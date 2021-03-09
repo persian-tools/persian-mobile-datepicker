@@ -1,5 +1,5 @@
-import React from "react";
-import styled from "styled-components";
+import React from 'react';
+import styled from 'styled-components';
 
 const Title = styled.h1`
   font-size: 1.5em;
@@ -7,17 +7,18 @@ const Title = styled.h1`
   color: palevioletred;
 `;
 
-export type Theme = "dark" | "light";
+export type Theme = 'dark' | 'light';
 export interface PickerProps {
-    theme: Theme;
+  theme: Theme;
 }
 
-const Picker: React.FC<PickerProps> = props => {
-    return (
-        <div>
-            Welcome to the Persian Mobile Date and Time picker - <Title>{props.theme}</Title>
-        </div>
-    )
-}
+const Picker: React.FC<PickerProps> = (props) => {
+  return (
+    <div>
+      Welcome to the Persian Mobile Date and Time picker -{' '}
+      <Title>{props.theme}</Title>
+    </div>
+  );
+};
 
 export default Picker;

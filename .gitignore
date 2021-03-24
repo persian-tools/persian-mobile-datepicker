@@ -23,5 +23,5 @@ yarn-error.log*
 #docs
 coverage
 
-.idea
-.vscode
+./.idea
+./.vscode

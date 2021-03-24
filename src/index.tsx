@@ -1,24 +1,34 @@
 import React from 'react';
-import styled from 'styled-components';
-
-const Title = styled.h1`
-  font-size: 1.5em;
-  text-align: center;
-  color: palevioletred;
-`;
-
-export type Theme = 'dark' | 'light';
-export interface PickerProps {
-  theme: Theme;
-}
+// Global Components
+import Sheet from 'react-modal-sheet';
+// Local Components
+import { WheelPicker } from './components/WheelPicker';
+// Types
+import type { PickerProps } from './index.types';
 
 const Picker: React.FC<PickerProps> = (props) => {
+  const [isOpen, setIsOpen] = React.useState<boolean>(true);
   return (
-    <div>
-      Welcome to the Persian Mobile Date and Time picker -{' '}
-      <Title>{props.theme}</Title>
-    </div>
+    <Sheet
+      isOpen={isOpen}
+      onClose={() => setIsOpen(false)}
+      snapPoints={[350]}
+      initialSnap={0}
+    >
+      <Sheet.Container>
+        <Sheet.Header />
+        <Sheet.Content disableDrag>
+          <WheelPicker prefix={props.classNamePrefix} data={[]} />
+        </Sheet.Content>
+      </Sheet.Container>
+      <Sheet.Backdrop />
+    </Sheet>
   );
+};
+
+Picker.defaultProps = {
+  theme: 'android-light',
+  classNamePrefix: 'persian-datepicker',
 };
 
 export default Picker;

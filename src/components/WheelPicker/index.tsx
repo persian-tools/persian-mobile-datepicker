@@ -1,99 +1,107 @@
 import React from 'react';
+// Global Components
+import MultiPicker from 'rmc-picker/es/MultiPicker';
+import Picker from 'rmc-picker/es/Picker';
 // Styles
 import { GlobalStyle } from './styles';
+// Helpers
+import {
+  columnName,
+  mapSelectedValueToDate,
+  prefixClassName,
+} from '../../helpers';
 // Types
-import type { WheelPickerProps } from './index.types';
+import type { PickerMultipleColumns, WheelPickerProps } from './index.types';
 
-export const WheelPicker: React.FC<WheelPickerProps> = () => {
+export const WheelPicker: React.FC<WheelPickerProps> = (props) => {
+  const [value, setValue] = React.useState<number[]>();
+  const prefix = prefixClassName(props.prefix!);
+  const pickerColumns: PickerMultipleColumns = [
+    [1399, 1400, 1401, 1402, 1403],
+    [
+      'فروردین',
+      'اردیبهشت',
+      'خرداد',
+      'تیر',
+      'مرداد',
+      'شهریور',
+      'مهر',
+      'آبان',
+      'آذر',
+      'دی',
+      'بهمن',
+      'اسفند',
+    ],
+    [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+    ],
+  ];
+
+  function onChange(value: Array<number>) {
+    console.log(
+      'onChange selected value',
+      value,
+      'value',
+      mapSelectedValueToDate(pickerColumns, value),
+    );
+    setValue(value);
+  }
   return (
     <React.Fragment>
-      <div className="wheelpicker shown" style={{ display: 'block' }}>
-        <div className="wheelpicker-backdrop"></div>
-        <div className="wheelpicker-panel">
-          <div className="wheelpicker-actions">
-            <button type="button" className="btn-cancel">
-              بستن
-            </button>
-            <button type="button" className="btn-set">
-              تایید
-            </button>
-            <h4 className="wheelpicker-title"></h4>
-          </div>
-          <div className="wheelpicker-main">
-            <div className="wheelpicker-wheels">
-              <div className="wheelpicker-wheel" style={{ height: 170 }}>
-                <ul
-                  className="wheelpicker-wheel-scroller"
-                  style={{
-                    transform: 'translate3d(0px, 0px, 0px)',
-                    marginTop: 68,
-                  }}
-                >
-                  <li className="wheelpicker-item ">1400</li>
-                  <li className="wheelpicker-item wheelpicker-item-selected">
-                    1399
-                  </li>
-                  <li className="wheelpicker-item">1398</li>
-                  <li className="wheelpicker-item">1397</li>
-                  <li className="wheelpicker-item">1396</li>
-                  <li className="wheelpicker-item">1395</li>
-                  <li className="wheelpicker-item">1394</li>
-                  <li className="wheelpicker-item">1393</li>
-                  <li className="wheelpicker-item">1392</li>
-                  <li className="wheelpicker-item">1391</li>
-                  <li className="wheelpicker-item">1390</li>
-                </ul>
-              </div>
-              <div className="wheelpicker-wheel" style={{ height: 170 }}>
-                <ul
-                  className="wheelpicker-wheel-scroller"
-                  style={{
-                    transform: 'translate3d(0px, 0px, 0px)',
-                    marginTop: 68,
-                  }}
-                >
-                  <li className="wheelpicker-item wheelpicker-item-selected">
-                    اسفند
-                  </li>
-                </ul>
-              </div>
-              <div className="wheelpicker-wheel" style={{ height: 170 }}>
-                <ul
-                  className="wheelpicker-wheel-scroller"
-                  style={{
-                    transform: 'translate3d(0px, 0px, 0px)',
-                    marginTop: 68,
-                  }}
-                >
-                  <li className="wheelpicker-item wheelpicker-item-selected">
-                    19
-                  </li>
-                  <li className="wheelpicker-item">20</li>
-                  <li className="wheelpicker-item">21</li>
-                  <li className="wheelpicker-item">22</li>
-                  <li className="wheelpicker-item">23</li>
-                  <li className="wheelpicker-item">24</li>
-                  <li className="wheelpicker-item">25</li>
-                  <li className="wheelpicker-item">26</li>
-                  <li className="wheelpicker-item">27</li>
-                  <li className="wheelpicker-item">28</li>
-                  <li className="wheelpicker-item">29</li>
-                  <li className="wheelpicker-item">30</li>
-                </ul>
-              </div>
-            </div>
-            <div
-              className="wheelpicker-mask wheelpicker-mask-top"
-              style={{ height: 67 }}
-            ></div>
-            <div className="wheelpicker-mask wheelpicker-mask-current"></div>
-            <div
-              className="wheelpicker-mask wheelpicker-mask-btm"
-              style={{ height: 67 }}
-            ></div>
-          </div>
-        </div>
-      </div>
+      <MultiPicker selectedValue={value} onValueChange={onChange}>
+        {pickerColumns.map((column, index) => {
+          return (
+            <Picker
+              key={index}
+              indicatorClassName={prefix(
+                `indicator ${prefix(`${columnName(index)}-column`)}`,
+              )}
+            >
+              {column.map((columnValues, columnValuesIndex) => {
+                return (
+                  <Picker.Item
+                    key={columnValuesIndex}
+                    className={prefix('view-item')}
+                    value={columnValuesIndex}
+                  >
+                    {columnValues}
+                  </Picker.Item>
+                );
+              })}
+            </Picker>
+          );
+        })}
+      </MultiPicker>
       <GlobalStyle />
     </React.Fragment>
   );
@@ -101,12 +109,4 @@ export const WheelPicker: React.FC<WheelPickerProps> = () => {
 
 WheelPicker.defaultProps = {
   data: [],
-  visibleRows: 5,
-  rowHeight: 34,
-  parseValue(value) {
-    return value.split(' ');
-  },
-  formatValue(value) {
-    return value.join(' ');
-  },
 };

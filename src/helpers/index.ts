@@ -37,3 +37,7 @@ export function mapSelectedValueToDate(
 ): PickerSingleColumn {
   return selectedValue.map((valueIndex, index) => columns[index][valueIndex]);
 }
+
+export function createAnArrayOfNumbers(length: number): number[] {
+  return new Array(length).fill(1).map((_, index) => index + 1);
+}

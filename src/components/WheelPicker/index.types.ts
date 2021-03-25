@@ -1,3 +1,5 @@
+import { JalaliMonth } from '../../helpers/date';
+
 export interface WheelPickerDataModel {
   label: string;
   value: string;
@@ -28,5 +30,5 @@ export interface WheelPickerProps {
   disabled?: boolean;
 }
 
-export type PickerSingleColumn = Array<string | number>;
+export type PickerSingleColumn = Array<JalaliMonth | string | number>;
 export type PickerMultipleColumns = Array<PickerSingleColumn>;

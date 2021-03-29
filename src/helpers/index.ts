@@ -1,13 +1,13 @@
+import {
+  PickerItemModel,
+  PickerSelectedDate,
+} from '../components/WheelPicker/index.types';
+
 /**
  * Add prefix for every classname
  *
  * @param {string} prefix
  */
-import {
-  PickerMultipleColumns,
-  PickerSingleColumn,
-} from '../components/WheelPicker/index.types';
-
 export function prefixClassName(prefix: string) {
   /**
    * Classname with returns itself with a prefix value
@@ -18,26 +18,54 @@ export function prefixClassName(prefix: string) {
   return (className: string) => `${prefix}-${className}`;
 }
 
-export function columnName(index: number): string {
-  return (
-    {
-      1: 'year',
-      2: 'month',
-      3: 'day',
-      4: 'hour',
-      5: 'minute',
-      6: 'second',
-    }[index] || ''
-  );
-}
-
-export function mapSelectedValueToDate(
-  columns: PickerMultipleColumns,
-  selectedValue: Array<number>,
-): PickerSingleColumn {
-  return selectedValue.map((valueIndex, index) => columns[index][valueIndex]);
-}
-
 export function createAnArrayOfNumbers(length: number): number[] {
   return new Array(length).fill(1).map((_, index) => index + 1);
+}
+
+export function generateArrayInRangeOfNumbers(
+  start: number,
+  end: number,
+): Array<number> {
+  const inRangeArray = [];
+  for (let i = start; i <= end && i >= start; i++) {
+    inRangeArray.push(i);
+  }
+
+  return inRangeArray;
+}
+
+export function convertSelectedDateToObject(
+  selectedDate: Array<PickerItemModel>,
+): PickerSelectedDate {
+  const result = {} as PickerSelectedDate;
+
+  selectedDate.forEach(({ type, value }) => {
+    result[type] = value;
+  });
+
+  return result;
+}
+
+export function convertSelectedDateToAnArray(
+  selectedDate: PickerSelectedDate,
+): Array<PickerItemModel> {
+  const columnsSortOrder = {
+    year: 1,
+    jyear: 1,
+    month: 2,
+    jmonth: 2,
+    day: 3,
+    hour: 4,
+    minute: 5,
+  };
+  const result = Object.keys(selectedDate).map((type) => ({
+    type,
+    value: selectedDate[type],
+  }));
+
+  const sortedColumnsOrder = result.sort((columnA, columnB) =>
+    columnsSortOrder[columnA.type] > columnsSortOrder[columnB.type] ? 1 : 0,
+  );
+
+  return sortedColumnsOrder as Array<PickerItemModel>;
 }

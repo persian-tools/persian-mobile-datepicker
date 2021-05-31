@@ -9,6 +9,7 @@ import { digitsEnToFa } from '@persian-tools/persian-tools';
 import { PickerProps } from './index.types';
 import { DateConfig } from './components/WheelPicker/index.types';
 import { SubmitButton, Footer, CancelButton } from './index.styles';
+import { setDate } from './helpers/date';
 
 const Picker: React.FC<PickerProps> = (props) => {
   const [isOpen, setIsOpen] = React.useState<boolean>(true);
@@ -19,9 +20,11 @@ const Picker: React.FC<PickerProps> = (props) => {
         formatter(value) {
           return value ? digitsEnToFa(value) : value;
         },
+        shouldRender: (value) => value === 1400,
       },
       month: {
         caption: 'ماه',
+        shouldRender: (value) => value >= 1 && value <= 7,
       },
       day: {
         formatter(value) {
@@ -34,6 +37,7 @@ const Picker: React.FC<PickerProps> = (props) => {
 
           return '';
         },
+        shouldRender: (value) => value >= 10 && value <= 30,
       },
     }),
     [],
@@ -49,7 +53,12 @@ const Picker: React.FC<PickerProps> = (props) => {
       <Sheet.Container>
         <Sheet.Header />
         <Sheet.Content disableDrag>
-          <WheelPicker config={pickerConfig} prefix={props.classNamePrefix} />
+          <WheelPicker
+            config={pickerConfig}
+            prefix={props.classNamePrefix}
+            minDate={props.minDate}
+            maxDate={props.maxDate}
+          />
 
           <Footer>
             <CancelButton>انصراف</CancelButton>
@@ -67,4 +76,5 @@ Picker.defaultProps = {
   classNamePrefix: 'persian-datepicker',
 };
 
+export { setDate };
 export default Picker;

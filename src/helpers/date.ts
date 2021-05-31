@@ -9,6 +9,11 @@ import {
   getDate,
   getYear,
   getMonth,
+  getHours,
+  getMinutes,
+  getSeconds,
+  isBefore as isBeforeFns,
+  isAfter as isAfterFns,
 } from 'date-fns-jalali';
 // Helpers
 import { createAnArrayOfNumbers, generateArrayInRangeOfNumbers } from './';
@@ -17,7 +22,7 @@ import type {
   PickerItemModel,
   WeekDaysName,
 } from '../components/WheelPicker/index.types';
-import { PickerDateModel } from '../components/WheelPicker/index.types';
+import type { PickerDateModel } from '../components/WheelPicker/index.types';
 
 export const weekDays: Record<number, WeekDaysName> = {
   0: 'شنبه',
@@ -55,27 +60,48 @@ export function setDate(
   return newJallaliDate(year, month, day, hour, minutes, seconds);
 }
 
-export const isYearLessThan = (current: number, next: number): boolean => {
-  return current > next;
-};
-export const convertDateToObject = (
-  date: Date,
-): Required<Pick<PickerDateModel, 'year' | 'month' | 'day'>> => {
+/**
+ * Convert entered date to an object
+ *
+ * @param {Date} date
+ * @return {Required<PickerDateModel>}
+ */
+export const convertDateToObject = (date: Date): Required<PickerDateModel> => {
   return {
     year: getYear(date),
     month: getMonth(date),
     day: getDate(date),
+    hour: getHours(date),
+    minute: getMinutes(date),
+    second: getSeconds(date),
   };
 };
 
 /**
- * Get the number of days in a jalali month of a year
+ * Convert an object of date to an instance of date function
+ *
+ * @param {PickerDateModel} obj
+ * @returns {Date}
+ */
+export const convertObjectToDate = (obj: PickerDateModel): Date => {
+  return setDate(
+    obj.year as number,
+    obj.month as number,
+    obj.day as number,
+    obj.hour as number,
+    obj.minute as number,
+    obj.second as number,
+  );
+};
+
+/**
+ * Get the number of days in a month of a year
  *
  * @param {number} year
  * @param {number} month
- * @returns {number} number of days in a jalali month of a year
+ * @returns {number} number of days in a month of a year
  */
-export function jDaysInMonth(year: number, month: number): number {
+export function daysInMonth(year: number, month: number): number {
   return dateGetDaysInMonth(setDate(year, month, 1));
 }
 
@@ -109,36 +135,76 @@ export function getWeekDayName(
   return weekDays[result];
 }
 
-// console.log('jDaysInMonth', jDaysInMonth(1400, 12));
-
-export function isValidJalaaliDate(
-  year: number,
-  month: number,
-  day: number,
-): boolean {
-  return dateIsValid(setDate(year, month, day));
+/**
+ * Check if entered date is valid
+ *
+ * @param {number} year
+ * @param {number} month
+ * @param {number} day
+ * @returns {boolean}
+ */
+export function isValidDate(year: number, month: number, day: number): boolean {
+  return isValid(setDate(year, month, day));
 }
 
+export function isValid(date: Date): boolean {
+  return dateIsValid(date);
+}
+
+export function isBefore(currentDate: Date, nextDate: Date): boolean {
+  return isBeforeFns(currentDate, nextDate);
+}
+
+export function isAfter(currentDate: Date, nextDate: Date): boolean {
+  return isAfterFns(currentDate, nextDate);
+}
+
+/**
+ * Return the current Year
+ *
+ * @returns {number}
+ */
 export function getCurrentYear(): number {
   return Number(format(new Date(), 'yyyy'));
 }
 
-export function generateJallaliYears(): Array<number> {
+/**
+ * Generate a Range of Years to show into the Date Picker
+ *
+ * @param {number} min Min year range
+ * @param {number} max Max year range
+ * @returns {Array<number>}
+ */
+export function generateYearsRange(min: number, max: number): Array<number> {
   const currentYear = getCurrentYear();
-  const prevDecade = currentYear - 100;
-  const nextDecade = currentYear + 100;
+  const minRange = currentYear - min;
+  const maxRange = currentYear + max;
 
-  return generateArrayInRangeOfNumbers(prevDecade, nextDecade);
+  return generateArrayInRangeOfNumbers(minRange, maxRange);
 }
 
+/**
+ * Check if the entered year is Leap
+ *
+ * @param {number} year
+ * @returns {boolean}
+ */
 export function isLeapYear(year: number): boolean {
   return dateIsLeapYear(year);
 }
 
+/**
+ * Combine and Generate all picker columns value
+ *
+ * @type {Record<string, (inp?: any) => Array<PickerItemModel>>}
+ */
 export const pickerData: Record<string, (inp?: any) => Array<PickerItemModel>> =
   {
-    getYears: () =>
-      generateJallaliYears().map((year) => ({ value: year, type: 'year' })),
+    getYears: ({ min, max } = {}) =>
+      generateYearsRange(min, max).map((year) => ({
+        value: year,
+        type: 'year',
+      })),
     getMonths: (monthsMap = jalaliMonths) =>
       Object.keys(monthsMap).map((value) => ({
         type: 'month',

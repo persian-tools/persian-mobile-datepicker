@@ -38,14 +38,8 @@ export interface WheelPickerProps {
 }
 
 export type DateConfigTypes =
-  // Gregorian Year
   | 'year'
-  // Jallali Year
-  | 'jyear'
-  // Gregorian Month
   | 'month'
-  // Jallali Month
-  | 'jmonth'
   | 'day'
   | 'hour'
   | 'minute'
@@ -63,6 +57,7 @@ export interface DateConfigValuesModel {
   caption?: string;
   formatter?: (value: PickerSelectedDateValue) => PickerSelectedDateValue;
   classname?: (value: PickerClassNameFormatter) => string | string[];
+  shouldRender?: (value: PickerClassNameFormatter) => boolean;
 }
 
 export type DateConfig = Partial<

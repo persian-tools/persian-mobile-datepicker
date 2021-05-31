@@ -50,9 +50,7 @@ export function convertSelectedDateToAnArray(
 ): string[] {
   const columnsSortOrder = {
     year: 1,
-    jyear: 1,
     month: 2,
-    jmonth: 2,
     day: 3,
     hour: 4,
     minute: 5,

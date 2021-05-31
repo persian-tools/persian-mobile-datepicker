@@ -2,14 +2,17 @@
   "name": "@persian-tools/persian-mobile-datepicker",
   "version": "0.0.1",
   "description": "Persian Mobile Date and Time picker",
+  "publishConfig": {
+    "access": "public"
+  },
   "source": "src/index.tsx",
   "main": "build/index.js",
   "esmodule": "build/index.modern.js",
   "module": "build/index.module.js",
   "types": "build/index.d.ts",
   "scripts": {
-    "build": "microbundle-crl src/index.tsx",
-    "dev": "microbundle-crl watch --no-css-modules",
+    "build": "microbundle-crl --compress --name persian-mobile-datepicker --strict",
+    "dev": "microbundle-crl watch --no-css-modules --name persian-mobile-datepicker --strict",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
   },
@@ -36,57 +39,56 @@
   },
   "homepage": "https://github.com/persian-tools/persian-mobile-datepicker#readme",
   "dependencies": {
-    "@persian-tools/persian-tools": "^1.6.0-beta.5",
-    "framer-motion": "^4.0.2",
-    "jalaali-js": "^1.1.5",
+    "@date-io/core": "^2.10.11",
+    "@persian-tools/persian-tools": "^1.6.1",
+    "date-fns-jalali": "^2.21.3-1",
+    "framer-motion": "^4.1.17",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-modal-sheet": "^1.3.0",
+    "react-modal-sheet": "^1.3.2",
     "rmc-picker": "^5.0.10",
-    "styled-components": "^5.2.1"
+    "styled-components": "^5.3.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.13.10",
-    "@storybook/addon-actions": "^6.1.21",
-    "@storybook/addon-essentials": "^6.1.21",
-    "@storybook/addon-links": "^6.1.21",
+    "@babel/core": "^7.14.3",
+    "@storybook/addon-actions": "^6.2.9",
+    "@storybook/addon-essentials": "^6.2.9",
+    "@storybook/addon-links": "^6.2.9",
     "@storybook/preset-create-react-app": "^3.1.7",
-    "@storybook/react": "^6.1.21",
-    "@testing-library/jest-dom": "^5.11.9",
-    "@testing-library/react": "^11.2.5",
-    "@testing-library/user-event": "^13.0.10",
-    "@types/jalaali-js": "^1.1.0",
-    "@types/jest": "^26.0.21",
-    "@types/node": "^14.14.35",
-    "@types/react": "^17.0.3",
-    "@types/react-dom": "^17.0.3",
+    "@storybook/react": "^6.2.9",
+    "@testing-library/jest-dom": "^5.12.0",
+    "@testing-library/react": "^11.2.7",
+    "@testing-library/user-event": "^13.1.9",
+    "@types/jest": "^26.0.23",
+    "@types/node": "^15.6.1",
+    "@types/react": "^17.0.7",
+    "@types/react-dom": "^17.0.5",
     "@types/styled-components": "^5.1.9",
-    "@typescript-eslint/eslint-plugin": "^4.19.0",
-    "@typescript-eslint/parser": "^4.19.0",
+    "@typescript-eslint/eslint-plugin": "^4.25.0",
+    "@typescript-eslint/parser": "^4.25.0",
     "babel-eslint": "^10.0.3",
     "babel-loader": "^8.2.2",
     "cross-env": "^7.0.3",
-    "eslint": "^7.22.0",
+    "eslint": "^7.27.0",
     "eslint-config-react-app": "^6.0.0",
-    "gh-pages": "^3.1.0",
+    "gh-pages": "^3.2.0",
     "microbundle-crl": "^0.13.11",
-    "prettier": "^2.2.1",
+    "prettier": "^2.3.0",
     "react-scripts": "^4.0.3",
-    "typescript": "^4.2.3"
+    "typescript": "^4.2.4"
   },
   "resolutions": {
-    "**/react": "16.5.0",
-    "**/react-dom": "16.5.0"
+    "**/react": "17.0.2",
+    "**/react-dom": "17.0.2"
   },
   "peerDependencies": {
-    "react": ">= 16.5.0"
+    "framer-motion": "^4.1.17"
   },
   "browserslist": {
     "production": [
-      "Chrome >= 60",
-      "Safari >= 10.1",
-      "Firefox >= 54",
-      "Edge >= 12"
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
     ],
     "development": [
       "last 1 chrome version",

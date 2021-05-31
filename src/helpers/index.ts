@@ -1,7 +1,4 @@
-import {
-  PickerItemModel,
-  PickerSelectedDate,
-} from '../components/WheelPicker/index.types';
+import { PickerDateModel } from '../components/WheelPicker/index.types';
 
 /**
  * Add prefix for every classname
@@ -27,7 +24,7 @@ export function generateArrayInRangeOfNumbers(
   end: number,
 ): Array<number> {
   const inRangeArray = [];
-  for (let i = start; i <= end && i >= start; i++) {
+  for (let i = start; i >= start && i <= end; i++) {
     inRangeArray.push(i);
   }
 
@@ -35,20 +32,22 @@ export function generateArrayInRangeOfNumbers(
 }
 
 export function convertSelectedDateToObject(
-  selectedDate: Array<PickerItemModel>,
-): PickerSelectedDate {
-  const result = {} as PickerSelectedDate;
+  selectedDate: Array<string>,
+): PickerDateModel {
+  const result = {} as PickerDateModel;
 
-  selectedDate.forEach(({ type, value }) => {
-    result[type] = value;
+  selectedDate.forEach((v) => {
+    const [type, value] = v.split('-');
+
+    result[type] = Number(value);
   });
 
   return result;
 }
 
 export function convertSelectedDateToAnArray(
-  selectedDate: PickerSelectedDate,
-): Array<PickerItemModel> {
+  selectedDate: PickerDateModel,
+): string[] {
   const columnsSortOrder = {
     year: 1,
     jyear: 1,
@@ -57,6 +56,7 @@ export function convertSelectedDateToAnArray(
     day: 3,
     hour: 4,
     minute: 5,
+    second: 6,
   };
   const result = Object.keys(selectedDate).map((type) => ({
     type,
@@ -67,5 +67,9 @@ export function convertSelectedDateToAnArray(
     columnsSortOrder[columnA.type] > columnsSortOrder[columnB.type] ? 1 : 0,
   );
 
-  return sortedColumnsOrder as Array<PickerItemModel>;
+  return sortedColumnsOrder.map((v) => `${v.type}-${v.value}`);
+}
+
+export function isObjectEmpty(obj: Object): boolean {
+  return Object.keys(obj).length === 0 && obj.constructor === Object;
 }

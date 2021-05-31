@@ -8,44 +8,52 @@ import { GlobalStyle } from './styles';
 import {
   convertSelectedDateToAnArray,
   convertSelectedDateToObject,
+  isObjectEmpty,
   prefixClassName,
 } from '../../helpers';
-import { jallaliMonthMap, pickerData } from '../../helpers/date';
+import {
+  isValidJalaaliDate,
+  jalaliMonths,
+  pickerData,
+  jDaysInMonth,
+  getWeekDay,
+  getWeekDayName,
+} from '../../helpers/date';
 // Hooks
-// import { usePrevious } from '../../hooks/previous';
+import { usePrevious } from '../../hooks/previous';
 // Types
 import type {
   PickerColumns,
   PickerItemModel,
   PickerSelectedDateValue,
   WheelPickerProps,
+  DateConfig,
+  PickerDateModel,
 } from './index.types';
-import { DateConfig, PickerSelectedDate } from './index.types';
+import { PickerClassNameFormatter } from './index.types';
 
 export const WheelPicker: React.FC<WheelPickerProps> = (props) => {
   // Local States
-  const [daysInMonth] = useState<number>(29);
-  // const [, setCurrentDaysInMonth] = useState<number>(30);
-  const [selectedDate, setSelectedDate] = useState<PickerSelectedDate>({});
+  const [daysInMonth, setDaysInMonth] = useState<number>(29);
+  const [selectedDate, setSelectedDate] = useState<PickerDateModel>({});
   // Hooks
-  // const previousSelectedDate = usePrevious<PickerSelectedDate>(
-  //   defaultSelectedValue,
-  // );
+  const previousSelectedDate = usePrevious<PickerDateModel>(selectedDate);
   // Local Variables
-  // const memoizeDaysInMonths = new Map<string, number>();
-  console.log('selectedDate', selectedDate);
   /**
    * Picker CSS classnames prefix name
    */
   const prefix = prefixClassName(props.prefix!);
   // Memo list
+
   /**
    * Default Picker selected columns value which goes from the parent to local changes
    */
-  const defaultPickerValues = React.useMemo<Array<PickerItemModel>>(() => {
-    return convertSelectedDateToAnArray(props.defaultValue || selectedDate);
+  const defaultPickerValues = React.useMemo<Array<string>>(() => {
+    return convertSelectedDateToAnArray(
+      (isObjectEmpty(selectedDate) ? props.defaultValue : selectedDate)!,
+    );
   }, [props.defaultValue, selectedDate]);
-  console.log('defaultPickerValues', defaultPickerValues);
+  // console.log('defaultPickerValues', defaultPickerValues);
   /**
    * Generate Picker's columns with their values
    *
@@ -55,15 +63,15 @@ export const WheelPicker: React.FC<WheelPickerProps> = (props) => {
   const pickerColumns = React.useMemo<PickerColumns>(() => {
     return Object.keys(props.config).map((column) => {
       switch (column) {
-        case 'jyear':
+        case 'year':
           return {
             type: 'year',
-            value: pickerData.getJallaliYears(),
+            value: pickerData.getYears(),
           };
-        case 'jmonth':
+        case 'month':
           return {
             type: 'month',
-            value: pickerData.getJallaliMonths(),
+            value: pickerData.getMonths(),
           };
         case 'day':
           return {
@@ -90,43 +98,52 @@ export const WheelPicker: React.FC<WheelPickerProps> = (props) => {
       }
     }) as PickerColumns;
   }, [props.config, pickerData, daysInMonth]);
-  // Local Watchers
+  /**
+   * Prepare the default value of DatePicker when the Developer has not passed a defaultValue
+   */
+  React.useLayoutEffect(() => {
+    if (
+      pickerColumns.length &&
+      isObjectEmpty(selectedDate) &&
+      isObjectEmpty(props.defaultValue!)
+    ) {
+      const defaultDate = {};
+      pickerColumns.forEach((column) => {
+        defaultDate[column.type] = column.value[0].value;
+      });
+      setSelectedDate(defaultDate);
+    }
+  }, [pickerColumns, selectedDate]);
+  /**
+   * * Local Watchers
+   */
   // Calculate days in selected months
-  // React.useEffect(() => {
-  //   const $defaultSelectedValue = [...defaultSelectedValue];
-  //   if (
-  //     !isLeapJalaaliYear(Number($defaultSelectedValue[0].value)) &&
-  //     $defaultSelectedValue[1].value === 12 &&
-  //     ($defaultSelectedValue[2].value as JalaliMonth)?.value === 30
-  //   ) {
-  //     $defaultSelectedValue[2].value = 29;
-  //   }
-  //   const currentDate = `${$defaultSelectedValue.join('/')}`;
-  //
-  //   if (
-  //     !memoizeDaysInMonths.has(currentDate) &&
-  //     isValidJalaaliDate(
-  //       Number(selectedYear.value),
-  //       Number(selectedMonth.value),
-  //       Number($defaultSelectedValue[2].value),
-  //     )
-  //   ) {
-  //     memoizeDaysInMonths.set(
-  //       currentDate,
-  //       daysInMonth(Number(selectedYear.value), Number(selectedMonth.value)),
-  //     );
-  //   }
-  //
-  //   if (
-  //     previousSelectedDate?.[1] !== selectedMonth ||
-  //     previousSelectedDate?.[0] !== selectedYear
-  //   ) {
-  //     const daysInMonthNo = memoizeDaysInMonths.get(currentDate);
-  //     const $daysList = createAnArrayOfNumbers(daysInMonthNo!);
-  //     setCurrentDaysInMonth(daysInMonthNo!);
-  //     setDaysList($daysList);
-  //   }
-  // }, [defaultSelectedValue]);
+  React.useEffect(() => {
+    if (!isObjectEmpty(selectedDate)) {
+      if (
+        previousSelectedDate.month !== selectedDate.month ||
+        previousSelectedDate.year !== selectedDate.year
+      ) {
+        setDaysInMonth(
+          jDaysInMonth(Number(selectedDate.year), Number(selectedDate.month)),
+        );
+      }
+    }
+  }, [selectedDate]);
+  /**
+   * Derived Selected Date from Prop's defaultValue
+   */
+  React.useEffect(() => {
+    if (
+      isValidJalaaliDate(
+        Number(props.defaultValue?.year),
+        Number(props.defaultValue?.month),
+        Number(props.defaultValue?.day),
+      )
+    ) {
+      setSelectedDate(props.defaultValue!);
+    }
+  }, [props.defaultValue]);
   /**
    * Date picker columns config
    *
@@ -134,14 +151,12 @@ export const WheelPicker: React.FC<WheelPickerProps> = (props) => {
    */
   const configs = React.useMemo(() => {
     const result = { ...props.config } as Required<DateConfig>;
-    if (result.jmonth && !result.jmonth.formatter) {
-      result.jmonth.formatter = (value) => jallaliMonthMap[value];
+    if (result.month && !result.month.formatter) {
+      result.month.formatter = (value) => jalaliMonths[value];
     }
 
     return result;
   }, [props.config]);
-  console.log('configs', configs);
-  console.log('columns', pickerColumns);
   // Handlers
   /**
    * Picker items' text content
@@ -161,7 +176,24 @@ export const WheelPicker: React.FC<WheelPickerProps> = (props) => {
   function handlePickerItemClassNames(pickerItem: PickerItemModel): string {
     const classNamesFormatter = configs[pickerItem.type]?.classname;
     if (classNamesFormatter) {
-      const classNames = classNamesFormatter(pickerItem.value);
+      const targetSelectedDate: PickerClassNameFormatter = { ...selectedDate };
+      targetSelectedDate[pickerItem.type] = pickerItem.value;
+      const weekDay = getWeekDay(
+        targetSelectedDate.year as number,
+        targetSelectedDate.month as number,
+        targetSelectedDate.day as number,
+      );
+      if (weekDay >= 0) {
+        targetSelectedDate.weekDay = weekDay;
+        targetSelectedDate.weekDayName = getWeekDayName(
+          targetSelectedDate.year as number,
+          targetSelectedDate.month as number,
+          targetSelectedDate.day as number,
+        );
+      }
+
+      // Pass to the classname config's formatter
+      const classNames = classNamesFormatter(targetSelectedDate);
 
       return Array.isArray(classNames) ? classNames.join(' ') : classNames;
     }
@@ -172,16 +204,12 @@ export const WheelPicker: React.FC<WheelPickerProps> = (props) => {
   /**
    * Picker onChange event which includes every columns' selected value
    *
-   * @param {Array<PickerItemModel>} value
+   * @param {Array<PickerItemModel<string>>} selected date
    * @returns {undefined}
    */
-  function onChange(value: Array<PickerItemModel>) {
-    console.log(
-      'onChange selected value',
-      value,
-      convertSelectedDateToObject(value),
-    );
+  function onChange(value: Array<string>) {
     const convertSelectedDate = convertSelectedDateToObject(value);
+
     setSelectedDate(convertSelectedDate);
     props.onChange?.(convertSelectedDate);
   }
@@ -208,7 +236,7 @@ export const WheelPicker: React.FC<WheelPickerProps> = (props) => {
                     className={`${prefix(
                       'view-item',
                     )} ${handlePickerItemClassNames(pickerItem)}`}
-                    value={pickerItem}
+                    value={`${pickerItem.type}-${pickerItem.value}`}
                   >
                     {handlePickerItemTextContent(pickerItem)}
                   </Picker.Item>
@@ -230,4 +258,9 @@ WheelPicker.defaultProps = {
   maxMonth: 12,
   minYear: 1300,
   maxYear: 1500,
+  defaultValue: {
+    year: 1399,
+    month: 12,
+    day: 29,
+  },
 };

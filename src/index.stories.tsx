@@ -1,6 +1,7 @@
 import React from 'react';
 import { Story, Meta } from '@storybook/react/types-6-0';
-import Picker, { PickerProps } from './index';
+import Picker from './index';
+import { PickerProps } from './index.types';
 
 export default {
   title: 'Base Picker',
@@ -20,5 +21,5 @@ const Template: Story<PickerProps> = (args) => <Picker {...args} />;
 
 export const Default = Template.bind({});
 Default.args = {
-  theme: 'light',
+  theme: 'android-light',
 };

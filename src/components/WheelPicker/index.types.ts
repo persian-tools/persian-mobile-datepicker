@@ -3,25 +3,18 @@ export interface WheelPickerSelectEvent extends PickerDateModel {}
 export interface WheelPickerProps {
   // CSS classnames prefix
   prefix?: string;
-  // Min Year value
-  minYear?: number;
-  // Max Year value
-  maxYear?: number;
-  // Min Month value
-  minMonth?: number;
-  // Max Month value
-  maxMonth?: number;
-  // Min Day value
-  minDay?: number;
-  // Max Day value
-  maxDay?: number;
   // Default column value
   defaultValue?: Date;
   // Title
   title?: string;
   // Triggered when the component DOM is generated, the parameter is the component element
   onRender?: () => void;
-  // Triggered when the value changes due to scrolling, the parameter is the index value of the entry array and the changed column
+  /**
+   * Gets called when value of the picker changes
+   *
+   * @param {WheelPickerSelectEvent} selected
+   * @return {void}
+   */
   onChange?: (selected: WheelPickerSelectEvent) => void;
   // Triggered when you click OK
   onSelect?: (selected: WheelPickerSelectEvent) => void;
@@ -31,14 +24,43 @@ export interface WheelPickerProps {
   disabled?: boolean;
   // Set config to configure year, month, day, hour, minute and seconds
   config: DateConfig;
-  // Min Date value
+  /**
+   * Specifies the minimum selectable day by user
+   *
+   * @default null
+   * @type {Date}
+   */
   minDate?: Date;
-  // Max Date value
+  /**
+   * Specifies the maximum selectable day by user
+   *
+   * @default null
+   * @type {Date}
+   */
   maxDate?: Date;
-  // Max decade
-  maxDecade?: number;
-  // Min decade
-  minDecade?: number;
+  /**
+   * The Minimum selectable year
+   *
+   * @description Picker will calculate the StartYear by this approach: currentYear + startYear
+   * @default 30
+   * @type {number}
+   */
+  endYear?: number;
+  /**
+   * The Maximum selectable year
+   *
+   * @description Picker will calculate the StartYear by this approach: currentYear + startYear
+   * @default 30
+   * @type {number}
+   */
+  startYear?: number;
+  /**
+   * Determines whether to mark weekend days with red or not. (weekend day is Friday)
+   *
+   * @default false
+   * @type {boolean}
+   */
+  highlightWeekends?: boolean;
 }
 
 export type DateConfigTypes =
@@ -56,14 +78,23 @@ export type DateConfigFormats =
   | 'hh'
   | 'mm'
   | 'ss';
+export type WeekDayText =
+  | 'شنبه'
+  | 'یک‌شنبه'
+  | 'دو‌شنبه'
+  | 'سه‌شنبه'
+  | 'چهار‌شنبه'
+  | 'پنج‌شنبه'
+  | 'جمعه';
+
 export type PickerSelectedDateValue = number;
 export interface DateConfigValuesModel {
   caption?: string;
   formatter?: (
     value: PickerSelectedDateValue,
   ) => PickerSelectedDateValue | string;
-  classname?: (value: PickerClassNameFormatter) => string | string[];
-  shouldRender?: (value: PickerClassNameFormatter) => boolean;
+  classname?: (value: PickerExtraDateInfo) => string | string[];
+  shouldRender?: (value: PickerExtraDateInfo) => boolean;
 }
 
 export type DateConfig = Partial<
@@ -82,9 +113,11 @@ export type PickerDateModel = {
 };
 export type RequiredPickerDateModel = Required<PickerDateModel>;
 
-export interface PickerClassNameFormatter extends PickerDateModel {
+export interface PickerExtraDateInfo extends PickerDateModel {
   weekDay?: number;
-  weekDayName?: WeekDaysName;
+  weekDayText?: WeekDayText;
+  monthText?: string;
+  isLeapYear?: boolean;
 }
 
 export interface PickerItemModel<V = PickerSelectedDateValue> {
@@ -93,12 +126,3 @@ export interface PickerItemModel<V = PickerSelectedDateValue> {
 }
 
 export type PickerColumns = Array<PickerItemModel<Array<PickerItemModel>>>;
-
-export type WeekDaysName =
-  | 'شنبه'
-  | 'یک‌شنبه'
-  | 'دو‌شنبه'
-  | 'سه‌شنبه'
-  | 'چهار‌شنبه'
-  | 'پنج‌شنبه'
-  | 'جمعه';

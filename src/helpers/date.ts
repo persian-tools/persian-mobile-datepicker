@@ -21,12 +21,12 @@ import { createAnArrayOfNumbers, generateArrayInRangeOfNumbers } from './';
 // Types
 import type {
   PickerItemModel,
-  WeekDaysName,
+  WeekDayText,
 } from '../components/WheelPicker/index.types';
 import type { PickerDateModel } from '../components/WheelPicker/index.types';
-import { RequiredPickerDateModel } from '../components/WheelPicker/index.types';
+import type { RequiredPickerDateModel } from '../components/WheelPicker/index.types';
 
-export const weekDays: Record<number, WeekDaysName> = {
+export const weekDays: Record<number, WeekDayText> = {
   0: 'شنبه',
   1: 'یک‌شنبه',
   2: 'دو‌شنبه',
@@ -119,19 +119,23 @@ export function getWeekDay(year: number, month: number, day: number): number {
   return (dateGetDay(setDate(year, month, day)) + 1) % 7;
 }
 
+export function isWeekend(year: number, month: number, day: number): boolean {
+  return getWeekDay(year, month, day) === 6;
+}
+
 /**
  * Get weekday's name by date
  *
  * @param {number} year
  * @param {number} month
  * @param {number} day
- * @return {WeekDaysName} شنبه،...
+ * @return {WeekDayText} شنبه،...
  */
-export function getWeekDayName(
+export function getWeekDayText(
   year: number,
   month: number,
   day: number,
-): WeekDaysName {
+): WeekDayText {
   const result = getWeekDay(year, month, day);
 
   return weekDays[result];
@@ -206,7 +210,7 @@ export function generateYearsRange(min: number, max: number): Array<number> {
  * @returns {boolean}
  */
 export function isLeapYear(year: number): boolean {
-  return dateIsLeapYear(year);
+  return dateIsLeapYear(setDate(year, 1, 1));
 }
 
 /**

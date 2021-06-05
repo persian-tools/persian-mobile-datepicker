@@ -1,33 +1,23 @@
-import React, { useState } from 'react';
+import React, { useLayoutEffect, useMemo } from 'react';
 // Global Components
 import Picker from 'rmc-picker/es/Picker';
 import MultiPicker from 'rmc-picker/es/MultiPicker';
 // Styles
 import { GlobalStyle } from './styles';
-// Helpers
-import {
-  convertSelectedDateToObject,
-  isObjectEmpty,
-  prefixClassName,
-} from '../../helpers';
-import {
-  convertDateToObject,
-  daysInMonth as calculateDaysInMonth,
-  isValid,
-  pickerData,
-} from '../../helpers/date';
 // Hooks
-import { usePrevious } from '../../hooks/previous';
-// Types
-import type {
-  PickerColumns,
-  PickerDateModel,
-  WheelPickerProps,
-} from './index.types';
 import { usePicker } from '../../hooks/usePicker';
+// Helpers
+import { convertSelectedDateToObject, isObjectEmpty } from '../../helpers';
+import { pickerData } from '../../helpers/date';
+// Types
+import type { PickerColumns, WheelPickerProps } from './index.types';
+import type { FC } from 'react';
 
-export const WheelPicker: React.FC<WheelPickerProps> = (props) => {
+export const WheelPicker: FC<WheelPickerProps> = (props) => {
   const {
+    prefix,
+
+    daysInMonth,
     selectedDate,
     setSelectedDate,
     defaultPickerValues,
@@ -39,16 +29,6 @@ export const WheelPicker: React.FC<WheelPickerProps> = (props) => {
     handlePickerItemTextContent,
     handlePickerItemClassNames,
   } = usePicker(props);
-  // Local States
-  const [daysInMonth, setDaysInMonth] = useState<number>(29);
-
-  // Hooks
-  const previousSelectedDate = usePrevious<PickerDateModel>(selectedDate);
-  // Local Variables
-  /**
-   * Picker CSS classnames prefix name
-   */
-  const prefix = prefixClassName(props.prefix!);
 
   // Memo list
   /**
@@ -57,7 +37,7 @@ export const WheelPicker: React.FC<WheelPickerProps> = (props) => {
    * @category watchers
    * @return {PickerColumns}
    */
-  const pickerColumns = React.useMemo<PickerColumns>(() => {
+  const pickerColumns = useMemo<PickerColumns>(() => {
     return Object.keys(props.config).map((column) => {
       switch (column) {
         case 'year':
@@ -103,7 +83,7 @@ export const WheelPicker: React.FC<WheelPickerProps> = (props) => {
   /**
    * Prepare the default value of DatePicker when the Developer has not passed a defaultValue
    */
-  React.useLayoutEffect(() => {
+  useLayoutEffect(() => {
     if (
       pickerColumns.length &&
       isObjectEmpty(selectedDate) &&
@@ -116,33 +96,6 @@ export const WheelPicker: React.FC<WheelPickerProps> = (props) => {
       setSelectedDate(defaultDate);
     }
   }, [pickerColumns, selectedDate, props.defaultValue]);
-  /**
-   * * Local Watchers
-   */
-  // Calculate days in selected months
-  React.useEffect(() => {
-    if (!isObjectEmpty(selectedDate)) {
-      if (
-        previousSelectedDate?.month !== selectedDate?.month ||
-        previousSelectedDate?.year !== selectedDate?.year
-      ) {
-        setDaysInMonth(
-          calculateDaysInMonth(
-            Number(selectedDate.year),
-            Number(selectedDate.month),
-          ),
-        );
-      }
-    }
-  }, [selectedDate, previousSelectedDate?.year, previousSelectedDate?.month]);
-  /**
-   * Derived Selected Date from Prop's defaultValue
-   */
-  React.useEffect(() => {
-    if (isValid(props.defaultValue!)) {
-      setSelectedDate(convertDateToObject(props.defaultValue!));
-    }
-  }, [props.defaultValue]);
 
   /**
    * Picker onChange event which includes every columns' selected value
@@ -197,6 +150,6 @@ export const WheelPicker: React.FC<WheelPickerProps> = (props) => {
 };
 
 WheelPicker.defaultProps = {
-  minDecade: 30, // past 30 years
-  maxDecade: 30, // next 30 years
+  startYear: 30, // past 30 years
+  endYear: 30, // next 30 years
 };

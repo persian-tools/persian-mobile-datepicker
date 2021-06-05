@@ -1,34 +1,61 @@
+import React from 'react';
 import {
+  convertDateToObject,
+  convertObjectToDate,
+  currentDateObject,
+  daysInMonth as calculateDaysInMonth,
+  getCurrentYear,
+  getWeekDay,
+  isAfter,
+  isBefore,
+  isEqual,
+  isLeapYear,
+  isValid,
+  isWeekend,
+  jalaliMonths,
+  weekDays,
+} from '../helpers/date';
+import {
+  convertSelectedDateToAnArray,
+  isObjectEmpty,
+  prefixClassName,
+  toPositive,
+} from '../helpers';
+// Hooks
+import { useState } from 'react';
+import { usePrevious } from './usePrevious';
+// Types
+import type {
   DateConfig,
   DateConfigTypes,
-  PickerClassNameFormatter,
+  PickerExtraDateInfo,
   PickerDateModel,
   PickerItemModel,
   PickerSelectedDateValue,
   RequiredPickerDateModel,
   WheelPickerProps,
 } from '../components/WheelPicker/index.types';
-import React, { useState } from 'react';
-import {
-  convertDateToObject,
-  convertObjectToDate,
-  currentDateObject,
-  getCurrentYear,
-  getWeekDay,
-  getWeekDayName,
-  isAfter,
-  isBefore,
-  isEqual,
-  isValid,
-  jalaliMonths,
-} from '../helpers/date';
-import {
-  convertSelectedDateToAnArray,
-  isObjectEmpty,
-  toPositive,
-} from '../helpers';
 
 export function usePicker(props: WheelPickerProps) {
+  /**
+   * Date picker columns config
+   *
+   * @returns {Required<DateConfig>}
+   */
+  const configs = React.useMemo<Required<DateConfig>>(() => {
+    const config = { ...props.config } as Required<DateConfig>;
+    if (config.month && !config.month.formatter) {
+      config.month.formatter = (value) => jalaliMonths[value];
+    }
+
+    return config;
+  }, [props.config]);
+
+  /**
+   * Picker CSS classnames prefix name
+   */
+  const prefix = prefixClassName(props.prefix!);
+
   /**
    * * Parse and convert [minDate] to an object
    *
@@ -83,19 +110,25 @@ export function usePicker(props: WheelPickerProps) {
    */
   const minYear = React.useMemo<number>(() => {
     const currentYear = getCurrentYear();
+    const startYear = Number(props.startYear);
 
-    let year: number = currentYear;
+    let year: number;
     if (isMinDateValid) {
       year = minDateObject.year;
     } else if (isDefaultValueValid) {
-      year = defaultValueDateObject.year;
-    } else if (Number(props.minDecade)) {
-      year = currentYear + Number(props.minDecade);
+      year = defaultValueDateObject.year + startYear;
+    } else {
+      year = currentYear + startYear;
     }
 
     return toPositive(currentYear - year);
-  }, [minDateObject, defaultValueDateObject, props.minDecade]);
-
+  }, [
+    isMinDateValid,
+    minDateObject,
+    isDefaultValueValid,
+    defaultValueDateObject,
+    props.startYear,
+  ]);
   /**
    * * Get Max Year of the [Year Column] which should be rendered
    *
@@ -103,39 +136,97 @@ export function usePicker(props: WheelPickerProps) {
    */
   const maxYear = React.useMemo<number>(() => {
     const currentYear = getCurrentYear();
+    const endYear = Number(props.endYear);
 
-    let year: number = currentYear;
+    let year: number;
     if (isMinDateValid) {
       year = maxDateObject.year;
     } else if (isDefaultValueValid) {
-      year = defaultValueDateObject.year;
-    } else if (Number(props.maxDecade)) {
-      year = currentYear + Number(props.maxDecade);
+      year = defaultValueDateObject.year + endYear;
+    } else {
+      year = currentYear + endYear;
     }
 
     return toPositive(currentYear - year);
   }, [
+    isMinDateValid,
     maxDateObject,
     defaultValueDateObject,
-    props.maxDecade,
+    props.endYear,
     isDefaultValueValid,
   ]);
 
+  /**
+   * Get default selected date by [MinDate], [MaxDate], [DefaultValue] or current date
+   *
+   * @type {PickerDateModel}
+   */
   const defaultSelectedDate = React.useMemo<PickerDateModel>(() => {
     if (isDefaultValueValid) {
-      return convertDateToObject(props.defaultValue!);
+      const defaultSelectedDateObject = convertDateToObject(
+        props.defaultValue!,
+      );
+      // Check if defaultValue has overlap with shouldRender which passed by config prop.
+      if (
+        configShouldRender(defaultSelectedDateObject, 'year') &&
+        configShouldRender(defaultSelectedDateObject, 'month') &&
+        configShouldRender(defaultSelectedDateObject, 'day')
+      ) {
+        return defaultSelectedDateObject;
+      } else {
+        // TODO: should be refactored and check currentDate if it is in range of min and max dates, if it was, it should be the default value
+        return currentDateObject();
+      }
+    }
+    if (isMinDateValid) {
+      return minDateObject;
     } else if (isMaxDateValid) {
       return maxDateObject;
-    } else if (isMinDateValid) {
-      return minDateObject;
     }
 
     return currentDateObject();
-  }, [isMinDateValid, isMaxDateValid, isDefaultValueValid]);
+  }, [
+    isMinDateValid,
+    maxDateObject,
+    minDateObject,
+    isMaxDateValid,
+    props.defaultValue,
+    isDefaultValueValid,
+  ]);
 
   // Local States
+  const [daysInMonth, setDaysInMonth] = useState<number>(29);
   const [selectedDate, setSelectedDate] =
     useState<PickerDateModel>(defaultSelectedDate);
+  // Hooks
+  const previousSelectedDate = usePrevious<PickerDateModel>(selectedDate);
+
+  // Watchers
+  /**
+   * Derived Selected Date from Prop's defaultValue
+   */
+  React.useEffect(() => {
+    if (isValid(props.defaultValue!)) {
+      setSelectedDate(convertDateToObject(props.defaultValue!));
+    }
+  }, [props.defaultValue]);
+
+  // Calculate days in selected months
+  React.useEffect(() => {
+    if (!isObjectEmpty(selectedDate)) {
+      if (
+        previousSelectedDate?.month !== selectedDate?.month ||
+        previousSelectedDate?.year !== selectedDate?.year
+      ) {
+        setDaysInMonth(
+          calculateDaysInMonth(
+            Number(selectedDate.year),
+            Number(selectedDate.month),
+          ),
+        );
+      }
+    }
+  }, [selectedDate, previousSelectedDate?.year, previousSelectedDate?.month]);
 
   /**
    * Default Picker selected columns value which goes from the parent to local changes
@@ -147,37 +238,43 @@ export function usePicker(props: WheelPickerProps) {
         : selectedDate)!,
     );
   }, [props.defaultValue, selectedDate]);
-  /**
-   * Date picker columns config
-   *
-   * @returns {DateConfig}
-   */
-  const configs = React.useMemo(() => {
-    const result = { ...props.config } as Required<DateConfig>;
-    if (result.month && !result.month.formatter) {
-      result.month.formatter = (value) => jalaliMonths[value];
-    }
 
-    return result;
-  }, [props.config]);
-
-  // Functions
+  // Handlers
   /**
    * Check if entered Year is in Range of Min and Max
    *
-   * @param {number} year
+   * @param {number} value
    * @returns {boolean}
    */
-  function shouldRenderYear(year: number): boolean {
-    if (isMaxDateValid && isMaxDateValid) {
-      return year >= minDateObject.year && year <= maxDateObject.year;
+  function shouldRenderYear(value: number): boolean {
+    // Call the Config's shouldRender method to find that we should render this item or not
+    // User can prevent rendering specific year or a list of years in Picker's Year column
+    if (!configShouldRender(selectedDate, 'year', value)) return false;
+
+    if (isMinDateValid && isMaxDateValid) {
+      return value >= minDateObject.year && value <= maxDateObject.year;
     } else if (isMaxDateValid) {
-      return year <= maxDateObject.year;
-    } else if (isMaxDateValid) {
-      return year >= minDateObject.year;
+      return value <= maxDateObject.year;
+    } else if (isMinDateValid) {
+      return value >= minDateObject.year;
     }
 
     return true;
+  }
+
+  function configShouldRender(
+    currentSelectedDate: PickerDateModel,
+    key: DateConfigTypes,
+    value?: PickerSelectedDateValue,
+  ) {
+    return (
+      configs?.[key]?.shouldRender?.(
+        extraDateInfo(currentSelectedDate, {
+          type: key,
+          value: value ?? currentSelectedDate[key]!,
+        }),
+      ) ?? true
+    );
   }
 
   /**
@@ -193,6 +290,11 @@ export function usePicker(props: WheelPickerProps) {
   ): boolean {
     // Create new Date object and clone the SelectedDate and assign the entered day to the Object
     const $date = { ...selectedDate, [key]: value };
+
+    // Call the Config's shouldRender method to find that we should render this item or not
+    // User can prevent rendering the weekend's holidays in Date Picker
+    if (!configShouldRender($date, key, value)) return false;
+
     // Convert to a Date instance
     const selectedDateValue = convertObjectToDate($date);
 
@@ -206,12 +308,13 @@ export function usePicker(props: WheelPickerProps) {
     )
       return true;
 
-    if (isMaxDateValid && isMaxDateValid) {
+    if (isMinDateValid && isMaxDateValid) {
+      // Date should be in range of min and max dates
       return (
         isAfter(selectedDateValue, props.minDate!) &&
         isBefore(selectedDateValue, props.maxDate!)
       );
-    } else if (isMaxDateValid) {
+    } else if (isMinDateValid) {
       return isAfter(selectedDateValue, props.minDate!);
     } else if (isMaxDateValid) {
       return isBefore(selectedDateValue, props.maxDate!);
@@ -247,13 +350,14 @@ export function usePicker(props: WheelPickerProps) {
     });
   }
 
+  // Picker Config's Formatters
   /**
-   * Picker items' text content
+   * Format the Picker items' text content
    *
    * @param {PickerItemModel} pickerItem
-   * @returns {PickerSelectedDateValue} columns text content
+   * @returns {PickerSelectedDateValue | string} columns text content
    */
-  function handlePickerItemTextContent(
+  function pickerItemTextFormatter(
     pickerItem: PickerItemModel,
   ): PickerSelectedDateValue | string {
     return (
@@ -271,32 +375,77 @@ export function usePicker(props: WheelPickerProps) {
   function handlePickerItemClassNames(pickerItem: PickerItemModel): string {
     const classNamesFormatter = configs[pickerItem.type]?.classname;
     if (classNamesFormatter) {
-      const targetSelectedDate: PickerClassNameFormatter = { ...selectedDate };
-      targetSelectedDate[pickerItem.type] = pickerItem.value;
-      const weekDay = getWeekDay(
-        targetSelectedDate.year as number,
-        targetSelectedDate.month as number,
-        targetSelectedDate.day as number,
-      );
-      if (weekDay >= 0) {
-        targetSelectedDate.weekDay = weekDay;
-        targetSelectedDate.weekDayName = getWeekDayName(
-          targetSelectedDate.year as number,
-          targetSelectedDate.month as number,
-          targetSelectedDate.day as number,
-        );
-      }
-
+      const dateValues = extraDateInfo(selectedDate, pickerItem);
       // Pass to the classname config's formatter
-      const classNames = classNamesFormatter(targetSelectedDate);
+      const classNames = classNamesFormatter(dateValues);
+      const classNameString = Array.isArray(classNames)
+        ? classNames.join(' ')
+        : classNames;
+      // Only add weekend className for the Day items
+      const highlightWeekendClassNameString =
+        pickerItem.type === 'day'
+          ? // Check result safely
+            highlightWeekendClassName(pickerItem.value) ?? ''
+          : '';
 
-      return Array.isArray(classNames) ? classNames.join(' ') : classNames;
+      return [classNameString, highlightWeekendClassNameString]
+        .filter(Boolean)
+        .join(' ');
+    } else if (props.highlightWeekends && pickerItem.type === 'day') {
+      return highlightWeekendClassName(pickerItem.value) ?? '';
     }
 
     return '';
   }
 
+  function highlightWeekendClassName(day: number): string {
+    const determineDayOfWeek = isWeekend(
+      selectedDate.year!,
+      selectedDate.month!,
+      day,
+    );
+
+    return determineDayOfWeek ? prefix('weekend') : '';
+  }
+
+  // Utilities
+  /**
+   * Find WeekDay and WeekName by a selected date and add to the Date object
+   *
+   * @param {PickerDateModel} currentSelectedDate
+   * @param {PickerItemModel} pickerItem
+   * @return {PickerExtraDateInfo}
+   */
+  function extraDateInfo(
+    currentSelectedDate: PickerDateModel,
+    pickerItem: PickerItemModel,
+  ): PickerExtraDateInfo {
+    const targetSelectedDate: PickerExtraDateInfo = {
+      ...currentSelectedDate,
+      [pickerItem.type]: pickerItem.value,
+    };
+    // Add Month text if the Picker type is month, just for Month's config object
+    targetSelectedDate.monthText = jalaliMonths[targetSelectedDate.month!];
+    // Check if year is leap year and if it was true just for Year's config object
+    targetSelectedDate.isLeapYear = isLeapYear(targetSelectedDate.year!);
+
+    const determineDayOfWeek = getWeekDay(
+      targetSelectedDate.year!,
+      targetSelectedDate.month!,
+      targetSelectedDate.day!,
+    );
+    if (determineDayOfWeek >= 0) {
+      targetSelectedDate.weekDay = determineDayOfWeek;
+      targetSelectedDate.weekDayText = weekDays[determineDayOfWeek];
+    }
+
+    return targetSelectedDate;
+  }
+
   return {
+    prefix,
+
+    daysInMonth,
     selectedDate,
     setSelectedDate,
 
@@ -316,7 +465,7 @@ export function usePicker(props: WheelPickerProps) {
     shouldRenderYear,
     shouldRender,
     filterAllowedColumnRows,
-    handlePickerItemTextContent,
+    handlePickerItemTextContent: pickerItemTextFormatter,
     handlePickerItemClassNames,
   };
 }

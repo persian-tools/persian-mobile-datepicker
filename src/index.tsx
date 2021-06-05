@@ -36,6 +36,12 @@ const Picker: React.FC<PickerProps> = (props) => {
             minDate={props.minDate}
             maxDate={props.maxDate}
             defaultValue={props.defaultValue}
+            highlightWeekends={props.highlightWeekends}
+            endYear={props.endYear}
+            startYear={props.startYear}
+            onChange={props.onChange}
+            onRender={props.onRender}
+            disabled={props.disabled}
           />
 
           <Footer>

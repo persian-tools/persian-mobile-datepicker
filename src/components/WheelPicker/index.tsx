@@ -6,42 +6,42 @@ import MultiPicker from 'rmc-picker/es/MultiPicker';
 import { GlobalStyle } from './styles';
 // Helpers
 import {
-  convertSelectedDateToAnArray,
   convertSelectedDateToObject,
   isObjectEmpty,
   prefixClassName,
 } from '../../helpers';
 import {
-  isValidDate,
-  jalaliMonths,
-  pickerData,
-  daysInMonth as calculateDaysInMonth,
-  getWeekDay,
-  getWeekDayName,
   convertDateToObject,
-  convertObjectToDate,
+  daysInMonth as calculateDaysInMonth,
   isValid,
-  isAfter,
-  isBefore,
+  pickerData,
 } from '../../helpers/date';
 // Hooks
 import { usePrevious } from '../../hooks/previous';
 // Types
 import type {
   PickerColumns,
-  PickerItemModel,
-  PickerSelectedDateValue,
-  WheelPickerProps,
-  DateConfig,
   PickerDateModel,
-  DateConfigTypes,
-  PickerClassNameFormatter,
+  WheelPickerProps,
 } from './index.types';
+import { usePicker } from '../../hooks/usePicker';
 
 export const WheelPicker: React.FC<WheelPickerProps> = (props) => {
+  const {
+    selectedDate,
+    setSelectedDate,
+    defaultPickerValues,
+
+    maxYear,
+    minYear,
+
+    filterAllowedColumnRows,
+    handlePickerItemTextContent,
+    handlePickerItemClassNames,
+  } = usePicker(props);
   // Local States
   const [daysInMonth, setDaysInMonth] = useState<number>(29);
-  const [selectedDate, setSelectedDate] = useState<PickerDateModel>({});
+
   // Hooks
   const previousSelectedDate = usePrevious<PickerDateModel>(selectedDate);
   // Local Variables
@@ -49,36 +49,8 @@ export const WheelPicker: React.FC<WheelPickerProps> = (props) => {
    * Picker CSS classnames prefix name
    */
   const prefix = prefixClassName(props.prefix!);
-  // Memo list
 
-  /**
-   * Default Picker selected columns value which goes from the parent to local changes
-   */
-  const defaultPickerValues = React.useMemo<Array<string>>(() => {
-    return convertSelectedDateToAnArray(
-      (isObjectEmpty(selectedDate) ? props.defaultValue : selectedDate)!,
-    );
-  }, [props.defaultValue, selectedDate]);
-  /**
-   * parse and convert [minDate] to an object
-   *
-   * @type {Required<PickerDateModel>}
-   */
-  const minDateObject = React.useMemo(
-    () => convertDateToObject(props.minDate!),
-    [props.minDate],
-  );
-  console.log('minDateObject', minDateObject);
-  /**
-   * parse and convert [maxDate] to an object
-   *
-   * @type {Required<PickerDateModel>}
-   */
-  const maxDateObject = React.useMemo(
-    () => convertDateToObject(props.maxDate!),
-    [props.minDate],
-  );
-  console.log('maxDateObject', maxDateObject);
+  // Memo list
   /**
    * Generate Picker's columns with their values
    *
@@ -86,14 +58,14 @@ export const WheelPicker: React.FC<WheelPickerProps> = (props) => {
    * @return {PickerColumns}
    */
   const pickerColumns = React.useMemo<PickerColumns>(() => {
-    let columns = Object.keys(props.config).map((column) => {
+    return Object.keys(props.config).map((column) => {
       switch (column) {
         case 'year':
           return {
             type: 'year',
             value: pickerData.getYears({
-              min: 10,
-              max: 10,
+              min: minYear,
+              max: maxYear,
             }),
           };
         case 'month':
@@ -122,12 +94,12 @@ export const WheelPicker: React.FC<WheelPickerProps> = (props) => {
             value: pickerData.getSeconds(),
           };
         default:
-          throw Error('unknown type');
+          throw TypeError(
+            `[PersianMobileDatePicker] ${column}'s type is not valid. Columns types should be one of [year, month, day]`,
+          );
       }
     }) as PickerColumns;
-
-    return columns;
-  }, [props.config, pickerData, daysInMonth]);
+  }, [props.config, daysInMonth, minYear, maxYear]);
   /**
    * Prepare the default value of DatePicker when the Developer has not passed a defaultValue
    */
@@ -143,7 +115,7 @@ export const WheelPicker: React.FC<WheelPickerProps> = (props) => {
       });
       setSelectedDate(defaultDate);
     }
-  }, [pickerColumns, selectedDate]);
+  }, [pickerColumns, selectedDate, props.defaultValue]);
   /**
    * * Local Watchers
    */
@@ -151,8 +123,8 @@ export const WheelPicker: React.FC<WheelPickerProps> = (props) => {
   React.useEffect(() => {
     if (!isObjectEmpty(selectedDate)) {
       if (
-        previousSelectedDate.month !== selectedDate.month ||
-        previousSelectedDate.year !== selectedDate.year
+        previousSelectedDate?.month !== selectedDate?.month ||
+        previousSelectedDate?.year !== selectedDate?.year
       ) {
         setDaysInMonth(
           calculateDaysInMonth(
@@ -162,82 +134,15 @@ export const WheelPicker: React.FC<WheelPickerProps> = (props) => {
         );
       }
     }
-  }, [selectedDate]);
+  }, [selectedDate, previousSelectedDate?.year, previousSelectedDate?.month]);
   /**
    * Derived Selected Date from Prop's defaultValue
    */
   React.useEffect(() => {
-    if (
-      isValidDate(
-        Number(props.defaultValue?.year),
-        Number(props.defaultValue?.month),
-        Number(props.defaultValue?.day),
-      )
-    ) {
-      setSelectedDate(props.defaultValue!);
+    if (isValid(props.defaultValue!)) {
+      setSelectedDate(convertDateToObject(props.defaultValue!));
     }
   }, [props.defaultValue]);
-  /**
-   * Date picker columns config
-   *
-   * @returns {DateConfig}
-   */
-  const configs = React.useMemo(() => {
-    const result = { ...props.config } as Required<DateConfig>;
-    if (result.month && !result.month.formatter) {
-      result.month.formatter = (value) => jalaliMonths[value];
-    }
-
-    return result;
-  }, [props.config]);
-  // Handlers
-  /**
-   * Picker items' text content
-   *
-   * @param {PickerItemModel} pickerItem
-   * @returns {PickerSelectedDateValue} columns text content
-   */
-  function handlePickerItemTextContent(
-    pickerItem: PickerItemModel,
-  ): PickerSelectedDateValue {
-    return (
-      configs[pickerItem.type]?.formatter?.(pickerItem.value) ??
-      pickerItem.value
-    );
-  }
-  /**
-   * Handle every single of columns' row Classname by their type and value
-   *
-   * @param pickerItem
-   * @returns {string}
-   */
-  function handlePickerItemClassNames(pickerItem: PickerItemModel): string {
-    const classNamesFormatter = configs[pickerItem.type]?.classname;
-    if (classNamesFormatter) {
-      const targetSelectedDate: PickerClassNameFormatter = { ...selectedDate };
-      targetSelectedDate[pickerItem.type] = pickerItem.value;
-      const weekDay = getWeekDay(
-        targetSelectedDate.year as number,
-        targetSelectedDate.month as number,
-        targetSelectedDate.day as number,
-      );
-      if (weekDay >= 0) {
-        targetSelectedDate.weekDay = weekDay;
-        targetSelectedDate.weekDayName = getWeekDayName(
-          targetSelectedDate.year as number,
-          targetSelectedDate.month as number,
-          targetSelectedDate.day as number,
-        );
-      }
-
-      // Pass to the classname config's formatter
-      const classNames = classNamesFormatter(targetSelectedDate);
-
-      return Array.isArray(classNames) ? classNames.join(' ') : classNames;
-    }
-
-    return '';
-  }
 
   /**
    * Picker onChange event which includes every columns' selected value
@@ -251,54 +156,6 @@ export const WheelPicker: React.FC<WheelPickerProps> = (props) => {
     setSelectedDate(convertSelectedDate);
     props.onChange?.(convertSelectedDate);
   }
-
-  /**
-   * Allow to render the Column's row if [min] and [max] is passed.
-   *
-   * @param {DateConfigTypes} rowType
-   * @param {PickerSelectedDateValue} rowValue
-   * @returns {boolean}
-   */
-  const shouldRenderColumnRow = React.useCallback<
-    (rowType: DateConfigTypes, rowValue: PickerSelectedDateValue) => boolean
-  >(
-    (rowType, rowValue) => {
-      const $selectedDateObject = { ...selectedDate };
-      $selectedDateObject[rowType] = rowValue;
-      const $selectedDate = convertObjectToDate($selectedDateObject);
-      console.log(
-        '$selectedDateObject',
-        $selectedDateObject,
-        'isValid',
-        isValid($selectedDate),
-      );
-      if (!isValid($selectedDate)) return true;
-
-      if (!isObjectEmpty(minDateObject) && !isObjectEmpty(maxDateObject)) {
-        if (rowType === 'year') {
-          return (
-            rowValue >= (minDateObject[rowType] || rowValue) &&
-            rowValue <= (maxDateObject[rowType] || rowValue)
-          );
-        }
-
-        return (
-          isAfter(props.minDate!, $selectedDate) &&
-          isBefore(props.maxDate!, $selectedDate)
-        );
-      } else if (!isObjectEmpty(minDateObject)) {
-        return isAfter(props.minDate!, $selectedDate);
-      } else if (!isObjectEmpty(maxDateObject)) {
-        return isBefore(props.maxDate!, $selectedDate);
-      }
-
-      return true;
-    },
-    [selectedDate, props.minDate, props.maxDate],
-  );
-
-  console.log('selectedDate', selectedDate);
-  console.log('pickerColumns', pickerColumns);
 
   return (
     <React.Fragment>
@@ -315,9 +172,9 @@ export const WheelPicker: React.FC<WheelPickerProps> = (props) => {
                 `indicator ${prefix(`${column.type}-column`)}`,
               )}
             >
-              {column.value.map((pickerItem) => {
-                return (
-                  shouldRenderColumnRow(pickerItem.type, pickerItem.value) && (
+              {filterAllowedColumnRows(column.value, column.type).map(
+                (pickerItem) => {
+                  return (
                     <Picker.Item
                       key={`${pickerItem.type}_${pickerItem.value}`}
                       className={`${prefix(
@@ -327,9 +184,9 @@ export const WheelPicker: React.FC<WheelPickerProps> = (props) => {
                     >
                       {handlePickerItemTextContent(pickerItem)}
                     </Picker.Item>
-                  )
-                );
-              })}
+                  );
+                },
+              )}
             </Picker>
           );
         })}
@@ -340,15 +197,6 @@ export const WheelPicker: React.FC<WheelPickerProps> = (props) => {
 };
 
 WheelPicker.defaultProps = {
-  minDay: 1,
-  maxDay: 31,
-  minMonth: 1,
-  maxMonth: 12,
-  minYear: 1300,
-  maxYear: 1500,
-  defaultValue: {
-    year: 1399,
-    month: 12,
-    day: 29,
-  },
+  minDecade: 30, // past 30 years
+  maxDecade: 30, // next 30 years
 };

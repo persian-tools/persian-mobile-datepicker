@@ -6,4 +6,6 @@ export type PickerTheme = `${Device}-${Theme}`;
 export interface PickerProps extends WheelPickerProps {
   theme?: PickerTheme;
   classNamePrefix?: string;
+  isOpen: boolean;
+  onClose?: () => void;
 }

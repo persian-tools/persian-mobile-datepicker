@@ -12,6 +12,7 @@ import {
   getHours,
   getMinutes,
   getSeconds,
+  isEqual as isEqualFns,
   isBefore as isBeforeFns,
   isAfter as isAfterFns,
 } from 'date-fns-jalali';
@@ -23,6 +24,7 @@ import type {
   WeekDaysName,
 } from '../components/WheelPicker/index.types';
 import type { PickerDateModel } from '../components/WheelPicker/index.types';
+import { RequiredPickerDateModel } from '../components/WheelPicker/index.types';
 
 export const weekDays: Record<number, WeekDaysName> = {
   0: 'شنبه',
@@ -64,12 +66,12 @@ export function setDate(
  * Convert entered date to an object
  *
  * @param {Date} date
- * @return {Required<PickerDateModel>}
+ * @return {RequiredPickerDateModel}
  */
-export const convertDateToObject = (date: Date): Required<PickerDateModel> => {
+export const convertDateToObject = (date: Date): RequiredPickerDateModel => {
   return {
     year: getYear(date),
-    month: getMonth(date),
+    month: getMonth(date) + 1,
     day: getDate(date),
     hour: getHours(date),
     minute: getMinutes(date),
@@ -159,13 +161,27 @@ export function isAfter(currentDate: Date, nextDate: Date): boolean {
   return isAfterFns(currentDate, nextDate);
 }
 
+export function isEqual(dateLeft: Date, dateRight: Date): boolean {
+  return isEqualFns(dateLeft, dateRight);
+}
+
 /**
  * Return the current Year
  *
  * @returns {number}
  */
 export function getCurrentYear(): number {
-  return Number(format(new Date(), 'yyyy'));
+  return currentDateObject().year;
+}
+
+export function currentDateObject(): Required<
+  Record<keyof Pick<PickerDateModel, 'year' | 'month' | 'day'>, number>
+> {
+  return {
+    year: Number(format(new Date(), 'yyyy')),
+    month: Number(format(new Date(), 'M')),
+    day: Number(format(new Date(), 'd')),
+  };
 }
 
 /**

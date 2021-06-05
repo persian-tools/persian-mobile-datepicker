@@ -16,7 +16,7 @@ export interface WheelPickerProps {
   // Max Day value
   maxDay?: number;
   // Default column value
-  defaultValue?: PickerDateModel;
+  defaultValue?: Date;
   // Title
   title?: string;
   // Triggered when the component DOM is generated, the parameter is the component element
@@ -35,6 +35,10 @@ export interface WheelPickerProps {
   minDate?: Date;
   // Max Date value
   maxDate?: Date;
+  // Max decade
+  maxDecade?: number;
+  // Min decade
+  minDecade?: number;
 }
 
 export type DateConfigTypes =
@@ -52,10 +56,12 @@ export type DateConfigFormats =
   | 'hh'
   | 'mm'
   | 'ss';
-export type PickerSelectedDateValue = string | number;
+export type PickerSelectedDateValue = number;
 export interface DateConfigValuesModel {
   caption?: string;
-  formatter?: (value: PickerSelectedDateValue) => PickerSelectedDateValue;
+  formatter?: (
+    value: PickerSelectedDateValue,
+  ) => PickerSelectedDateValue | string;
   classname?: (value: PickerClassNameFormatter) => string | string[];
   shouldRender?: (value: PickerClassNameFormatter) => boolean;
 }
@@ -74,6 +80,7 @@ export type PickerDateModel = {
   minute?: PickerSelectedDateValue;
   second?: PickerSelectedDateValue;
 };
+export type RequiredPickerDateModel = Required<PickerDateModel>;
 
 export interface PickerClassNameFormatter extends PickerDateModel {
   weekDay?: number;

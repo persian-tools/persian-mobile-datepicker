@@ -71,3 +71,7 @@ export function convertSelectedDateToAnArray(
 export function isObjectEmpty(obj: Object): boolean {
   return Object.keys(obj).length === 0 && obj.constructor === Object;
 }
+
+export function toPositive(n: number): number {
+  return n < 0 ? n * -1 : n;
+}

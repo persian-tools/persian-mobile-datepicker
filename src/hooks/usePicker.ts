@@ -172,19 +172,45 @@ export function usePicker(props: WheelPickerProps) {
         configShouldRender(defaultSelectedDateObject, 'month') &&
         configShouldRender(defaultSelectedDateObject, 'day')
       ) {
+        console.log('1');
         return defaultSelectedDateObject;
-      } else {
-        // TODO: should be refactored and check currentDate if it is in range of min and max dates, if it was, it should be the default value
-        return currentDateObject();
       }
     }
-    if (isMinDateValid) {
-      return minDateObject;
-    } else if (isMaxDateValid) {
+
+    const currentDate = new Date();
+    const currentDateAsObject = currentDateObject();
+
+    if (isMaxDateValid) {
+      // We goes here if `defaultValue` is not valid as valid date
+      // Check if the `Current Date` is less than or Equals the `maxDate`, if was true, consider the `currentDate` as the `defaultValue`
+      if (
+        isBefore(currentDate, props.maxDate!) ||
+        isEqual(currentDate, props.maxDate!)
+      ) {
+        console.log('2');
+        return currentDateAsObject;
+      }
+      console.log('3');
+      // `Current Date` is not in range of [maxDate] and Max Date should be used as `defaultValue`
       return maxDateObject;
+    } else if (isMinDateValid) {
+      // We goes here if `maxDate` or `defaultValue` is not valid as valid date
+      // Check if the `Current Date` is bigger than or Equals the `Min Date`, if was true, consider the `Current Date` as `defaultValue`
+      if (
+        isAfter(currentDate, props.minDate!) ||
+        isEqual(currentDate, props.minDate!)
+      ) {
+        console.log('4');
+        return currentDateAsObject;
+      }
+      console.log('5');
+      return minDateObject;
     }
 
-    return currentDateObject();
+    // I tried my best but `defaultValue`, `maxDate` and `minDate` are not valid dates.
+    throw new Error(
+      `[PersianMobileDatePicker] I tried my best but can't consider a valid default value for using in the Picker's Columns.`,
+    );
   }, [
     isMinDateValid,
     maxDateObject,
@@ -193,6 +219,7 @@ export function usePicker(props: WheelPickerProps) {
     props.defaultValue,
     isDefaultValueValid,
   ]);
+  console.log('defaultSelectedDate', defaultSelectedDate);
 
   // Local States
   const [daysInMonth, setDaysInMonth] = useState<number>(29);

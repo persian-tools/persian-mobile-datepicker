@@ -1,4 +1,9 @@
-export interface WheelPickerSelectEvent extends PickerDateModel {}
+import { CSSProperties } from 'react';
+
+export interface WheelPickerSelectEvent {
+  object: PickerDateModel;
+  date: Date;
+}
 
 export interface WheelPickerProps {
   // CSS classnames prefix
@@ -83,9 +88,13 @@ export type WeekDayText =
   | 'پنج‌شنبه'
   | 'جمعه';
 
+export interface PickerColumnCaption {
+  text: string;
+  style?: CSSProperties;
+}
 export type PickerSelectedDateValue = number;
 export interface DateConfigValuesModel {
-  caption?: string;
+  caption?: PickerColumnCaption;
   formatter?: (
     value: PickerSelectedDateValue,
   ) => PickerSelectedDateValue | string;

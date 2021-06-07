@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   convertDateInstanceToDateObject,
   convertDateObjectToDateInstance,
@@ -22,7 +21,7 @@ import {
   toPositive,
 } from '../helpers';
 // Hooks
-import { useState } from 'react';
+import { useState, useRef, useMemo, useEffect } from 'react';
 import { usePrevious } from './usePrevious';
 // Types
 import type {
@@ -35,15 +34,17 @@ import type {
   RequiredPickerDateModel,
   WheelPickerProps,
 } from '../components/WheelPicker/index.types';
+import { PickerColumnCaption } from '../components/WheelPicker/index.types';
 
 export function usePicker(props: WheelPickerProps) {
+  const selectedDateRef = useRef<PickerDateModel>();
   /**
    * Date picker columns config
    *
    * @return {Required<DateConfig>}
    * @private
    */
-  const configs = React.useMemo<Required<DateConfig>>(() => {
+  const configs = useMemo<Required<DateConfig>>(() => {
     const config = { ...props.config } as Required<DateConfig>;
     if (config.month && !config.month.formatter) {
       config.month.formatter = (value) => jalaliMonths[value];
@@ -72,7 +73,7 @@ export function usePicker(props: WheelPickerProps) {
    *
    * @type {RequiredPickerDateModel}
    */
-  const minDateObject = React.useMemo<RequiredPickerDateModel>(
+  const minDateObject = useMemo<RequiredPickerDateModel>(
     () => convertDateInstanceToDateObject(props.minDate!),
     [props.minDate],
   );
@@ -81,7 +82,7 @@ export function usePicker(props: WheelPickerProps) {
    *
    * @type {RequiredPickerDateModel}
    */
-  const maxDateObject = React.useMemo<RequiredPickerDateModel>(
+  const maxDateObject = useMemo<RequiredPickerDateModel>(
     () => convertDateInstanceToDateObject(props.maxDate!),
     [props.maxDate],
   );
@@ -99,7 +100,7 @@ export function usePicker(props: WheelPickerProps) {
    * @type {RequiredPickerDateModel}
    * @private
    */
-  const defaultValueDateObject = React.useMemo<RequiredPickerDateModel>(
+  const defaultValueDateObject = useMemo<RequiredPickerDateModel>(
     () => convertDateInstanceToDateObject(props.defaultValue!),
     [props.defaultValue],
   );
@@ -117,7 +118,7 @@ export function usePicker(props: WheelPickerProps) {
    * @type {number}
    * @private
    */
-  const minYear = React.useMemo<number>(() => {
+  const minYear = useMemo<number>(() => {
     const currentYear = getCurrentYear();
     const startYear = Number(props.startYear);
 
@@ -144,7 +145,7 @@ export function usePicker(props: WheelPickerProps) {
    * @type {number}
    * @private
    */
-  const maxYear = React.useMemo<number>(() => {
+  const maxYear = useMemo<number>(() => {
     const currentYear = getCurrentYear();
     const endYear = Number(props.endYear);
 
@@ -172,7 +173,14 @@ export function usePicker(props: WheelPickerProps) {
    * @type {PickerDateModel}
    * @private
    */
-  const defaultSelectedDate = React.useMemo<PickerDateModel>(() => {
+  const defaultSelectedDateObject = useMemo<PickerDateModel>(() => {
+    if (
+      selectedDateRef.current &&
+      isValid(convertDateObjectToDateInstance(selectedDateRef.current))
+    ) {
+      return selectedDateRef.current;
+    }
+
     if (isDefaultValueValid) {
       const defaultSelectedDateObject = convertDateInstanceToDateObject(
         props.defaultValue!,
@@ -229,6 +237,7 @@ export function usePicker(props: WheelPickerProps) {
     isMaxDateValid,
     props.defaultValue,
     isDefaultValueValid,
+    selectedDateRef.current,
   ]);
 
   /**
@@ -237,29 +246,21 @@ export function usePicker(props: WheelPickerProps) {
    * @type {Array<string>}
    * @private
    */
-  const defaultPickerValueAsString = React.useMemo<Array<string>>(() => {
-    return convertSelectedDateToAnArray(defaultSelectedDate);
-  }, [defaultSelectedDate]);
+  const defaultPickerValueAsString = useMemo<Array<string>>(() => {
+    return convertSelectedDateToAnArray(defaultSelectedDateObject);
+  }, [defaultSelectedDateObject]);
 
   // Local States
   const [daysInMonth, setDaysInMonth] = useState<number>(29);
-  const [selectedDate, setSelectedDate] =
-    useState<PickerDateModel>(defaultSelectedDate);
+  const [selectedDate, setSelectedDate] = useState<PickerDateModel>(
+    defaultSelectedDateObject,
+  );
   // Hooks
   const previousSelectedDate = usePrevious<PickerDateModel>(selectedDate);
 
   // Watchers
-  /**
-   * Derived Selected Date from Prop's defaultValue
-   */
-  React.useEffect(() => {
-    if (isValid(props.defaultValue!)) {
-      setSelectedDate(convertDateInstanceToDateObject(props.defaultValue!));
-    }
-  }, [props.defaultValue]);
-
   // Calculate days in selected months
-  React.useEffect(() => {
+  useEffect(() => {
     if (!isObjectEmpty(selectedDate)) {
       if (
         previousSelectedDate?.month !== selectedDate?.month ||
@@ -416,6 +417,19 @@ export function usePicker(props: WheelPickerProps) {
   }
 
   /**
+   * Get Picker columns Caption and its styles if has
+   *
+   * @param {DateConfigTypes} type
+   * @return {PickerColumnCaption} Caption text and styles
+   * @private
+   */
+  function getPickerColumnsCaption(
+    type: DateConfigTypes,
+  ): PickerColumnCaption | boolean {
+    return configs[type]?.caption! ?? false;
+  }
+
+  /**
    * Handle every single of columns' row Classname by their type and value
    *
    * @param {PickerItemModel} pickerItem
@@ -505,9 +519,14 @@ export function usePicker(props: WheelPickerProps) {
 
     daysInMonth,
     selectedDate,
-    setSelectedDate,
+    setSelectedDate: (date: PickerDateModel) => {
+      selectedDateRef.current = date;
 
-    defaultSelectedDate,
+      setSelectedDate(date);
+    },
+    defaultSelectedDateObject,
+
+    defaultSelectedDate: defaultSelectedDateObject,
     maxYear,
     minYear,
     minDateObject,
@@ -522,6 +541,7 @@ export function usePicker(props: WheelPickerProps) {
     // Functions
     filterAllowedColumnRows,
     getPickerItemClassNames,
+    getPickerColumnsCaption,
     shouldRender: shouldRenderItem,
     shouldRenderYear: shouldRenderYearItem,
     handlePickerItemTextContent: pickerItemTextFormatter,

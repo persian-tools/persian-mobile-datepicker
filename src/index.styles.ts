@@ -1,36 +1,37 @@
 import styled from 'styled-components';
 
 export const SubmitButton = styled.button`
-  width: 170px;
+  width: 50%;
   height: 45px;
-  color: #fff;
-  background-color: #28a745;
-  border: 1px solid #28a745;
+  color: #b7dfff;
+  background-color: #1672eb;
+  border-radius: 5px;
+  border: none;
   display: inline-block;
-  font-weight: 400;
   text-align: center;
   vertical-align: middle;
   user-select: none;
   padding: 0.375rem 0.75rem;
   font-size: 1rem;
   line-height: 1.5;
-  border-radius: 0.25rem;
   -webkit-appearance: button;
   margin: 0 15px;
 `;
 
 export const CancelButton = styled(SubmitButton)`
-  color: #fff;
-  background-color: #dc3545;
-  border-color: #dc3545;
+  color: #626262;
+  background-color: transparent;
+  border: 1px solid #e6ecee;
 `;
 
 export const Footer = styled.div`
   position: absolute;
   bottom: 0;
-  right: 0;
-  width: 100%;
+  right: 2.5%;
+  width: 95%;
   height: 55px;
   display: flex;
   justify-content: space-between;
+  align-content: space-between;
+  align-items: center;
 `;

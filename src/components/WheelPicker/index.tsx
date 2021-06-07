@@ -3,15 +3,19 @@ import React, { useLayoutEffect, useMemo } from 'react';
 import Picker from 'rmc-picker/es/Picker';
 import MultiPicker from 'rmc-picker/es/MultiPicker';
 // Styles
-import { GlobalStyle } from './styles';
+import { Caption, GlobalStyle } from './styles';
 // Hooks
 import { usePicker } from '../../hooks/usePicker';
 // Helpers
 import { convertSelectedDateToObject, isObjectEmpty } from '../../helpers';
-import { pickerData } from '../../helpers/date';
+import {
+  convertDateObjectToDateInstance,
+  pickerData,
+} from '../../helpers/date';
 // Types
 import type { FC } from 'react';
 import type { PickerColumns, WheelPickerProps } from './index.types';
+import { PickerColumnCaption } from './index.types';
 
 export const WheelPicker: FC<WheelPickerProps> = (props) => {
   const {
@@ -20,14 +24,16 @@ export const WheelPicker: FC<WheelPickerProps> = (props) => {
     daysInMonth,
     selectedDate,
     setSelectedDate,
+    defaultSelectedDateObject,
     defaultPickerValueAsString,
 
     maxYear,
     minYear,
 
+    getPickerColumnsCaption,
     filterAllowedColumnRows,
-    handlePickerItemTextContent,
     getPickerItemClassNames,
+    handlePickerItemTextContent,
   } = usePicker(props);
 
   // Memo list
@@ -108,17 +114,43 @@ export const WheelPicker: FC<WheelPickerProps> = (props) => {
     const convertSelectedDate = convertSelectedDateToObject(value);
 
     setSelectedDate(convertSelectedDate);
-    props.onChange?.(convertSelectedDate);
+    props.onChange?.({
+      object: convertSelectedDate,
+      date: convertDateObjectToDateInstance(convertSelectedDate),
+    });
   }
 
   return (
     <React.Fragment>
+      {pickerColumns.map((column, index) => {
+        const caption = getPickerColumnsCaption(column.type);
+        if (caption) {
+          return (
+            <Caption
+              key={`${column.type}_${index}`}
+              columnSize={pickerColumns.length}
+              className={prefix('caption')}
+              style={(caption as PickerColumnCaption).style || {}}
+            >
+              {(caption as PickerColumnCaption).text}
+            </Caption>
+          );
+        }
+
+        return (
+          <Caption
+            key={`${column.type}_${index}`}
+            columnSize={pickerColumns.length}
+            className={`${prefix('caption')} ${prefix('caption--empty')}`}
+          ></Caption>
+        );
+      })}
       <MultiPicker
         selectedValue={defaultPickerValueAsString}
         className={prefix('multi-picker')}
         onValueChange={onChange}
       >
-        {(pickerColumns || []).map((column, index) => {
+        {pickerColumns.map((column, index) => {
           return (
             <Picker
               key={`${index}`}
@@ -131,9 +163,14 @@ export const WheelPicker: FC<WheelPickerProps> = (props) => {
                   return (
                     <Picker.Item
                       key={`${pickerItem.type}_${pickerItem.value}`}
-                      className={`${prefix(
-                        'view-item',
-                      )} ${getPickerItemClassNames(pickerItem)}`}
+                      className={`${
+                        pickerItem.value ===
+                        defaultSelectedDateObject[pickerItem.type]
+                          ? prefix('active-selected')
+                          : ''
+                      } ${prefix('view-item')} ${getPickerItemClassNames(
+                        pickerItem,
+                      )}`}
                       value={`${pickerItem.type}-${pickerItem.value}`}
                     >
                       {handlePickerItemTextContent(pickerItem)}

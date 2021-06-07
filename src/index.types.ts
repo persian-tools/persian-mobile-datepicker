@@ -25,4 +25,6 @@ export interface PickerProps extends WheelPickerProps {
   onCancel?: () => void;
   // Display Cancel button
   showCancelButton?: boolean;
+  // Disable drag for the whole sheet.
+  disableSheetDrag?: boolean;
 }

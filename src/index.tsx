@@ -28,7 +28,7 @@ const Picker: React.FC<PickerProps> = (props) => {
     >
       <Sheet.Container>
         <Sheet.Header />
-        <Sheet.Content disableDrag>
+        <Sheet.Content disableDrag={props.disableSheetDrag}>
           <WheelPicker
             config={props.config}
             prefix={props.classNamePrefix}
@@ -64,6 +64,7 @@ Picker.defaultProps = {
   cancelText: 'انصراف',
   disabled: false,
   showCancelButton: true,
+  disableSheetDrag: true,
 };
 
 export { Picker, WheelPicker };

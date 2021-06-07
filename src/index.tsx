@@ -67,7 +67,7 @@ Picker.defaultProps = {
   disableSheetDrag: true,
 };
 
-export { Picker, WheelPicker };
 export default Picker;
+export { Picker, WheelPicker };
 export * from './helpers/date';
 export * from './components/WheelPicker/index.types';

@@ -10,8 +10,8 @@ import { usePicker } from '../../hooks/usePicker';
 import { convertSelectedDateToObject, isObjectEmpty } from '../../helpers';
 import { pickerData } from '../../helpers/date';
 // Types
-import type { PickerColumns, WheelPickerProps } from './index.types';
 import type { FC } from 'react';
+import type { PickerColumns, WheelPickerProps } from './index.types';
 
 export const WheelPicker: FC<WheelPickerProps> = (props) => {
   const {
@@ -20,14 +20,14 @@ export const WheelPicker: FC<WheelPickerProps> = (props) => {
     daysInMonth,
     selectedDate,
     setSelectedDate,
-    defaultPickerValues,
+    defaultPickerValueAsString,
 
     maxYear,
     minYear,
 
     filterAllowedColumnRows,
     handlePickerItemTextContent,
-    handlePickerItemClassNames,
+    getPickerItemClassNames,
   } = usePicker(props);
 
   // Memo list
@@ -36,6 +36,7 @@ export const WheelPicker: FC<WheelPickerProps> = (props) => {
    *
    * @category watchers
    * @return {PickerColumns}
+   * @private
    */
   const pickerColumns = useMemo<PickerColumns>(() => {
     return Object.keys(props.config).map((column) => {
@@ -101,7 +102,7 @@ export const WheelPicker: FC<WheelPickerProps> = (props) => {
    * Picker onChange event which includes every columns' selected value
    *
    * @param { Array<string>} value date
-   * @returns {void}
+   * @return {void}
    */
   function onChange(value: Array<string>) {
     const convertSelectedDate = convertSelectedDateToObject(value);
@@ -113,7 +114,7 @@ export const WheelPicker: FC<WheelPickerProps> = (props) => {
   return (
     <React.Fragment>
       <MultiPicker
-        selectedValue={defaultPickerValues}
+        selectedValue={defaultPickerValueAsString}
         className={prefix('multi-picker')}
         onValueChange={onChange}
       >
@@ -132,7 +133,7 @@ export const WheelPicker: FC<WheelPickerProps> = (props) => {
                       key={`${pickerItem.type}_${pickerItem.value}`}
                       className={`${prefix(
                         'view-item',
-                      )} ${handlePickerItemClassNames(pickerItem)}`}
+                      )} ${getPickerItemClassNames(pickerItem)}`}
                       value={`${pickerItem.type}-${pickerItem.value}`}
                     >
                       {handlePickerItemTextContent(pickerItem)}

@@ -10,7 +10,7 @@ export function prefixClassName(prefix: string) {
    * Classname with returns itself with a prefix value
    *
    * @param {string} className
-   * @returns {string}
+   * @return {string}
    */
   return (className: string) => `${prefix}-${className}`;
 }

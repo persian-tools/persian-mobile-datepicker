@@ -49,17 +49,30 @@ export const jalaliMonths = {
   11: 'بهمن',
   12: 'اسفند',
 };
-export function setDate(
-  year: number,
-  month: number,
+
+/**
+ * Convert Jallali Date to Gregorian
+ *
+ * @param {number} $0.year
+ * @param {number} $0.month
+ * @param {number} $0.day
+ * @param {number} $0.hour
+ * @param {number} $0.minute
+ * @param {number} $0.second
+ *
+ * @public
+ */
+export function createDateInstance({
+  year,
+  month,
   day = 1,
-  hour?: number,
-  minutes?: number,
-  seconds?: number,
-): Date {
+  hour,
+  minute,
+  second,
+}: PickerDateModel): Date {
   // date-fns month starts from 0, it means farvardin is 0 and esfand is 11
-  month = month - 1;
-  return newJallaliDate(year, month, day, hour, minutes, seconds);
+  month = month! - 1;
+  return newJallaliDate(year!, month, day, hour, minute, second);
 }
 
 /**
@@ -67,8 +80,11 @@ export function setDate(
  *
  * @param {Date} date
  * @return {RequiredPickerDateModel}
+ * @public
  */
-export const convertDateToObject = (date: Date): RequiredPickerDateModel => {
+export const convertDateInstanceToDateObject = (
+  date: Date,
+): RequiredPickerDateModel => {
   return {
     year: getYear(date),
     month: getMonth(date) + 1,
@@ -82,18 +98,15 @@ export const convertDateToObject = (date: Date): RequiredPickerDateModel => {
 /**
  * Convert an object of date to an instance of date function
  *
- * @param {PickerDateModel} obj
- * @returns {Date}
+ * @param {PickerDateModel} dateObject
+ * @return {Date}
+ *
+ * @public
  */
-export const convertObjectToDate = (obj: PickerDateModel): Date => {
-  return setDate(
-    obj.year as number,
-    obj.month as number,
-    obj.day as number,
-    obj.hour as number,
-    obj.minute as number,
-    obj.second as number,
-  );
+export const convertDateObjectToDateInstance = (
+  dateObject: PickerDateModel,
+): Date => {
+  return createDateInstance(dateObject);
 };
 
 /**
@@ -101,10 +114,12 @@ export const convertObjectToDate = (obj: PickerDateModel): Date => {
  *
  * @param {number} year
  * @param {number} month
- * @returns {number} number of days in a month of a year
+ * @return {number} number of days in a month of a year
+ *
+ * @public
  */
 export function daysInMonth(year: number, month: number): number {
-  return dateGetDaysInMonth(setDate(year, month, 1));
+  return dateGetDaysInMonth(createDateInstance({ year, month, day: 1 }));
 }
 
 /**
@@ -114,11 +129,23 @@ export function daysInMonth(year: number, month: number): number {
  * @param {number} year
  * @param {number} month
  * @param {number} day
+ * @return {number}
+ *
+ * @public
  */
 export function getWeekDay(year: number, month: number, day: number): number {
-  return (dateGetDay(setDate(year, month, day)) + 1) % 7;
+  return (dateGetDay(createDateInstance({ year, month, day })) + 1) % 7;
 }
 
+/**
+ * Return if the Date is at the Weekend
+ *
+ * @param {number} year
+ * @param {number} month
+ * @param {number} day
+ * @return {boolean}
+ * @public
+ */
 export function isWeekend(year: number, month: number, day: number): boolean {
   return getWeekDay(year, month, day) === 6;
 }
@@ -130,6 +157,7 @@ export function isWeekend(year: number, month: number, day: number): boolean {
  * @param {number} month
  * @param {number} day
  * @return {WeekDayText} شنبه،...
+ * @public
  */
 export function getWeekDayText(
   year: number,
@@ -142,29 +170,49 @@ export function getWeekDayText(
 }
 
 /**
- * Check if entered date is valid
+ * Is the given date valid?
  *
- * @param {number} year
- * @param {number} month
- * @param {number} day
- * @returns {boolean}
+ * Returns false if argument is Invalid Date and true otherwise.
+ * Argument is converted to Date using toDate.
+ * See toDate Invalid Date is a Date, whose time value is NaN.
+ *
+ * @param {Date} date
+ * @return {boolean}
  */
-export function isValidDate(year: number, month: number, day: number): boolean {
-  return isValid(setDate(year, month, day));
-}
-
 export function isValid(date: Date): boolean {
   return dateIsValid(date);
 }
 
-export function isBefore(currentDate: Date, nextDate: Date): boolean {
-  return isBeforeFns(currentDate, nextDate);
+/**
+ * Is the first date before the second one?
+ *
+ * @param {Date} date
+ * @param {Date} dateToCompare
+ * @return {boolean}
+ * @public
+ */
+export function isBefore(date: Date, dateToCompare: Date): boolean {
+  return isBeforeFns(date, dateToCompare);
 }
 
-export function isAfter(currentDate: Date, nextDate: Date): boolean {
-  return isAfterFns(currentDate, nextDate);
+/**
+ * Is the first date after the second one?
+ *
+ * @param {Date} date
+ * @param {Date} dateToCompare
+ * @return {boolean}
+ */
+export function isAfter(date: Date, dateToCompare: Date): boolean {
+  return isAfterFns(date, dateToCompare);
 }
 
+/**
+ * Are the given dates equal?
+ *
+ * @param {Date} dateLeft
+ * @param {Date} dateRight
+ * @return {boolean}
+ */
 export function isEqual(dateLeft: Date, dateRight: Date): boolean {
   return isEqualFns(dateLeft, dateRight);
 }
@@ -172,19 +220,30 @@ export function isEqual(dateLeft: Date, dateRight: Date): boolean {
 /**
  * Return the current Year
  *
- * @returns {number}
+ * @return {number}
  */
 export function getCurrentYear(): number {
   return currentDateObject().year;
 }
 
+/**
+ * Convert date instance string to an object.
+ * The result may vary by locale.
+ *
+ * @return {Required<Record<keyof PickerDateModel, number>>}
+ * @public
+ */
 export function currentDateObject(): Required<
-  Record<keyof Pick<PickerDateModel, 'year' | 'month' | 'day'>, number>
+  Record<keyof PickerDateModel, number>
 > {
+  const date = new Date();
   return {
-    year: Number(format(new Date(), 'yyyy')),
-    month: Number(format(new Date(), 'M')),
-    day: Number(format(new Date(), 'd')),
+    year: Number(format(date, 'yyyy')),
+    month: Number(format(date, 'M')),
+    day: Number(format(date, 'd')),
+    hour: Number(format(date, 'h')),
+    minute: Number(format(date, 'm')),
+    second: Number(format(date, 'S')),
   };
 }
 
@@ -193,7 +252,8 @@ export function currentDateObject(): Required<
  *
  * @param {number} min Min year range
  * @param {number} max Max year range
- * @returns {Array<number>}
+ * @return {Array<number>}
+ * @public
  */
 export function generateYearsRange(min: number, max: number): Array<number> {
   const currentYear = getCurrentYear();
@@ -207,16 +267,18 @@ export function generateYearsRange(min: number, max: number): Array<number> {
  * Check if the entered year is Leap
  *
  * @param {number} year
- * @returns {boolean}
+ * @return {boolean}
+ * @public
  */
 export function isLeapYear(year: number): boolean {
-  return dateIsLeapYear(setDate(year, 1, 1));
+  return dateIsLeapYear(createDateInstance({ year, month: 1, day: 1 }));
 }
 
 /**
  * Combine and Generate all picker columns value
  *
  * @type {Record<string, (inp?: any) => Array<PickerItemModel>>}
+ * @private
  */
 export const pickerData: Record<string, (inp?: any) => Array<PickerItemModel>> =
   {

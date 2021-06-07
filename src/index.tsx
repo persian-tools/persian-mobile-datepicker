@@ -6,7 +6,6 @@ import { WheelPicker } from './components/WheelPicker';
 // Types
 import type { PickerProps } from './index.types';
 import { SubmitButton, Footer, CancelButton } from './index.styles';
-import { setDate } from './helpers/date';
 
 const Picker: React.FC<PickerProps> = (props) => {
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
@@ -45,8 +44,10 @@ const Picker: React.FC<PickerProps> = (props) => {
           />
 
           <Footer>
-            <CancelButton>انصراف</CancelButton>
-            <SubmitButton>تایید</SubmitButton>
+            {props.showCancelButton && (
+              <CancelButton>{props.cancelText}</CancelButton>
+            )}
+            <SubmitButton>{props.submitText}</SubmitButton>
           </Footer>
         </Sheet.Content>
       </Sheet.Container>
@@ -59,8 +60,13 @@ Picker.defaultProps = {
   isOpen: false,
   theme: 'android-light',
   classNamePrefix: 'persian-datepicker',
+  submitText: 'تایید',
+  cancelText: 'انصراف',
+  disabled: false,
+  showCancelButton: true,
 };
 
-export { setDate };
+export { Picker, WheelPicker };
 export default Picker;
+export * from './helpers/date';
 export * from './components/WheelPicker/index.types';

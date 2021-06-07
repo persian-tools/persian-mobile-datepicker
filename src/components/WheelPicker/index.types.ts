@@ -16,10 +16,6 @@ export interface WheelPickerProps {
    * @return {void}
    */
   onChange?: (selected: WheelPickerSelectEvent) => void;
-  // Triggered when you click OK
-  onSelect?: (selected: WheelPickerSelectEvent) => void;
-  // Triggered when click Cancel,
-  onCancel?: () => void;
   // Disabled
   disabled?: boolean;
   // Set config to configure year, month, day, hour, minute and seconds

@@ -39,7 +39,6 @@ const Picker: React.FC<PickerProps> = (props) => {
             endYear={props.endYear}
             startYear={props.startYear}
             onChange={props.onChange}
-            onRender={props.onRender}
             disabled={props.disabled}
           />
 
@@ -67,7 +66,6 @@ Picker.defaultProps = {
   disableSheetDrag: true,
 };
 
-export default Picker;
 export { Picker, WheelPicker };
 export * from './helpers/date';
-export * from './components/WheelPicker/index.types';
+export type {DateConfig, WheelPickerSelectEvent} from './components/WheelPicker/index.types';

@@ -1,25 +1,40 @@
-import React, { useLayoutEffect, useMemo } from 'react';
+import React, {
+  CSSProperties,
+  useLayoutEffect,
+  useMemo,
+  useCallback,
+  FC,
+} from 'react';
 // Global Components
-import Picker from 'rmc-picker/es/Picker';
 import MultiPicker from 'rmc-picker/es/MultiPicker';
 // Styles
-import { Caption, GlobalStyle } from './styles';
+import {
+  Caption,
+  GlobalStyle,
+  PickerItemWithStyle,
+  PickerWithStyle,
+} from './styles';
 // Hooks
 import { usePicker } from '../../hooks/usePicker';
 // Helpers
 import { convertSelectedDateToObject, isObjectEmpty } from '../../helpers';
 import {
   convertDateObjectToDateInstance,
+  isWeekend,
   pickerData,
 } from '../../helpers/date';
 // Types
-import type { FC } from 'react';
-import type { PickerColumns, WheelPickerProps } from './index.types';
-import { PickerColumnCaption } from './index.types';
+import type {
+  DateConfigTypes,
+  PickerColumns,
+  WheelPickerProps,
+  PickerColumnCaption,
+} from './index.types';
 
 export const WheelPicker: FC<WheelPickerProps> = (props) => {
   const {
     prefix,
+    configs,
 
     daysInMonth,
     selectedDate,
@@ -110,15 +125,44 @@ export const WheelPicker: FC<WheelPickerProps> = (props) => {
    * @param { Array<string>} value date
    * @return {void}
    */
-  function onChange(value: Array<string>) {
+  function onChange(value: Array<string>): void {
     const convertSelectedDate = convertSelectedDateToObject(value);
 
     setSelectedDate(convertSelectedDate);
+    // Call onChange if presents
     props.onChange?.({
       object: convertSelectedDate,
       date: convertDateObjectToDateInstance(convertSelectedDate),
     });
   }
+
+  const columnStyles = useCallback<(type: DateConfigTypes) => CSSProperties>(
+    (type) => {
+      return configs[type].columnStyle || {};
+    },
+    [configs],
+  );
+
+  const columnItemStyles = useCallback<
+    (type: DateConfigTypes) => CSSProperties
+  >(
+    (type) => {
+      return {
+        ...{ color: '#3f3f3e' },
+        ...(configs[type].itemStyle || {}),
+      };
+    },
+    [configs],
+  );
+
+  const columnSelectedItemStyles = useCallback<
+    (type: DateConfigTypes) => CSSProperties
+  >(
+    (type) => {
+      return configs[type].selectedItemStyle || {};
+    },
+    [configs],
+  );
 
   return (
     <React.Fragment>
@@ -152,33 +196,57 @@ export const WheelPicker: FC<WheelPickerProps> = (props) => {
       >
         {pickerColumns.map((column, index) => {
           return (
-            <Picker
+            <PickerWithStyle
               key={`${index}`}
-              indicatorClassName={prefix(
-                `indicator ${prefix(`${column.type}-column`)}`,
-              )}
+              style={columnStyles(column.type)}
+              indicatorClassName={`${prefix(`indicator`)} ${prefix(
+                `${column.type}-column`,
+              )}`}
             >
               {filterAllowedColumnRows(column.value, column.type).map(
                 (pickerItem) => {
+                  const isSelectedItem =
+                    pickerItem.value ===
+                    defaultSelectedDateObject[pickerItem.type];
                   return (
-                    <Picker.Item
+                    <PickerItemWithStyle
+                      // @ts-ignore
+                      style={{
+                        ...{ unicodeBidi: 'plaintext', direction: 'rtl' },
+                        ...columnItemStyles(column.type),
+                        ...(isSelectedItem
+                          ? columnSelectedItemStyles(column.type)
+                          : {}),
+                      }}
                       key={`${pickerItem.type}_${pickerItem.value}`}
                       className={`${
-                        pickerItem.value ===
-                        defaultSelectedDateObject[pickerItem.type]
-                          ? prefix('active-selected')
-                          : ''
+                        isSelectedItem ? prefix('active-selected') : ''
                       } ${prefix('view-item')} ${getPickerItemClassNames(
                         pickerItem,
                       )}`}
                       value={`${pickerItem.type}-${pickerItem.value}`}
                     >
-                      {handlePickerItemTextContent(pickerItem)}
-                    </Picker.Item>
+                      <div
+                        style={
+                          pickerItem.type === 'day' &&
+                          isWeekend(
+                            selectedDate.year!,
+                            selectedDate.month!,
+                            pickerItem.value,
+                          )
+                            ? {
+                                color: '#de3f18',
+                              }
+                            : {}
+                        }
+                      >
+                        {handlePickerItemTextContent(pickerItem)}
+                      </div>
+                    </PickerItemWithStyle>
                   );
                 },
               )}
-            </Picker>
+            </PickerWithStyle>
           );
         })}
       </MultiPicker>

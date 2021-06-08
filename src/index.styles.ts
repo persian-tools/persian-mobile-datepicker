@@ -34,4 +34,5 @@ export const Footer = styled.div`
   justify-content: space-between;
   align-content: space-between;
   align-items: center;
+  border-top: 1px solid #ddd;
 `;

@@ -12,8 +12,6 @@ export interface WheelPickerProps {
   defaultValue?: Date;
   // Title
   title?: string;
-  // Triggered when the component DOM is generated, the parameter is the component element
-  onRender?: () => void;
   /**
    * Gets called when value of the picker changes
    *
@@ -94,12 +92,20 @@ export interface PickerColumnCaption {
 }
 export type PickerSelectedDateValue = number;
 export interface DateConfigValuesModel {
+  // Columns Caption with text and style
   caption?: PickerColumnCaption;
-  formatter?: (
-    value: PickerSelectedDateValue,
-  ) => PickerSelectedDateValue | string;
+  // Format the Columns content
+  formatter?: (value: PickerExtraDateInfo) => PickerSelectedDateValue | string;
+  // Items className
   classname?: (value: PickerExtraDateInfo) => string | string[];
+  // Allow to render an Item
   shouldRender?: (value: PickerExtraDateInfo) => boolean;
+  // Column Styles
+  columnStyle?: CSSProperties;
+  // Column's Items Styles
+  itemStyle?: CSSProperties;
+  // Active Selected Column's Items Styles
+  selectedItemStyle?: CSSProperties;
 }
 
 export type DateConfig = Partial<

@@ -1,3 +1,5 @@
+import { useState, useRef, useMemo, useEffect } from 'react';
+
 import {
   convertDateInstanceToDateObject,
   convertDateObjectToDateInstance,
@@ -21,7 +23,6 @@ import {
   toPositive,
 } from '../helpers';
 // Hooks
-import { useState, useRef, useMemo, useEffect } from 'react';
 import { usePrevious } from './usePrevious';
 // Types
 import type {
@@ -34,7 +35,7 @@ import type {
   RequiredPickerDateModel,
   WheelPickerProps,
 } from '../components/WheelPicker/index.types';
-import { PickerColumnCaption } from '../components/WheelPicker/index.types';
+import type { PickerColumnCaption } from '../components/WheelPicker/index.types';
 
 export function usePicker(props: WheelPickerProps) {
   const selectedDateRef = useRef<PickerDateModel>();
@@ -47,7 +48,7 @@ export function usePicker(props: WheelPickerProps) {
   const configs = useMemo<Required<DateConfig>>(() => {
     const config = { ...props.config } as Required<DateConfig>;
     if (config.month && !config.month.formatter) {
-      config.month.formatter = (value) => jalaliMonths[value];
+      config.month.formatter = (value) => jalaliMonths[value.month!];
     }
 
     return config;
@@ -410,9 +411,9 @@ export function usePicker(props: WheelPickerProps) {
   function pickerItemTextFormatter(
     pickerItem: PickerItemModel,
   ): PickerSelectedDateValue | string {
+    const dateValues = addExtraDateInfo(selectedDate, pickerItem);
     return (
-      configs[pickerItem.type]?.formatter?.(pickerItem.value) ??
-      pickerItem.value
+      configs[pickerItem.type]?.formatter?.(dateValues) ?? pickerItem.value
     );
   }
 
@@ -516,6 +517,7 @@ export function usePicker(props: WheelPickerProps) {
 
   return {
     prefix,
+    configs,
 
     daysInMonth,
     selectedDate,

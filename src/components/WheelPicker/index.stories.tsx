@@ -14,6 +14,4 @@ export default {
 const Template: Story<WheelPickerProps> = (args) => <WheelPicker {...args} />;
 
 export const Default = Template.bind({});
-Default.args = {
-  data: [],
-};
+Default.args = {};

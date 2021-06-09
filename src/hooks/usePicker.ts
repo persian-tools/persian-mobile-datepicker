@@ -34,6 +34,7 @@ import type {
   PickerSelectedDateValue,
   RequiredPickerDateModel,
   WheelPickerProps,
+  RequiredPickerExtraDateInfo,
 } from '../components/WheelPicker/index.types';
 import type { PickerColumnCaption } from '../components/WheelPicker/index.types';
 
@@ -186,13 +187,26 @@ export function usePicker(props: WheelPickerProps) {
       const defaultSelectedDateObject = convertDateInstanceToDateObject(
         props.defaultValue!,
       );
-      // Check if defaultValue has overlap with shouldRender which passed by config prop.
+      // Default value has no overlap with [minDate], [maxDate] and also can be rendered by the shouldRender in Component's Config prop
       if (
+        shouldRenderItem(
+          defaultSelectedDateObject,
+          'month',
+          defaultSelectedDateObject.month,
+        ) &&
+        shouldRenderItem(
+          defaultSelectedDateObject,
+          'day',
+          defaultSelectedDateObject.day,
+        ) &&
+        shouldRenderYearItem(
+          defaultSelectedDateObject,
+          defaultSelectedDateObject.year,
+        ) &&
         configShouldRender(defaultSelectedDateObject, 'year') &&
         configShouldRender(defaultSelectedDateObject, 'month') &&
         configShouldRender(defaultSelectedDateObject, 'day')
       ) {
-        console.log('1');
         return defaultSelectedDateObject;
       }
     }
@@ -200,31 +214,29 @@ export function usePicker(props: WheelPickerProps) {
     const currentDate = new Date();
     const currentDateAsObject = currentDateObject();
 
-    if (isMaxDateValid) {
-      // We goes here if `defaultValue` is not valid as valid date
-      // Check if the `Current Date` is less than or Equals the `maxDate`, if was true, consider the `currentDate` as the `defaultValue`
-      if (
-        isBefore(currentDate, props.maxDate!) ||
-        isEqual(currentDate, props.maxDate!)
-      ) {
-        console.log('2');
-        return currentDateAsObject;
-      }
-      console.log('3');
-      // `Current Date` is not in range of [maxDate] and Max Date should be used as `defaultValue`
-      return maxDateObject;
-    } else if (isMinDateValid) {
+    if (isMinDateValid) {
       // We goes here if `maxDate` or `defaultValue` is not valid as valid date
       // Check if the `Current Date` is bigger than or Equals the `Min Date`, if was true, consider the `Current Date` as `defaultValue`
       if (
         isAfter(currentDate, props.minDate!) ||
         isEqual(currentDate, props.minDate!)
       ) {
-        console.log('4');
         return currentDateAsObject;
       }
-      console.log('5');
+
       return minDateObject;
+    } else if (isMaxDateValid) {
+      // We goes here if `defaultValue` is not valid as valid date
+      // Check if the `Current Date` is less than or Equals the `maxDate`, if was true, consider the `currentDate` as the `defaultValue`
+      if (
+        isBefore(currentDate, props.maxDate!) ||
+        isEqual(currentDate, props.maxDate!)
+      ) {
+        return currentDateAsObject;
+      }
+
+      // `Current Date` is not in range of [maxDate] and Max Date should be used as `defaultValue`
+      return maxDateObject;
     }
 
     // I tried my best but `defaultValue`, `maxDate` and `minDate` are not valid dates.
@@ -281,11 +293,15 @@ export function usePicker(props: WheelPickerProps) {
   /**
    * Check if entered Year is in Range of Min and Max
    *
-   * @param {number} value
-   * @return {boolean}
+   * @param {PickerDateModel} selectedDate - Selected date which is an Object
+   * @param {number} value - year value as a number
+   * @return {boolean} entered year is allowed to render
    * @private
    */
-  function shouldRenderYearItem(value: number): boolean {
+  function shouldRenderYearItem(
+    selectedDate: PickerDateModel,
+    value: number,
+  ): boolean {
     // Call the Config's shouldRender method to find that we should render this item or not
     // User can prevent rendering specific year or a list of years in Picker's Year column
     if (!configShouldRender(selectedDate, 'year', value)) return false;
@@ -328,12 +344,14 @@ export function usePicker(props: WheelPickerProps) {
   /**
    * * Check if the Month or Day Column's item should be rendered or not
    *
+   * @param {PickerDateModel} selectedDate
    * @param {DateConfigTypes} key
    * @param {PickerSelectedDateValue} value
    * @return {boolean}
    * @private
    */
   function shouldRenderItem(
+    selectedDate: PickerDateModel,
     key: DateConfigTypes,
     value: PickerSelectedDateValue,
   ): boolean {
@@ -388,11 +406,14 @@ export function usePicker(props: WheelPickerProps) {
       // Check if Day or Month is in Range
       if (
         (type === 'day' || type === 'month') &&
-        !shouldRenderItem(pickerItem.type, pickerItem.value)
+        !shouldRenderItem(selectedDate, pickerItem.type, pickerItem.value)
       ) {
         return false;
         // Check if Month is in Range
-      } else if (type === 'year' && !shouldRenderYearItem(pickerItem.value)) {
+      } else if (
+        type === 'year' &&
+        !shouldRenderYearItem(selectedDate, pickerItem.value)
+      ) {
         return false;
       }
 
@@ -492,7 +513,7 @@ export function usePicker(props: WheelPickerProps) {
   function addExtraDateInfo(
     currentSelectedDate: PickerDateModel,
     pickerItem: PickerItemModel,
-  ): PickerExtraDateInfo {
+  ): RequiredPickerExtraDateInfo {
     const targetSelectedDate: PickerExtraDateInfo = {
       ...currentSelectedDate,
       [pickerItem.type]: pickerItem.value,
@@ -512,7 +533,7 @@ export function usePicker(props: WheelPickerProps) {
       targetSelectedDate.weekDayText = weekDays[determineDayOfWeek];
     }
 
-    return targetSelectedDate;
+    return targetSelectedDate as RequiredPickerExtraDateInfo;
   }
 
   return {

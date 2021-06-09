@@ -95,11 +95,13 @@ export interface DateConfigValuesModel {
   // Columns Caption with text and style
   caption?: PickerColumnCaption;
   // Format the Columns content
-  formatter?: (value: PickerExtraDateInfo) => PickerSelectedDateValue | string;
+  formatter?: (
+    value: RequiredPickerExtraDateInfo,
+  ) => PickerSelectedDateValue | string;
   // Items className
-  classname?: (value: PickerExtraDateInfo) => string | string[];
+  classname?: (value: RequiredPickerExtraDateInfo) => string | string[];
   // Allow to render an Item
-  shouldRender?: (value: PickerExtraDateInfo) => boolean;
+  shouldRender?: (value: RequiredPickerExtraDateInfo) => boolean;
   // Column Styles
   columnStyle?: CSSProperties;
   // Column's Items Styles
@@ -114,14 +116,14 @@ export type DateConfig = Partial<
   }
 >;
 
-export type PickerDateModel = {
+export interface PickerDateModel {
   year?: PickerSelectedDateValue;
   month?: PickerSelectedDateValue;
   day?: PickerSelectedDateValue;
   hour?: PickerSelectedDateValue;
   minute?: PickerSelectedDateValue;
   second?: PickerSelectedDateValue;
-};
+}
 export type RequiredPickerDateModel = Required<PickerDateModel>;
 
 export interface PickerExtraDateInfo extends PickerDateModel {
@@ -130,6 +132,7 @@ export interface PickerExtraDateInfo extends PickerDateModel {
   monthText?: string;
   isLeapYear?: boolean;
 }
+export type RequiredPickerExtraDateInfo = Required<PickerExtraDateInfo>;
 
 export interface PickerItemModel<V = PickerSelectedDateValue> {
   type: DateConfigTypes;

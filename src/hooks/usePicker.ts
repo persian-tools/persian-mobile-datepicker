@@ -1,11 +1,13 @@
+// React Hooks
 import { useState, useRef, useMemo, useEffect } from 'react';
-
+// Utilities
 import {
   convertDateInstanceToDateObject,
   convertDateObjectToDateInstance,
   currentDateObject,
   daysInMonth as calculateDaysInMonth,
   getCurrentYear,
+  getDayOfYear,
   getWeekDay,
   isAfter,
   isBefore,
@@ -24,6 +26,8 @@ import {
 } from '../helpers';
 // Hooks
 import { usePrevious } from './usePrevious';
+// Events
+import { solarEvents } from '../events/solar';
 // Types
 import type {
   DateConfig,
@@ -522,6 +526,16 @@ export function usePicker(props: WheelPickerProps) {
     );
   }
 
+  /**
+   * Check the given day of year is holiday or not?
+   *
+   * @param {number} dayOfYear
+   * @return {boolean}
+   */
+  function checkDateIsHoliday(dayOfYear: number): boolean {
+    return solarEvents[dayOfYear]?.holiday;
+  }
+
   // Utilities
   /**
    * Find WeekDay and WeekName by a selected date and add to the Date object
@@ -533,16 +547,27 @@ export function usePicker(props: WheelPickerProps) {
    */
   function addExtraDateInfo(
     currentSelectedDate: PickerDateModel,
-    pickerItem: PickerItemModel,
+    pickerItem?: PickerItemModel,
   ): RequiredPickerExtraDateInfo {
     const targetSelectedDate: PickerExtraDateInfo = {
       ...currentSelectedDate,
-      [pickerItem.type]: pickerItem.value,
     };
+    if (pickerItem) {
+      targetSelectedDate[pickerItem.type] = pickerItem.value;
+    }
     // Add Month text if the Picker type is month, just for Month's config object
     targetSelectedDate.monthText = jalaliMonths[targetSelectedDate.month!];
     // Check if year is leap year and if it was true just for Year's config object
     targetSelectedDate.isLeapYear = isLeapYear(targetSelectedDate.year!);
+    // Day of Year
+    targetSelectedDate.dayOfYear = getDayOfYear(
+      targetSelectedDate.year!,
+      targetSelectedDate.month!,
+      targetSelectedDate.day!,
+    );
+    //
+    targetSelectedDate.isHoliday =
+      solarEvents[targetSelectedDate.dayOfYear]?.holiday ?? false;
 
     const determineDayOfWeek = getWeekDay(
       targetSelectedDate.year!,
@@ -583,7 +608,9 @@ export function usePicker(props: WheelPickerProps) {
     defaultPickerValueAsString,
 
     // Functions
+    addExtraDateInfo,
     checkDayIsWeekend,
+    checkDateIsHoliday,
     filterAllowedColumnRows,
     getPickerItemClassNames,
     getPickerColumnsCaption,

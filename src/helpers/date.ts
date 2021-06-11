@@ -15,9 +15,14 @@ import {
   isEqual as isEqualFns,
   isBefore as isBeforeFns,
   isAfter as isAfterFns,
+  getDayOfYear as getDayOfYearFns,
 } from 'date-fns-jalali';
 // Helpers
-import { generateAnArrayOfNumbers, generateArrayInRangeOfNumbers } from './';
+import {
+  generateAnArrayOfNumbers,
+  generateArrayInRangeOfNumbers,
+  toPositive,
+} from './';
 // Types
 import type {
   PickerItemModel,
@@ -135,6 +140,18 @@ export function daysInMonth(year: number, month: number): number {
  */
 export function getWeekDay(year: number, month: number, day: number): number {
   return (dateGetDay(createDateInstance({ year, month, day })) + 1) % 7;
+}
+
+/**
+ * Get the day of the year of the given date.
+
+ * @param {number} year
+ * @param {number} month
+ * @param {number} day
+ * @return {number}
+ */
+export function getDayOfYear(year: number, month: number, day: number): number {
+  return getDayOfYearFns(createDateInstance({ year, month, day }));
 }
 
 /**
@@ -279,41 +296,89 @@ export function isLeapYear(year: number): boolean {
 }
 
 /**
+ * Calculate the minimum year items which picker should render in Year Column
+ *
+ * @public
+ *
+ * @param {number} year
+ * @return {number} this value should assign to the [startYear] picker prop
+ *
+ * @example
+ * assume that currentYear is 1400
+ * startYear(1380) // 20(currentYear - 1380)
+ */
+export function startYear(year: number) {
+  const currentYear = getCurrentYear();
+  if (currentYear / year > 2) {
+    throw new Error(
+      `[PersianMobileDatePicker] Invalid Year, Usage: startYearFrom(1380), means Year picker's column should starts from 1380 up to now`,
+    );
+  }
+
+  return toPositive(currentYear - year);
+}
+
+/**
+ * Calculate the maximum year items which picker should render in Year Column
+ *
+ * @public
+ *
+ * @param {number} year
+ * @return {number} this value should assign to the [endYear] picker prop
+ *
+ * @example
+ * assume that currentYear is 1400
+ * endYear(1410) // 10(year - currentYear)
+ */
+export function endYear(year: number) {
+  const currentYear = getCurrentYear();
+  if (currentYear / year > 2) {
+    throw new Error(
+      `[PersianMobileDatePicker] Invalid Year, Usage: endYearTo(1410), means Year picker's column should end in 1410`,
+    );
+  }
+
+  return toPositive(currentYear - year);
+}
+
+/**
  * Combine and Generate all picker columns value
  *
  * @type {Record<string, (inp?: any) => Array<PickerItemModel>>}
  * @private
  */
-export const pickerData: Record<string, (inp?: any) => Array<PickerItemModel>> =
-  {
-    getYears: ({ min, max } = {}) =>
-      generateYearsRange(min, max).map((year) => ({
-        value: year,
-        type: 'year',
-      })),
-    getMonths: (monthsMap = jalaliMonths) =>
-      Object.keys(monthsMap).map((value) => ({
-        type: 'month',
-        value: Number(value),
-      })),
-    getDays: (days = 29) =>
-      generateAnArrayOfNumbers(days).map((day) => ({
-        value: day,
-        type: 'day',
-      })),
-    getHours: () =>
-      generateAnArrayOfNumbers(24).map((hour) => ({
-        value: hour,
-        type: 'hour',
-      })),
-    getSeconds: () =>
-      generateAnArrayOfNumbers(59).map((hour) => ({
-        value: hour,
-        type: 'second',
-      })),
-    getMinutes: () =>
-      generateAnArrayOfNumbers(59).map((hour) => ({
-        value: hour,
-        type: 'minute',
-      })),
-  };
+export const pickerData: Record<
+  string,
+  (inp?: any) => Array<PickerItemModel>
+> = {
+  getYears: ({ min, max } = {}) =>
+    generateYearsRange(min, max).map((year) => ({
+      value: year,
+      type: 'year',
+    })),
+  getMonths: (monthsMap = jalaliMonths) =>
+    Object.keys(monthsMap).map((value) => ({
+      type: 'month',
+      value: Number(value),
+    })),
+  getDays: (days = 29) =>
+    generateAnArrayOfNumbers(days).map((day) => ({
+      value: day,
+      type: 'day',
+    })),
+  getHours: () =>
+    generateAnArrayOfNumbers(24).map((hour) => ({
+      value: hour,
+      type: 'hour',
+    })),
+  getSeconds: () =>
+    generateAnArrayOfNumbers(59).map((hour) => ({
+      value: hour,
+      type: 'second',
+    })),
+  getMinutes: () =>
+    generateAnArrayOfNumbers(59).map((hour) => ({
+      value: hour,
+      type: 'minute',
+    })),
+};

@@ -1,8 +1,14 @@
 import { CSSProperties } from 'react';
 
+export type EventTypes = 'solar' | 'persian';
+export interface Event {
+  type: EventTypes;
+  title: string;
+}
 export interface WheelPickerSelectEvent {
-  object: PickerDateModel;
   date: Date;
+  events: Array<Event>;
+  object: PickerDateModel;
 }
 
 export interface WheelPickerProps {
@@ -60,6 +66,13 @@ export interface WheelPickerProps {
    * @type {boolean}
    */
   highlightWeekends?: boolean;
+  /**
+   * Determines whether to mark holidays in day column.
+   *
+   * @default false
+   * @type {boolean}
+   */
+  highlightHolidays?: boolean;
   // Add the name of the day of the week
   addDayName?: boolean;
 }
@@ -129,10 +142,19 @@ export interface PickerDateModel {
 export type RequiredPickerDateModel = Required<PickerDateModel>;
 
 export interface PickerExtraDateInfo extends PickerDateModel {
+  // The day of the week of the given date.
+  // 0 represents Saturday(شنبه)
   weekDay?: number;
+  // The day's name of the week of the given date
   weekDayText?: WeekDayText;
+  // The month's name of the given date
   monthText?: string;
+  // The day of the year of the given date.
+  dayOfYear?: number;
+  // Is the given date in the leap year?
   isLeapYear?: boolean;
+  // Is the given date holiday?
+  isHoliday?: boolean;
 }
 export type RequiredPickerExtraDateInfo = Required<PickerExtraDateInfo>;
 

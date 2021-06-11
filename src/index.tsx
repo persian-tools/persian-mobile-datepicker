@@ -28,19 +28,21 @@ const Picker: React.FC<PickerProps> = (props) => {
     <Sheet
       isOpen={isOpen}
       onClose={() => handleClose()}
-      snapPoints={[380]}
+      snapPoints={[385 + (props.title ? 55 : 0)]}
       initialSnap={0}
     >
       <Sheet.Container>
         <Sheet.Header />
         <Sheet.Content disableDrag={props.disableSheetDrag}>
           <WheelPicker
+            title={props.title}
             config={props.config}
             minDate={props.minDate}
             maxDate={props.maxDate}
             defaultValue={props.defaultValue}
             classNamePrefix={props.classNamePrefix}
             highlightWeekends={props.highlightWeekends}
+            highlightHolidays={props.highlightHolidays}
             endYear={props.endYear}
             startYear={props.startYear}
             onChange={props.onChange}

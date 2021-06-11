@@ -9,19 +9,28 @@ import React, {
 import MultiPicker from 'rmc-picker/es/MultiPicker';
 // Styles
 import {
-  Caption,
+  StyledCaption,
   GlobalStyle,
   PickerItemWithStyle,
   PickerWithStyle,
-} from './styles';
+  StyledTitle,
+} from './index.styles';
 // Hooks
 import { usePicker } from '../../hooks/usePicker';
 // Helpers
-import { convertSelectedDateToObject, isObjectEmpty } from '../../helpers';
+import {
+  convertSelectedDateObjectToArray,
+  convertSelectedDateToObject,
+  isObjectEmpty,
+} from '../../helpers';
 import {
   pickerData,
   convertDateObjectToDateInstance,
+  getDayOfYear,
 } from '../../helpers/date';
+// Events
+import { solarEvents } from '../../events/solar';
+import { persianEvents } from '../../events/persian';
 // Types
 import type {
   DateConfigTypes,
@@ -29,6 +38,7 @@ import type {
   WheelPickerProps,
   PickerColumnCaption,
   PickerItemModel,
+  EventTypes,
 } from './index.types';
 
 export const WheelPicker: FC<WheelPickerProps> = (props) => {
@@ -46,6 +56,7 @@ export const WheelPicker: FC<WheelPickerProps> = (props) => {
     minYear,
 
     checkDayIsWeekend,
+    checkDateIsHoliday,
     getPickerColumnsCaption,
     filterAllowedColumnRows,
     getPickerItemClassNames,
@@ -120,6 +131,12 @@ export const WheelPicker: FC<WheelPickerProps> = (props) => {
     }
   }, [pickerColumns, selectedDate, props.defaultValue]);
 
+  React.useEffect(() => {
+    if (selectedDate && defaultPickerValueAsString.length) {
+      onChange(convertSelectedDateObjectToArray(selectedDate));
+    }
+  }, []);
+
   /**
    * Picker onChange event which includes every columns' selected value
    *
@@ -128,10 +145,32 @@ export const WheelPicker: FC<WheelPickerProps> = (props) => {
    */
   function onChange(value: Array<string>): void {
     const convertSelectedDate = convertSelectedDateToObject(value);
+    const dayOfYear = getDayOfYear(
+      convertSelectedDate.year!,
+      convertSelectedDate.month!,
+      convertSelectedDate.day!,
+    );
+    // Events
+    const events = [];
+    const solarEvent = solarEvents[dayOfYear];
+    if (solarEvent) {
+      events.push({
+        type: 'solar' as EventTypes,
+        title: solarEvent.title,
+      });
+    }
+    const persianEvent = persianEvents[dayOfYear];
+    if (persianEvent) {
+      events.push({
+        type: 'persian' as EventTypes,
+        title: persianEvent.title,
+      });
+    }
 
     setSelectedDate(convertSelectedDate);
     // Call onChange if presents
     props.onChange?.({
+      events,
       object: convertSelectedDate,
       date: convertDateObjectToDateInstance(convertSelectedDate),
     });
@@ -196,7 +235,7 @@ export const WheelPicker: FC<WheelPickerProps> = (props) => {
   );
 
   /**
-   * Get Picker's text content styles if the day is weekend
+   * Get Picker's text content styles if the day is weekend or holiday
    *
    * @param {PickerItemModel} pickerItem
    * @return {CSSProperties}
@@ -207,35 +246,56 @@ export const WheelPicker: FC<WheelPickerProps> = (props) => {
     (pickerItem: PickerItemModel) => CSSProperties
   >(
     (pickerItem) => {
-      return pickerItem.type === 'day' && checkDayIsWeekend(pickerItem.value)
-        ? {
+      const isDayItem = pickerItem.type === 'day';
+      if (isDayItem) {
+        // Highlight weekends if needed
+        if (props.highlightWeekends && checkDayIsWeekend(pickerItem.value)) {
+          return {
             color: '#de3f18',
+          };
+        }
+
+        // Highlight holidays if needed
+        if (props.highlightHolidays) {
+          const dayOfYear = getDayOfYear(
+            selectedDate.year!,
+            selectedDate.month!,
+            pickerItem.value,
+          );
+
+          if (checkDateIsHoliday(dayOfYear)) {
+            return {
+              color: '#de3f18',
+            };
           }
-        : {};
+        }
+      }
+      return {};
     },
     [selectedDate],
   );
 
   return (
     <React.Fragment>
+      {props.title && <StyledTitle>{props.title}</StyledTitle>}
       {pickerColumns.map((column, index) => {
         const caption = getPickerColumnsCaption(column.type);
         if (caption) {
           const { style = {}, text } = caption as PickerColumnCaption;
           return (
-            <Caption
+            <StyledCaption
               key={`Picker_Caption_${column.type}_${index}`}
               columnSize={pickerColumns.length}
               className={classNamePrefix('caption')}
               style={style}
             >
               {text}
-            </Caption>
+            </StyledCaption>
           );
         }
 
         return (
-          <Caption
+          <StyledCaption
             key={`Picker_Caption_${column.type}_${index}`}
             columnSize={pickerColumns.length}
             className={`${classNamePrefix('caption')} ${classNamePrefix(

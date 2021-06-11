@@ -1,10 +1,4 @@
-import React, {
-  CSSProperties,
-  useLayoutEffect,
-  useMemo,
-  useCallback,
-  FC,
-} from 'react';
+import React, { CSSProperties, useMemo, useCallback, FC } from 'react';
 // Global Components
 import MultiPicker from 'rmc-picker/es/MultiPicker';
 // Styles
@@ -17,11 +11,10 @@ import {
 } from './index.styles';
 // Hooks
 import { usePicker } from '../../hooks/usePicker';
-// Helpers
+// Helpers and Utilities
 import {
-  convertSelectedDateObjectToArray,
   convertSelectedDateToObject,
-  isObjectEmpty,
+  convertSelectedDateObjectToArray,
 } from '../../helpers';
 import {
   pickerData,
@@ -113,23 +106,14 @@ export const WheelPicker: FC<WheelPickerProps> = (props) => {
           );
       }
     }) as PickerColumns;
-  }, [props.config, daysInMonth, minYear, maxYear]);
-  /**
-   * Prepare the default value of DatePicker when the Developer has not passed a defaultValue
-   */
-  useLayoutEffect(() => {
-    if (
-      pickerColumns.length &&
-      isObjectEmpty(selectedDate) &&
-      isObjectEmpty(props.defaultValue!)
-    ) {
-      const defaultDate = {};
-      pickerColumns.forEach((column) => {
-        defaultDate[column.type] = column.value[0].value;
-      });
-      setSelectedDate(defaultDate);
-    }
-  }, [pickerColumns, selectedDate, props.defaultValue]);
+  }, [
+    props.config,
+    daysInMonth,
+    minYear,
+    maxYear,
+    props.startYear,
+    props.endYear,
+  ]);
 
   React.useEffect(() => {
     if (selectedDate && defaultPickerValueAsString.length) {
@@ -176,6 +160,7 @@ export const WheelPicker: FC<WheelPickerProps> = (props) => {
     });
   }
 
+  // Columns style
   const columnStyles = useCallback<(type: DateConfigTypes) => CSSProperties>(
     (type) => {
       return configs[type].columnStyle || {};
@@ -183,6 +168,7 @@ export const WheelPicker: FC<WheelPickerProps> = (props) => {
     [configs],
   );
 
+  // Columns items style
   const columnItemStyles = useCallback<
     (type: DateConfigTypes) => CSSProperties
   >(
@@ -195,14 +181,7 @@ export const WheelPicker: FC<WheelPickerProps> = (props) => {
     [configs],
   );
 
-  /**
-   * Get Picker's selected items styles from Config prop
-   *
-   * @param {DateConfigTypes} type
-   * @return {CSSProperties}
-   *
-   * @private
-   */
+  // Column selected item styles
   const columnSelectedItemStyles = useCallback<
     (type: DateConfigTypes) => CSSProperties
   >(
@@ -272,8 +251,10 @@ export const WheelPicker: FC<WheelPickerProps> = (props) => {
       }
       return {};
     },
-    [selectedDate],
+    [selectedDate, props.highlightHolidays, props.highlightWeekends],
   );
+
+  console.count('rerender');
 
   return (
     <React.Fragment>

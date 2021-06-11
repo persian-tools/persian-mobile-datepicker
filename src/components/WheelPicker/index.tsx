@@ -19,7 +19,6 @@ import { usePicker } from '../../hooks/usePicker';
 // Helpers
 import { convertSelectedDateToObject, isObjectEmpty } from '../../helpers';
 import {
-  isWeekend,
   pickerData,
   convertDateObjectToDateInstance,
 } from '../../helpers/date';
@@ -34,8 +33,8 @@ import type {
 
 export const WheelPicker: FC<WheelPickerProps> = (props) => {
   const {
-    prefix,
     configs,
+    classNamePrefix,
 
     daysInMonth,
     selectedDate,
@@ -46,6 +45,7 @@ export const WheelPicker: FC<WheelPickerProps> = (props) => {
     maxYear,
     minYear,
 
+    checkDayIsWeekend,
     getPickerColumnsCaption,
     filterAllowedColumnRows,
     getPickerItemClassNames,
@@ -207,8 +207,7 @@ export const WheelPicker: FC<WheelPickerProps> = (props) => {
     (pickerItem: PickerItemModel) => CSSProperties
   >(
     (pickerItem) => {
-      return pickerItem.type === 'day' &&
-        isWeekend(selectedDate.year!, selectedDate.month!, pickerItem.value)
+      return pickerItem.type === 'day' && checkDayIsWeekend(pickerItem.value)
         ? {
             color: '#de3f18',
           }
@@ -227,7 +226,7 @@ export const WheelPicker: FC<WheelPickerProps> = (props) => {
             <Caption
               key={`Picker_Caption_${column.type}_${index}`}
               columnSize={pickerColumns.length}
-              className={prefix('caption')}
+              className={classNamePrefix('caption')}
               style={style}
             >
               {text}
@@ -239,13 +238,15 @@ export const WheelPicker: FC<WheelPickerProps> = (props) => {
           <Caption
             key={`Picker_Caption_${column.type}_${index}`}
             columnSize={pickerColumns.length}
-            className={`${prefix('caption')} ${prefix('caption--empty')}`}
-          ></Caption>
+            className={`${classNamePrefix('caption')} ${classNamePrefix(
+              'caption--empty',
+            )}`}
+          />
         );
       })}
       <MultiPicker
         selectedValue={defaultPickerValueAsString}
-        className={prefix('multi-picker')}
+        className={classNamePrefix('multi-picker')}
         onValueChange={onChange}
       >
         {pickerColumns.map((column, index) => {
@@ -253,9 +254,9 @@ export const WheelPicker: FC<WheelPickerProps> = (props) => {
             <PickerWithStyle
               key={`Picker_${index}`}
               style={columnStyles(column.type)}
-              indicatorClassName={`${prefix(`indicator`)} ${prefix(
-                `${column.type}-column`,
-              )}`}
+              indicatorClassName={`${classNamePrefix(
+                `indicator`,
+              )} ${classNamePrefix(`${column.type}-column`)}`}
             >
               {filterAllowedColumnRows(column.value, column.type).map(
                 (pickerItem) => {
@@ -268,10 +269,10 @@ export const WheelPicker: FC<WheelPickerProps> = (props) => {
                       style={pickerItemStyles(column.type, isSelectedItem)}
                       key={`Picker_Item_${pickerItem.type}_${pickerItem.value}`}
                       className={`${
-                        isSelectedItem ? prefix('active-selected') : ''
-                      } ${prefix('view-item')} ${getPickerItemClassNames(
-                        pickerItem,
-                      )}`}
+                        isSelectedItem ? classNamePrefix('active-selected') : ''
+                      } ${classNamePrefix(
+                        'view-item',
+                      )} ${getPickerItemClassNames(pickerItem)}`}
                       value={`${pickerItem.type}-${pickerItem.value}`}
                     >
                       <div style={pickerTextContentStyles(pickerItem)}>
@@ -293,4 +294,7 @@ export const WheelPicker: FC<WheelPickerProps> = (props) => {
 WheelPicker.defaultProps = {
   startYear: 30, // past 30 years
   endYear: 30, // next 30 years
+  addDayName: false,
+  disabled: false,
+  classNamePrefix: 'persian-datepicker',
 };

@@ -5,8 +5,8 @@ import Sheet from 'react-modal-sheet';
 import { WheelPicker } from './components/WheelPicker';
 // Styled Components
 import {
-  StyledSubmitButton,
   StyledFooter,
+  StyledSubmitButton,
   StyledCancelButton,
 } from './index.styles';
 // Types
@@ -36,15 +36,16 @@ const Picker: React.FC<PickerProps> = (props) => {
         <Sheet.Content disableDrag={props.disableSheetDrag}>
           <WheelPicker
             config={props.config}
-            prefix={props.classNamePrefix}
             minDate={props.minDate}
             maxDate={props.maxDate}
             defaultValue={props.defaultValue}
+            classNamePrefix={props.classNamePrefix}
             highlightWeekends={props.highlightWeekends}
             endYear={props.endYear}
             startYear={props.startYear}
             onChange={props.onChange}
             disabled={props.disabled}
+            addDayName={props.addDayName}
           />
 
           <StyledFooter>
@@ -69,6 +70,7 @@ Picker.defaultProps = {
   disabled: false,
   showCancelButton: true,
   disableSheetDrag: true,
+  addDayName: false,
 };
 
 export { Picker, WheelPicker };
@@ -76,4 +78,16 @@ export * from './helpers/date';
 export type {
   DateConfig,
   WheelPickerSelectEvent,
+  WheelPickerProps,
+  PickerColumnCaption,
+  RequiredPickerExtraDateInfo,
+  DateConfigTypes,
+  PickerDateModel,
+  DateConfigFormats,
+  PickerColumns,
+  PickerSelectedDateValue,
+  PickerItemModel,
+  RequiredPickerDateModel,
+  PickerExtraDateInfo,
+  DateConfigValuesModel,
 } from './components/WheelPicker/index.types';

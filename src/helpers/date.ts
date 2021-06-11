@@ -1,8 +1,8 @@
 // Date Utilities
 import {
-  format,
+  format as formatFns,
   getDay as dateGetDay,
-  newDate as newJallaliDate,
+  newDate,
   isValid as dateIsValid,
   isLeapYear as dateIsLeapYear,
   getDaysInMonth as dateGetDaysInMonth,
@@ -17,14 +17,14 @@ import {
   isAfter as isAfterFns,
 } from 'date-fns-jalali';
 // Helpers
-import { createAnArrayOfNumbers, generateArrayInRangeOfNumbers } from './';
+import { generateAnArrayOfNumbers, generateArrayInRangeOfNumbers } from './';
 // Types
 import type {
   PickerItemModel,
   WeekDayText,
+  PickerDateModel,
+  RequiredPickerDateModel,
 } from '../components/WheelPicker/index.types';
-import type { PickerDateModel } from '../components/WheelPicker/index.types';
-import type { RequiredPickerDateModel } from '../components/WheelPicker/index.types';
 
 export const weekDays: Record<number, WeekDayText> = {
   0: 'شنبه',
@@ -72,7 +72,7 @@ export function createDateInstance({
 }: PickerDateModel): Date {
   // date-fns month starts from 0, it means farvardin is 0 and esfand is 11
   month = month! - 1;
-  return newJallaliDate(year!, month, day, hour, minute, second);
+  return newDate(year!, month, day, hour, minute, second);
 }
 
 /**
@@ -206,6 +206,10 @@ export function isAfter(date: Date, dateToCompare: Date): boolean {
   return isAfterFns(date, dateToCompare);
 }
 
+export function format(date: Date | number, formatBy: string): string {
+  return formatFns(date, formatBy);
+}
+
 /**
  * Are the given dates equal?
  *
@@ -221,21 +225,21 @@ export function isEqual(dateLeft: Date, dateRight: Date): boolean {
  * Return the current Year
  *
  * @return {number}
+ * @public
  */
 export function getCurrentYear(): number {
   return currentDateObject().year;
 }
 
+export type CurrentDateObject = Required<Record<keyof PickerDateModel, number>>;
 /**
  * Convert date instance string to an object.
  * The result may vary by locale.
  *
- * @return {Required<Record<keyof PickerDateModel, number>>}
+ * @return {CurrentDateObject}
  * @public
  */
-export function currentDateObject(): Required<
-  Record<keyof PickerDateModel, number>
-> {
+export function currentDateObject(): CurrentDateObject {
   const date = new Date();
   return {
     year: Number(format(date, 'yyyy')),
@@ -253,9 +257,9 @@ export function currentDateObject(): Required<
  * @param {number} min Min year range
  * @param {number} max Max year range
  * @return {Array<number>}
- * @public
+ * @private
  */
-export function generateYearsRange(min: number, max: number): Array<number> {
+function generateYearsRange(min: number, max: number): Array<number> {
   const currentYear = getCurrentYear();
   const minRange = currentYear - min;
   const maxRange = currentYear + max;
@@ -293,16 +297,22 @@ export const pickerData: Record<string, (inp?: any) => Array<PickerItemModel>> =
         value: Number(value),
       })),
     getDays: (days = 29) =>
-      createAnArrayOfNumbers(days).map((day) => ({ value: day, type: 'day' })),
+      generateAnArrayOfNumbers(days).map((day) => ({
+        value: day,
+        type: 'day',
+      })),
     getHours: () =>
-      createAnArrayOfNumbers(24).map((hour) => ({ value: hour, type: 'hour' })),
+      generateAnArrayOfNumbers(24).map((hour) => ({
+        value: hour,
+        type: 'hour',
+      })),
     getSeconds: () =>
-      createAnArrayOfNumbers(59).map((hour) => ({
+      generateAnArrayOfNumbers(59).map((hour) => ({
         value: hour,
         type: 'second',
       })),
     getMinutes: () =>
-      createAnArrayOfNumbers(59).map((hour) => ({
+      generateAnArrayOfNumbers(59).map((hour) => ({
         value: hour,
         type: 'minute',
       })),

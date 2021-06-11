@@ -3,9 +3,14 @@ import React from 'react';
 import Sheet from 'react-modal-sheet';
 // Local Components
 import { WheelPicker } from './components/WheelPicker';
+// Styled Components
+import {
+  StyledSubmitButton,
+  StyledFooter,
+  StyledCancelButton,
+} from './index.styles';
 // Types
 import type { PickerProps } from './index.types';
-import { SubmitButton, Footer, CancelButton } from './index.styles';
 
 const Picker: React.FC<PickerProps> = (props) => {
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
@@ -42,12 +47,12 @@ const Picker: React.FC<PickerProps> = (props) => {
             disabled={props.disabled}
           />
 
-          <Footer>
+          <StyledFooter>
             {props.showCancelButton && (
-              <CancelButton>{props.cancelText}</CancelButton>
+              <StyledCancelButton>{props.cancelText}</StyledCancelButton>
             )}
-            <SubmitButton>{props.submitText}</SubmitButton>
-          </Footer>
+            <StyledSubmitButton>{props.submitText}</StyledSubmitButton>
+          </StyledFooter>
         </Sheet.Content>
       </Sheet.Container>
       <Sheet.Backdrop />
@@ -68,4 +73,7 @@ Picker.defaultProps = {
 
 export { Picker, WheelPicker };
 export * from './helpers/date';
-export type {DateConfig, WheelPickerSelectEvent} from './components/WheelPicker/index.types';
+export type {
+  DateConfig,
+  WheelPickerSelectEvent,
+} from './components/WheelPicker/index.types';

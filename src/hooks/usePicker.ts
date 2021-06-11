@@ -17,7 +17,7 @@ import {
   weekDays,
 } from '../helpers/date';
 import {
-  convertSelectedDateToAnArray,
+  convertSelectedDateObjectToArray,
   isObjectEmpty,
   prefixClassName,
   toPositive,
@@ -189,6 +189,7 @@ export function usePicker(props: WheelPickerProps) {
       );
       // Default value has no overlap with [minDate], [maxDate] and also can be rendered by the shouldRender in Component's Config prop
       if (
+        // [defaultValue] is in Range of [MinDate] and [MaxDate] - /start
         shouldRenderItem(
           defaultSelectedDateObject,
           'month',
@@ -203,9 +204,12 @@ export function usePicker(props: WheelPickerProps) {
           defaultSelectedDateObject,
           defaultSelectedDateObject.year,
         ) &&
+        // /end
+        // [defaultValue] can be rendered by the [shouldRender] Config method - /start
         configShouldRender(defaultSelectedDateObject, 'year') &&
         configShouldRender(defaultSelectedDateObject, 'month') &&
         configShouldRender(defaultSelectedDateObject, 'day')
+        // /end
       ) {
         return defaultSelectedDateObject;
       }
@@ -260,7 +264,7 @@ export function usePicker(props: WheelPickerProps) {
    * @private
    */
   const defaultPickerValueAsString = useMemo<Array<string>>(() => {
-    return convertSelectedDateToAnArray(defaultSelectedDateObject);
+    return convertSelectedDateObjectToArray(defaultSelectedDateObject);
   }, [defaultSelectedDateObject]);
 
   // Local States

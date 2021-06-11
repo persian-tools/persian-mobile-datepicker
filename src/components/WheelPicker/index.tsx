@@ -19,9 +19,9 @@ import { usePicker } from '../../hooks/usePicker';
 // Helpers
 import { convertSelectedDateToObject, isObjectEmpty } from '../../helpers';
 import {
-  convertDateObjectToDateInstance,
   isWeekend,
   pickerData,
+  convertDateObjectToDateInstance,
 } from '../../helpers/date';
 // Types
 import type {
@@ -29,6 +29,7 @@ import type {
   PickerColumns,
   WheelPickerProps,
   PickerColumnCaption,
+  PickerItemModel,
 } from './index.types';
 
 export const WheelPicker: FC<WheelPickerProps> = (props) => {
@@ -155,6 +156,14 @@ export const WheelPicker: FC<WheelPickerProps> = (props) => {
     [configs],
   );
 
+  /**
+   * Get Picker's selected items styles from Config prop
+   *
+   * @param {DateConfigTypes} type
+   * @return {CSSProperties}
+   *
+   * @private
+   */
   const columnSelectedItemStyles = useCallback<
     (type: DateConfigTypes) => CSSProperties
   >(
@@ -164,26 +173,71 @@ export const WheelPicker: FC<WheelPickerProps> = (props) => {
     [configs],
   );
 
+  /**
+   * Get Picker's item styles such as selected and none selected styles
+   *
+   * @param {DateConfigTypes} type
+   * @param {boolean} isSelected
+   * @return {CSSProperties}
+   *
+   * @private
+   */
+  const pickerItemStyles = React.useCallback<
+    (type: DateConfigTypes, isSelected: boolean) => CSSProperties
+  >(
+    (type, isSelected) => {
+      return {
+        ...{ unicodeBidi: 'plaintext', direction: 'rtl' },
+        ...columnItemStyles(type),
+        ...(isSelected ? columnSelectedItemStyles(type) : {}),
+      };
+    },
+    [columnSelectedItemStyles, columnItemStyles],
+  );
+
+  /**
+   * Get Picker's text content styles if the day is weekend
+   *
+   * @param {PickerItemModel} pickerItem
+   * @return {CSSProperties}
+   *
+   * @private
+   */
+  const pickerTextContentStyles = React.useCallback<
+    (pickerItem: PickerItemModel) => CSSProperties
+  >(
+    (pickerItem) => {
+      return pickerItem.type === 'day' &&
+        isWeekend(selectedDate.year!, selectedDate.month!, pickerItem.value)
+        ? {
+            color: '#de3f18',
+          }
+        : {};
+    },
+    [selectedDate],
+  );
+
   return (
     <React.Fragment>
       {pickerColumns.map((column, index) => {
         const caption = getPickerColumnsCaption(column.type);
         if (caption) {
+          const { style = {}, text } = caption as PickerColumnCaption;
           return (
             <Caption
-              key={`${column.type}_${index}`}
+              key={`Picker_Caption_${column.type}_${index}`}
               columnSize={pickerColumns.length}
               className={prefix('caption')}
-              style={(caption as PickerColumnCaption).style || {}}
+              style={style}
             >
-              {(caption as PickerColumnCaption).text}
+              {text}
             </Caption>
           );
         }
 
         return (
           <Caption
-            key={`${column.type}_${index}`}
+            key={`Picker_Caption_${column.type}_${index}`}
             columnSize={pickerColumns.length}
             className={`${prefix('caption')} ${prefix('caption--empty')}`}
           ></Caption>
@@ -197,7 +251,7 @@ export const WheelPicker: FC<WheelPickerProps> = (props) => {
         {pickerColumns.map((column, index) => {
           return (
             <PickerWithStyle
-              key={`${index}`}
+              key={`Picker_${index}`}
               style={columnStyles(column.type)}
               indicatorClassName={`${prefix(`indicator`)} ${prefix(
                 `${column.type}-column`,
@@ -211,14 +265,8 @@ export const WheelPicker: FC<WheelPickerProps> = (props) => {
                   return (
                     <PickerItemWithStyle
                       // @ts-ignore
-                      style={{
-                        ...{ unicodeBidi: 'plaintext', direction: 'rtl' },
-                        ...columnItemStyles(column.type),
-                        ...(isSelectedItem
-                          ? columnSelectedItemStyles(column.type)
-                          : {}),
-                      }}
-                      key={`${pickerItem.type}_${pickerItem.value}`}
+                      style={pickerItemStyles(column.type, isSelectedItem)}
+                      key={`Picker_Item_${pickerItem.type}_${pickerItem.value}`}
                       className={`${
                         isSelectedItem ? prefix('active-selected') : ''
                       } ${prefix('view-item')} ${getPickerItemClassNames(
@@ -226,20 +274,7 @@ export const WheelPicker: FC<WheelPickerProps> = (props) => {
                       )}`}
                       value={`${pickerItem.type}-${pickerItem.value}`}
                     >
-                      <div
-                        style={
-                          pickerItem.type === 'day' &&
-                          isWeekend(
-                            selectedDate.year!,
-                            selectedDate.month!,
-                            pickerItem.value,
-                          )
-                            ? {
-                                color: '#de3f18',
-                              }
-                            : {}
-                        }
-                      >
+                      <div style={pickerTextContentStyles(pickerItem)}>
                         {handlePickerItemTextContent(pickerItem)}
                       </div>
                     </PickerItemWithStyle>

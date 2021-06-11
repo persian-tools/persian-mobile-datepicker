@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const SubmitButton = styled.button`
+export const StyledSubmitButton = styled.button`
   width: 50%;
   height: 45px;
   color: #b7dfff;
@@ -18,13 +18,13 @@ export const SubmitButton = styled.button`
   margin: 0 15px;
 `;
 
-export const CancelButton = styled(SubmitButton)`
+export const StyledCancelButton = styled(StyledSubmitButton)`
   color: #626262;
   background-color: transparent;
   border: 1px solid #e6ecee;
 `;
 
-export const Footer = styled.div`
+export const StyledFooter = styled.div`
   position: absolute;
   bottom: 0;
   right: 2.5%;

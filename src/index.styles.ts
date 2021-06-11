@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const StyledSubmitButton = styled.button`
-  width: 150px;
+  width: 140px;
   height: 48px;
   color: #c5dcfa;
   background: #1672ec;

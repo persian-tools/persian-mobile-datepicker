@@ -7,7 +7,7 @@ export interface WheelPickerSelectEvent {
 
 export interface WheelPickerProps {
   // CSS classnames prefix
-  prefix?: string;
+  classNamePrefix?: string;
   // Default column value
   defaultValue?: Date;
   // Title
@@ -60,6 +60,8 @@ export interface WheelPickerProps {
    * @type {boolean}
    */
   highlightWeekends?: boolean;
+  // Add the name of the day of the week
+  addDayName?: boolean;
 }
 
 export type DateConfigTypes =

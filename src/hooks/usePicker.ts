@@ -61,7 +61,7 @@ export function usePicker(props: WheelPickerProps) {
    * @type {(str: string) => string}
    * @private
    */
-  const prefix = prefixClassName(props.prefix!);
+  const classNamePrefix = prefixClassName(props.classNamePrefix!);
 
   /**
    * * Check if the [Min Date] is valid and has filled
@@ -437,9 +437,18 @@ export function usePicker(props: WheelPickerProps) {
     pickerItem: PickerItemModel,
   ): PickerSelectedDateValue | string {
     const dateValues = addExtraDateInfo(selectedDate, pickerItem);
-    return (
-      configs[pickerItem.type]?.formatter?.(dateValues) ?? pickerItem.value
-    );
+    const textContent =
+      configs[pickerItem.type]?.formatter?.(dateValues) ?? pickerItem.value;
+    const isDayColumn = pickerItem.type === 'day';
+    const shouldHighlightWeekends =
+      isDayColumn && !!props.highlightWeekends && dateValues.weekDay === 6;
+    const shouldAddDayName = isDayColumn && !!props.addDayName;
+
+    return shouldHighlightWeekends
+      ? `${textContent}(${weekDays[6]})`
+      : shouldAddDayName
+      ? `${textContent}(${weekDays[dateValues.weekDay]})`
+      : textContent;
   }
 
   /**
@@ -496,13 +505,21 @@ export function usePicker(props: WheelPickerProps) {
    * @private
    */
   function highlightWeekendClassName(day: number): string {
-    const determineDayOfWeek = isWeekend(
-      selectedDate.year!,
-      selectedDate.month!,
+    return checkDayIsWeekend(day) ? classNamePrefix('weekend') : '';
+  }
+
+  /**
+   * Check that the day is a weekend or not?
+   *
+   * @param {number} day
+   * @return {boolean}
+   */
+  function checkDayIsWeekend(day: number): boolean {
+    return isWeekend(
+      defaultSelectedDateObject.year!,
+      defaultSelectedDateObject.month!,
       day,
     );
-
-    return determineDayOfWeek ? prefix('weekend') : '';
   }
 
   // Utilities
@@ -541,8 +558,8 @@ export function usePicker(props: WheelPickerProps) {
   }
 
   return {
-    prefix,
     configs,
+    classNamePrefix,
 
     daysInMonth,
     selectedDate,
@@ -566,6 +583,7 @@ export function usePicker(props: WheelPickerProps) {
     defaultPickerValueAsString,
 
     // Functions
+    checkDayIsWeekend,
     filterAllowedColumnRows,
     getPickerItemClassNames,
     getPickerColumnsCaption,

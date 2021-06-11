@@ -1,20 +1,27 @@
 {
   "name": "@persian-tools/persian-mobile-datepicker",
   "version": "0.0.1",
-  "description": "Persian Mobile Date and Time picker",
+  "description": "Modern Persian Mobile date picker",
   "publishConfig": {
     "access": "public"
   },
   "source": "src/index.tsx",
   "main": "build/index.js",
+  "umd:main": "build/index.umd.js",
   "esmodule": "build/index.modern.js",
   "module": "build/index.module.js",
   "types": "build/index.d.ts",
   "scripts": {
-    "build": "microbundle-crl --compress --name persian-mobile-datepicker --strict",
-    "dev": "microbundle-crl watch --no-css-modules --name persian-mobile-datepicker --strict",
-    "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "prepare": "npm run build",
+    "base": "microbundle --no-css-modules --compress --name persian-mobile-datepicker --strict --jsx React.createElement",
+    "build": "npm run base -- --raw --sourcemap false",
+    "dev": "npm run base -- watch",
+    "test": "jest --coverage --config=jest.config.js",
+    "report-coverage": "cat ./coverage/lcov.info | coveralls",
+    "storybook": "start-storybook -p 6006 --ci",
+    "build-storybook": "build-storybook",
+    "deploy-storybook": "storybook-to-ghpages",
+    "semantic-release": "semantic-release"
   },
   "repository": {
     "type": "git",
@@ -30,9 +37,9 @@
     "build"
   ],
   "engines": {
-    "node": ">= 10"
+    "node": ">= 12.13.0"
   },
-  "author": "persian-tools",
+  "author": "Ali Torki <ali_4286@live.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/persian-tools/persian-mobile-datepicker/issues"
@@ -40,6 +47,7 @@
   "homepage": "https://github.com/persian-tools/persian-mobile-datepicker#readme",
   "dependencies": {
     "@persian-tools/persian-tools": "^1.6.1",
+    "@types/styled-components": "^5.1.10",
     "date-fns-jalali": "^2.22.1-0",
     "framer-motion": "^4.1.17",
     "react": "^17.0.2",
@@ -48,34 +56,52 @@
     "styled-components": "^5.3.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.14.3",
+    "@babel/core": "^7.14.5",
+    "@babel/node": "^7.14.5",
+    "@babel/plugin-proposal-object-rest-spread": "^7.14.5",
+    "@babel/polyfill": "^7.2.5",
+    "@babel/preset-env": "^7.14.5",
+    "@babel/preset-react": "^7.14.5",
+    "@semantic-release/changelog": "^5.0.1",
+    "@semantic-release/git": "^9.0.0",
     "@storybook/addon-actions": "^6.2.9",
     "@storybook/addon-essentials": "^6.2.9",
     "@storybook/addon-links": "^6.2.9",
+    "@storybook/addons": "^6.2.9",
     "@storybook/preset-create-react-app": "^3.1.7",
     "@storybook/react": "^6.2.9",
-    "@testing-library/jest-dom": "^5.13.0",
-    "@testing-library/react": "^11.2.7",
-    "@testing-library/user-event": "^13.1.9",
+    "@storybook/storybook-deployer": "^2.8.8",
+    "@testing-library/react-hooks": "^7.0.0",
     "@types/jest": "^26.0.23",
-    "@types/node": "^15.12.2",
-    "@types/react": "^17.0.9",
-    "@types/react-dom": "^17.0.6",
-    "@types/styled-components": "^5.1.9",
-    "@typescript-eslint/eslint-plugin": "^4.26.1",
     "@typescript-eslint/parser": "^4.26.1",
-    "babel-eslint": "^10.0.3",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-eslint": "^10.0.1",
+    "babel-jest": "^27.0.2",
     "babel-loader": "^8.2.2",
+    "commitizen": "^4.2.4",
+    "coveralls": "^3.1.0",
     "eslint": "^7.28.0",
-    "eslint-config-react-app": "^6.0.0",
-    "gh-pages": "^3.2.0",
-    "microbundle-crl": "^0.13.11",
-    "prettier": "^2.3.1",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-plugin-import": "^2.23.4",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-react": "^7.24.0",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "husky": "^6.0.0",
+    "jest": "^27.0.4",
+    "jest-dom": "^3.0.0",
+    "microbundle": "^0.13.2",
+    "parcel-bundler": "^1.12.4",
+    "prettier": "^2.2.1",
+    "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "typescript": "^4.3.2"
+    "react-test-renderer": "^17.0.2",
+    "react-testing-library": "^5.9.0",
+    "regenerator-runtime": "^0.13.7",
+    "semantic-release": "^17.4.3",
+    "ts-jest": "^27.0.3"
   },
   "resolutions": {
-    "**/react": "17.0.2"
+    "@babel/core": "^7.5.4"
   },
   "peerDependencies": {
     "framer-motion": "^4.1.17",

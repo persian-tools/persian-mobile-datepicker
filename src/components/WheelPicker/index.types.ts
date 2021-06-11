@@ -14,8 +14,10 @@ export interface WheelPickerSelectEvent {
 export interface WheelPickerProps {
   // CSS classnames prefix
   classNamePrefix?: string;
-  // Default column value
-  defaultValue?: Date;
+  // Initial picker value
+  initialValue?: Date;
+  // Current picker value
+  value?: WheelPickerSelectEvent;
   // Title
   title?: string;
   /**

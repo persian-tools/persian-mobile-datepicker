@@ -101,14 +101,14 @@ export function usePicker(props: WheelPickerProps) {
   const isMaxDateValid = isValid(props.maxDate!);
 
   /**
-   * * Parse and convert the [defaultValue] that filled as a prop to an Object
+   * * Parse and convert the [initialValue] that filled as a prop to an Object
    *
    * @type {RequiredPickerDateModel}
    * @private
    */
-  const defaultValueDateObject = useMemo<RequiredPickerDateModel>(
-    () => convertDateInstanceToDateObject(props.defaultValue!),
-    [props.defaultValue],
+  const initialValueDateObject = useMemo<RequiredPickerDateModel>(
+    () => convertDateInstanceToDateObject(props.initialValue!),
+    [props.initialValue],
   );
   /**
    * Check if the Default Value Date is valid and has filled
@@ -116,7 +116,7 @@ export function usePicker(props: WheelPickerProps) {
    * @type {boolean}
    * @private
    */
-  const isDefaultValueValid = isValid(props.defaultValue!);
+  const isInitialValueValid = isValid(props.initialValue!);
 
   /**
    * Get Min Year of the Year Column which should be rendered
@@ -131,8 +131,8 @@ export function usePicker(props: WheelPickerProps) {
     let year: number;
     if (isMinDateValid) {
       year = minDateObject.year;
-    } else if (isDefaultValueValid) {
-      year = defaultValueDateObject.year + startYear;
+    } else if (isInitialValueValid) {
+      year = initialValueDateObject.year + startYear;
     } else {
       year = currentYear + startYear;
     }
@@ -141,8 +141,8 @@ export function usePicker(props: WheelPickerProps) {
   }, [
     isMinDateValid,
     minDateObject,
-    isDefaultValueValid,
-    defaultValueDateObject,
+    isInitialValueValid,
+    initialValueDateObject,
     props.startYear,
   ]);
   /**
@@ -158,8 +158,8 @@ export function usePicker(props: WheelPickerProps) {
     let year: number;
     if (isMinDateValid) {
       year = maxDateObject.year;
-    } else if (isDefaultValueValid) {
-      year = defaultValueDateObject.year + endYear;
+    } else if (isInitialValueValid) {
+      year = initialValueDateObject.year + endYear;
     } else {
       year = currentYear + endYear;
     }
@@ -168,13 +168,13 @@ export function usePicker(props: WheelPickerProps) {
   }, [
     isMinDateValid,
     maxDateObject,
-    defaultValueDateObject,
+    initialValueDateObject,
     props.endYear,
-    isDefaultValueValid,
+    isInitialValueValid,
   ]);
 
   /**
-   * Get default selected date by [MinDate], [MaxDate], [DefaultValue] or current date
+   * Get default selected date by [MinDate], [MaxDate], [initialValue] or current date
    *
    * @type {PickerDateModel}
    * @private
@@ -187,13 +187,15 @@ export function usePicker(props: WheelPickerProps) {
       return selectedDateRef.current;
     }
 
-    if (isDefaultValueValid) {
+    if (isValid(props.value?.date!)) {
+      return props.value?.object!;
+    } else if (isInitialValueValid) {
       const defaultSelectedDateObject = convertDateInstanceToDateObject(
-        props.defaultValue!,
+        props.initialValue!,
       );
       // Default value has no overlap with [minDate], [maxDate] and also can be rendered by the shouldRender in Component's Config prop
       if (
-        // [defaultValue] is in Range of [MinDate] and [MaxDate] - /start
+        // [initialValue] is in Range of [MinDate] and [MaxDate] - /start
         shouldRenderItem(
           defaultSelectedDateObject,
           'month',
@@ -209,7 +211,7 @@ export function usePicker(props: WheelPickerProps) {
           defaultSelectedDateObject.year,
         ) &&
         // /end
-        // [defaultValue] can be rendered by the [shouldRender] Config method - /start
+        // [initialValue] can be rendered by the [shouldRender] Config method - /start
         configShouldRender(defaultSelectedDateObject, 'year') &&
         configShouldRender(defaultSelectedDateObject, 'month') &&
         configShouldRender(defaultSelectedDateObject, 'day')
@@ -223,8 +225,8 @@ export function usePicker(props: WheelPickerProps) {
     const currentDateAsObject = currentDateObject();
 
     if (isMinDateValid) {
-      // We goes here if `maxDate` or `defaultValue` is not valid as valid date
-      // Check if the `Current Date` is bigger than or Equals the `Min Date`, if was true, consider the `Current Date` as `defaultValue`
+      // We goes here if `maxDate` or `initialValue` is not valid as valid date
+      // Check if the `Current Date` is bigger than or Equals the `Min Date`, if was true, consider the `Current Date` as `initialValue`
       if (
         isAfter(currentDate, props.minDate!) ||
         isEqual(currentDate, props.minDate!)
@@ -234,8 +236,8 @@ export function usePicker(props: WheelPickerProps) {
 
       return minDateObject;
     } else if (isMaxDateValid) {
-      // We goes here if `defaultValue` is not valid as valid date
-      // Check if the `Current Date` is less than or Equals the `maxDate`, if was true, consider the `currentDate` as the `defaultValue`
+      // We goes here if `initialValue` is not valid as valid date
+      // Check if the `Current Date` is less than or Equals the `maxDate`, if was true, consider the `currentDate` as the `initialValue`
       if (
         isBefore(currentDate, props.maxDate!) ||
         isEqual(currentDate, props.maxDate!)
@@ -243,11 +245,11 @@ export function usePicker(props: WheelPickerProps) {
         return currentDateAsObject;
       }
 
-      // `Current Date` is not in range of [maxDate] and Max Date should be used as `defaultValue`
+      // `Current Date` is not in range of [maxDate] and Max Date should be used as `initialValue`
       return maxDateObject;
     }
 
-    // I tried my best but `defaultValue`, `maxDate` and `minDate` are not valid dates.
+    // I tried my best but `initialValue`, `maxDate` and `minDate` are not valid dates.
     throw new Error(
       `[PersianMobileDatePicker] I tried my best but can't consider a valid default value for using in the Picker's Columns.`,
     );
@@ -256,11 +258,12 @@ export function usePicker(props: WheelPickerProps) {
     maxDateObject,
     minDateObject,
     isMaxDateValid,
-    props.defaultValue,
-    isDefaultValueValid,
+    props.value?.date,
+    props.value?.object,
+    props.initialValue,
+    isInitialValueValid,
     selectedDateRef.current,
   ]);
-
   /**
    * Default Picker selected columns value which goes from the parent to local changes
    *
@@ -608,8 +611,8 @@ export function usePicker(props: WheelPickerProps) {
     isMinDateValid,
     isMaxDateValid,
 
-    isDefaultValueValid,
-    defaultValueDateObject,
+    isInitialValueValid,
+    initialValueDateObject,
     defaultPickerValueAsString,
 
     // Functions

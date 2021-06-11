@@ -15,6 +15,8 @@ export const StyledCaption = styled.div<CaptionProps>`
   font-size: 1.1em;
   border-bottom: 1px solid #e0e0e0;
 `;
+StyledCaption.displayName = 'PersianTools(WheelPicker)(Caption)';
+
 export const StyledTitle = styled.div`
   width: 100%;
   text-align: center;
@@ -23,5 +25,10 @@ export const StyledTitle = styled.div`
   font-weight: bold;
   font-size: 1.1em;
 `;
+StyledTitle.displayName = 'PersianTools(WheelPicker)(Title)';
+
 export const PickerWithStyle = styled(Picker)``;
+PickerWithStyle.displayName = 'PersianTools(WheelPicker)(PickerColumns)';
+
 export const PickerItemWithStyle = styled(Picker.Item)``;
+PickerItemWithStyle.displayName = 'PersianTools(WheelPicker)(PickerItems)';

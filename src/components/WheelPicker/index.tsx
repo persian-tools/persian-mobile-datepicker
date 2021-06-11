@@ -18,8 +18,8 @@ import {
 } from '../../helpers';
 import {
   pickerData,
-  convertDateObjectToDateInstance,
   getDayOfYear,
+  convertDateObjectToDateInstance,
 } from '../../helpers/date';
 // Events
 import { solarEvents } from '../../events/solar';
@@ -115,6 +115,7 @@ export const WheelPicker: FC<WheelPickerProps> = (props) => {
     props.endYear,
   ]);
 
+  // Call onChange for the first time that the WheelPicker has mounted.
   React.useEffect(() => {
     if (selectedDate && defaultPickerValueAsString.length) {
       onChange(convertSelectedDateObjectToArray(selectedDate));
@@ -254,8 +255,6 @@ export const WheelPicker: FC<WheelPickerProps> = (props) => {
     [selectedDate, props.highlightHolidays, props.highlightWeekends],
   );
 
-  console.count('rerender');
-
   return (
     <React.Fragment>
       {props.title && <StyledTitle>{props.title}</StyledTitle>}
@@ -332,6 +331,7 @@ export const WheelPicker: FC<WheelPickerProps> = (props) => {
   );
 };
 
+WheelPicker.displayName = 'PersianTools(WheelPicker)';
 WheelPicker.defaultProps = {
   startYear: 30, // past 30 years
   endYear: 30, // next 30 years

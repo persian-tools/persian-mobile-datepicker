@@ -11,9 +11,14 @@ import {
 } from './index.styles';
 // Types
 import type { PickerProps } from './index.types';
+import type { WheelPickerSelectEvent } from './components/WheelPicker/index.types';
 
 const Picker: React.FC<PickerProps> = (props) => {
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
+  const [
+    selectedDate,
+    setSelectedDate,
+  ] = React.useState<WheelPickerSelectEvent>();
 
   React.useEffect(() => {
     setIsOpen(props.isOpen);
@@ -22,6 +27,16 @@ const Picker: React.FC<PickerProps> = (props) => {
   function handleClose() {
     setIsOpen(false);
     props.onClose?.();
+  }
+
+  function handleOnChange(selected: WheelPickerSelectEvent) {
+    setSelectedDate(selected);
+    props.onChange?.(selected);
+  }
+
+  function handleSubmit() {
+    handleClose();
+    props.onSubmit(selectedDate!);
   }
 
   return (
@@ -36,25 +51,28 @@ const Picker: React.FC<PickerProps> = (props) => {
         <Sheet.Content disableDrag={props.disableSheetDrag}>
           <WheelPicker
             title={props.title}
+            value={props.value}
             config={props.config}
             minDate={props.minDate}
             maxDate={props.maxDate}
-            defaultValue={props.defaultValue}
+            endYear={props.endYear}
+            onChange={handleOnChange}
+            disabled={props.disabled}
+            startYear={props.startYear}
+            addDayName={props.addDayName}
+            initialValue={props.initialValue}
             classNamePrefix={props.classNamePrefix}
             highlightWeekends={props.highlightWeekends}
             highlightHolidays={props.highlightHolidays}
-            endYear={props.endYear}
-            startYear={props.startYear}
-            onChange={props.onChange}
-            disabled={props.disabled}
-            addDayName={props.addDayName}
           />
 
           <StyledFooter>
             {props.showCancelButton && (
               <StyledCancelButton>{props.cancelText}</StyledCancelButton>
             )}
-            <StyledSubmitButton>{props.submitText}</StyledSubmitButton>
+            <StyledSubmitButton onClick={handleSubmit}>
+              {props.submitText}
+            </StyledSubmitButton>
           </StyledFooter>
         </Sheet.Content>
       </Sheet.Container>
@@ -63,6 +81,7 @@ const Picker: React.FC<PickerProps> = (props) => {
   );
 };
 
+Picker.displayName = 'PersianTools(Picker)';
 Picker.defaultProps = {
   isOpen: false,
   theme: 'android-light',

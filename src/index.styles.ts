@@ -16,12 +16,14 @@ export const StyledSubmitButton = styled.button`
   line-height: 1.5;
   -webkit-appearance: button;
 `;
+StyledSubmitButton.displayName = 'PersianTools(Picker)(SubmitButton)';
 
 export const StyledCancelButton = styled(StyledSubmitButton)`
   color: #616161;
   background-color: transparent;
   border: 1px solid #c0c0c0;
 `;
+StyledCancelButton.displayName = 'PersianTools(Picker)(CancelButton)';
 
 export const StyledFooter = styled.div`
   position: absolute;
@@ -36,3 +38,4 @@ export const StyledFooter = styled.div`
   align-items: center;
   border-top: 1px solid #e0e0e0;
 `;
+StyledFooter.displayName = 'PersianTools(Picker)(Footer)';

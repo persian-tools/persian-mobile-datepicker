@@ -20,7 +20,7 @@ export interface PickerProps extends WheelPickerProps {
   // Cancel button text
   cancelText?: string;
   // Triggered when you click OK
-  onSelect: (selected: WheelPickerSelectEvent) => void;
+  onSubmit: (selected: WheelPickerSelectEvent) => void;
   // Triggered when click Cancel,
   onCancel?: () => void;
   // Display Cancel button

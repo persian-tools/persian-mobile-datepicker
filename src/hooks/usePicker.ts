@@ -283,19 +283,24 @@ export function usePicker(props: WheelPickerProps) {
   // Calculate days in selected months
   useEffect(() => {
     if (!isObjectEmpty(selectedDate)) {
+      const $daysInMonth = calculateDaysInMonth(
+        Number(selectedDate.year),
+        Number(selectedDate.month),
+      );
       if (
-        previousSelectedDate?.month !== selectedDate?.month ||
-        previousSelectedDate?.year !== selectedDate?.year
+        (previousSelectedDate?.month !== selectedDate?.month ||
+          previousSelectedDate?.year !== selectedDate?.year) &&
+        daysInMonth !== $daysInMonth
       ) {
-        setDaysInMonth(
-          calculateDaysInMonth(
-            Number(selectedDate.year),
-            Number(selectedDate.month),
-          ),
-        );
+        setDaysInMonth($daysInMonth);
       }
     }
-  }, [selectedDate, previousSelectedDate?.year, previousSelectedDate?.month]);
+  }, [
+    selectedDate.month,
+    selectedDate.year,
+    previousSelectedDate?.year,
+    previousSelectedDate?.month,
+  ]);
 
   // Handlers
   /**

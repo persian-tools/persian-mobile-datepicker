@@ -30,7 +30,7 @@ import { usePrevious } from './usePrevious';
 import { solarEvents } from '../events/solar';
 // Types
 import type {
-  DateConfig,
+  DatePickerConfig,
   DateConfigTypes,
   PickerExtraDateInfo,
   PickerDateModel,
@@ -47,11 +47,11 @@ export function usePicker(props: WheelPickerProps) {
   /**
    * Date picker columns config
    *
-   * @return {Required<DateConfig>}
+   * @return {Required<DatePickerConfig>}
    * @private
    */
-  const configs = useMemo<Required<DateConfig>>(() => {
-    const config = { ...props.config } as Required<DateConfig>;
+  const configs = useMemo<Required<DatePickerConfig>>(() => {
+    const config = { ...props.config } as Required<DatePickerConfig>;
     if (config.month && !config.month.formatter) {
       config.month.formatter = (value) => jalaliMonths[value.month!];
     }

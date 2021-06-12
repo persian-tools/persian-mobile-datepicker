@@ -15,10 +15,8 @@ import type { WheelPickerSelectEvent } from './components/WheelPicker/index.type
 
 const Picker: React.FC<PickerProps> = (props) => {
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
-  const [
-    selectedDate,
-    setSelectedDate,
-  ] = React.useState<WheelPickerSelectEvent>();
+  const [selectedDate, setSelectedDate] =
+    React.useState<WheelPickerSelectEvent>();
 
   React.useEffect(() => {
     setIsOpen(props.isOpen);
@@ -57,7 +55,6 @@ const Picker: React.FC<PickerProps> = (props) => {
             maxDate={props.maxDate}
             endYear={props.endYear}
             onChange={handleOnChange}
-            disabled={props.disabled}
             startYear={props.startYear}
             addDayName={props.addDayName}
             initialValue={props.initialValue}
@@ -88,7 +85,6 @@ Picker.defaultProps = {
   classNamePrefix: 'persian-datepicker',
   submitText: 'تایید',
   cancelText: 'انصراف',
-  disabled: false,
   showCancelButton: true,
   disableSheetDrag: true,
   addDayName: false,
@@ -97,7 +93,7 @@ Picker.defaultProps = {
 export { Picker, WheelPicker };
 export * from './helpers/date';
 export type {
-  DateConfig,
+  DatePickerConfig,
   WheelPickerSelectEvent,
   WheelPickerProps,
   PickerColumnCaption,

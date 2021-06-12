@@ -137,7 +137,9 @@ export function usePicker(props: WheelPickerProps) {
       year = currentYear + startYear;
     }
 
-    return toPositive(currentYear - year);
+    const result = toPositive(currentYear - year);
+
+    return result === 0 ? year : result;
   }, [
     isMinDateValid,
     minDateObject,
@@ -145,6 +147,7 @@ export function usePicker(props: WheelPickerProps) {
     initialValueDateObject,
     props.startYear,
   ]);
+
   /**
    * * Get Max Year of the [Year Column] which should be rendered
    *
@@ -156,7 +159,7 @@ export function usePicker(props: WheelPickerProps) {
     const endYear = Number(props.endYear);
 
     let year: number;
-    if (isMinDateValid) {
+    if (isMaxDateValid) {
       year = maxDateObject.year;
     } else if (isInitialValueValid) {
       year = initialValueDateObject.year + endYear;
@@ -164,9 +167,11 @@ export function usePicker(props: WheelPickerProps) {
       year = currentYear + endYear;
     }
 
-    return toPositive(currentYear - year);
+    const result = toPositive(currentYear - year);
+
+    return result === 0 ? currentYear : result;
   }, [
-    isMinDateValid,
+    isMaxDateValid,
     maxDateObject,
     initialValueDateObject,
     props.endYear,
@@ -249,14 +254,14 @@ export function usePicker(props: WheelPickerProps) {
       return maxDateObject;
     }
 
-    // I tried my best but `initialValue`, `maxDate` and `minDate` are not valid dates.
+    // I tried my best but `value`, `initialValue`, `maxDate` and `minDate` are not valid dates.
     throw new Error(
       `[PersianMobileDatePicker] I tried my best but can't consider a valid default value for using in the Picker's Columns.`,
     );
   }, [
+    props.maxDate,
+    props.minDate,
     isMinDateValid,
-    maxDateObject,
-    minDateObject,
     isMaxDateValid,
     props.value?.date,
     props.value?.object,
@@ -307,6 +312,30 @@ export function usePicker(props: WheelPickerProps) {
 
   // Handlers
   /**
+   * This function will call `shouldRender` in the Config object, which gave us one of the DatePicker component's props and checks to render the Item(This property is optional).
+   *
+   * @param {PickerDateModel} currentSelectedDate
+   * @param {DateConfigTypes} key
+   * @param {PickerSelectedDateValue} value
+   * @return {boolean}
+   * @private
+   */
+  function configShouldRender(
+    currentSelectedDate: PickerDateModel,
+    key: DateConfigTypes,
+    value?: PickerSelectedDateValue,
+  ): boolean {
+    return (
+      configs?.[key]?.shouldRender?.(
+        addExtraDateInfo(currentSelectedDate, {
+          type: key,
+          value: value ?? currentSelectedDate[key]!,
+        }),
+      ) ?? true
+    );
+  }
+
+  /**
    * Check if entered Year is in Range of Min and Max
    *
    * @param {PickerDateModel} selectedDate - Selected date which is an Object
@@ -334,30 +363,6 @@ export function usePicker(props: WheelPickerProps) {
   }
 
   /**
-   * This function will call `shouldRender` in the Config object, which gave us one of the DatePicker component's props and checks to render the Item(This property is optional).
-   *
-   * @param {PickerDateModel} currentSelectedDate
-   * @param {DateConfigTypes} key
-   * @param {PickerSelectedDateValue} value
-   * @return {boolean}
-   * @private
-   */
-  function configShouldRender(
-    currentSelectedDate: PickerDateModel,
-    key: DateConfigTypes,
-    value?: PickerSelectedDateValue,
-  ): boolean {
-    return (
-      configs?.[key]?.shouldRender?.(
-        addExtraDateInfo(currentSelectedDate, {
-          type: key,
-          value: value ?? currentSelectedDate[key]!,
-        }),
-      ) ?? true
-    );
-  }
-
-  /**
    * * Check if the Month or Day Column's item should be rendered or not
    *
    * @param {PickerDateModel} selectedDate
@@ -374,6 +379,11 @@ export function usePicker(props: WheelPickerProps) {
     // Create new Date object and clone the SelectedDate and assign the entered day to the Object
     const $date = { ...selectedDate, [key]: value };
 
+    // If [minDate] is valid and we are validating the month column,
+    // we should pass the [minDate] day to the [selectedDate] as day value
+    if (key === 'month' && isMinDateValid) {
+      $date.day = minDateObject.day;
+    }
     // Call the Config's shouldRender method to find that we should render this item or not
     // User can prevent rendering the weekend's holidays in Date Picker
     if (!configShouldRender($date, key, value)) return false;

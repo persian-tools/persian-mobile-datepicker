@@ -347,38 +347,36 @@ export function endYear(year: number) {
  * @type {Record<string, (inp?: any) => Array<PickerItemModel>>}
  * @private
  */
-export const pickerData: Record<
-  string,
-  (inp?: any) => Array<PickerItemModel>
-> = {
-  getYears: ({ min, max } = {}) =>
-    generateYearsRange(min, max).map((year) => ({
-      value: year,
-      type: 'year',
-    })),
-  getMonths: (monthsMap = jalaliMonths) =>
-    Object.keys(monthsMap).map((value) => ({
-      type: 'month',
-      value: Number(value),
-    })),
-  getDays: (days = 29) =>
-    generateAnArrayOfNumbers(days).map((day) => ({
-      value: day,
-      type: 'day',
-    })),
-  getHours: () =>
-    generateAnArrayOfNumbers(24).map((hour) => ({
-      value: hour,
-      type: 'hour',
-    })),
-  getSeconds: () =>
-    generateAnArrayOfNumbers(59).map((hour) => ({
-      value: hour,
-      type: 'second',
-    })),
-  getMinutes: () =>
-    generateAnArrayOfNumbers(59).map((hour) => ({
-      value: hour,
-      type: 'minute',
-    })),
-};
+export const pickerData: Record<string, (inp?: any) => Array<PickerItemModel>> =
+  {
+    getYears: ({ min, max } = {}) =>
+      generateYearsRange(min, max).map((year) => ({
+        value: year,
+        type: 'year',
+      })),
+    getMonths: (monthsMap = jalaliMonths) =>
+      Object.keys(monthsMap).map((value) => ({
+        type: 'month',
+        value: Number(value),
+      })),
+    getDays: (days = 29) =>
+      generateAnArrayOfNumbers(days).map((day) => ({
+        value: day,
+        type: 'day',
+      })),
+    getHours: () =>
+      generateAnArrayOfNumbers(24).map((hour) => ({
+        value: hour,
+        type: 'hour',
+      })),
+    getSeconds: () =>
+      generateAnArrayOfNumbers(59).map((hour) => ({
+        value: hour,
+        type: 'second',
+      })),
+    getMinutes: () =>
+      generateAnArrayOfNumbers(59).map((hour) => ({
+        value: hour,
+        type: 'minute',
+      })),
+  };

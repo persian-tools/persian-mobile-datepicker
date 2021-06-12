@@ -65,7 +65,9 @@ const Picker: React.FC<PickerProps> = (props) => {
 
           <StyledFooter>
             {props.showCancelButton && (
-              <StyledCancelButton>{props.cancelText}</StyledCancelButton>
+              <StyledCancelButton onClick={handleClose}>
+                {props.cancelText}
+              </StyledCancelButton>
             )}
             <StyledSubmitButton onClick={handleSubmit}>
               {props.submitText}

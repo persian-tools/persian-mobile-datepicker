@@ -126,16 +126,9 @@
     "framer-motion": "^4.1.17",
     "react": "^17.0.2"
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  }
+  "browserslist": [
+    ">0.1%",
+    "not dead",
+    "not op_mini all"
+  ]
 }

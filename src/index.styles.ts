@@ -32,7 +32,7 @@ export const StyledFooter = styled.div`
   bottom: 0;
   right: 0;
   width: 100%;
-  height: 40px;
+  height: 70px;
   padding: 15px 0;
   display: flex;
   justify-content: space-between;

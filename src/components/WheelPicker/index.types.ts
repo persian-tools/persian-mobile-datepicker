@@ -18,7 +18,7 @@ export interface WheelPickerProps {
   initialValue?: Date;
   // Current picker value
   value?: WheelPickerSelectEvent;
-  // Title
+  // WheelPicker title
   title?: string;
   /**
    * Gets called when value of the picker changes
@@ -27,10 +27,8 @@ export interface WheelPickerProps {
    * @return {void}
    */
   onChange?: (selected: WheelPickerSelectEvent) => void;
-  // Disabled
-  disabled?: boolean;
   // Set config to configure year, month, day, hour, minute and seconds
-  config: DateConfig;
+  config: DatePickerConfig;
   /**
    * Specifies the minimum selectable day by user
    *
@@ -127,7 +125,7 @@ export interface DateConfigValuesModel {
   selectedItemStyle?: CSSProperties;
 }
 
-export type DateConfig = Partial<
+export type DatePickerConfig = Partial<
   {
     [key in DateConfigTypes]: DateConfigValuesModel;
   }

@@ -300,6 +300,7 @@ export const WheelPicker: FC<WheelPickerProps> = (props) => {
             >
               {filterAllowedColumnRows(column.value, column.type).map(
                 (pickerItem) => {
+                  // is current column's item selected?.
                   const isSelectedItem =
                     pickerItem.value ===
                     defaultSelectedDateObject[pickerItem.type];
@@ -336,6 +337,5 @@ WheelPicker.defaultProps = {
   startYear: 30, // past 30 years
   endYear: 30, // next 30 years
   addDayName: false,
-  disabled: false,
   classNamePrefix: 'persian-datepicker',
 };

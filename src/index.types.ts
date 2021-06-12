@@ -1,4 +1,4 @@
-import {
+import type {
   WheelPickerProps,
   WheelPickerSelectEvent,
 } from './components/WheelPicker/index.types';

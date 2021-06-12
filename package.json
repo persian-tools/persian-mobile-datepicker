@@ -1,7 +1,7 @@
 {
   "name": "@persian-tools/persian-mobile-datepicker",
   "version": "0.0.1",
-  "description": "Modern Persian Mobile date picker",
+  "description": "Modern Persian mobile date picker",
   "publishConfig": {
     "access": "public"
   },
@@ -10,12 +10,12 @@
   "umd:main": "build/index.umd.js",
   "esmodule": "build/index.modern.js",
   "module": "build/index.module.js",
-  "types": "build/index.d.ts",
+  "typings": "build/index.d.ts",
   "scripts": {
     "prepare": "npm run build",
-    "base": "microbundle --no-css-modules --compress --name persian-mobile-datepicker --strict --jsx React.createElement",
-    "build": "npm run base -- --raw --sourcemap false",
-    "dev": "npm run base -- watch",
+    "bundler": "microbundle --no-css-modules --name persian-mobile-datepicker --strict --jsx React.createElement",
+    "build": "npm run bundler -- --raw --sourcemap false --compress",
+    "dev": "npm run bundler -- watch",
     "test": "jest --coverage --config=jest.config.js",
     "report-coverage": "cat ./coverage/lcov.info | coveralls",
     "storybook": "start-storybook -p 6006 --ci",
@@ -23,6 +23,7 @@
     "deploy-storybook": "storybook-to-ghpages",
     "semantic-release": "semantic-release"
   },
+  "home": "https:///persian-tools.github.io//persian-mobile-datepicker",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/persian-tools/persian-mobile-datepicker.git"
@@ -31,13 +32,14 @@
     "persian",
     "datepicker",
     "mobile-datepicker",
-    "persian-datepicker"
+    "persian-datepicker",
+    "persian-mobile-datepicker"
   ],
   "files": [
     "build"
   ],
   "engines": {
-    "node": ">= 12.13.0"
+    "node": ">= 14.15.0"
   },
   "author": "Ali Torki <ali_4286@live.com>",
   "license": "MIT",
@@ -46,11 +48,8 @@
   },
   "homepage": "https://github.com/persian-tools/persian-mobile-datepicker#readme",
   "dependencies": {
-    "@persian-tools/persian-tools": "^1.6.1",
-    "@types/styled-components": "^5.1.10",
     "date-fns-jalali": "^2.22.1-0",
     "framer-motion": "^4.1.17",
-    "react": "^17.0.2",
     "react-modal-sheet": "^1.4.0",
     "rmc-picker": "^5.0.10",
     "styled-components": "^5.3.0"
@@ -73,6 +72,9 @@
     "@storybook/storybook-deployer": "^2.8.8",
     "@testing-library/react-hooks": "^7.0.0",
     "@types/jest": "^26.0.23",
+    "@types/react": "^17.0.11",
+    "@types/styled-components": "^5.1.10",
+    "@typescript-eslint/eslint-plugin": "^4.26.1",
     "@typescript-eslint/parser": "^4.26.1",
     "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "^10.0.1",
@@ -82,6 +84,7 @@
     "coveralls": "^3.1.0",
     "eslint": "^7.28.0",
     "eslint-config-airbnb": "^18.2.1",
+    "eslint-import-resolver-typescript": "^2.4.0",
     "eslint-plugin-import": "^2.23.4",
     "eslint-plugin-jsx-a11y": "^6.4.1",
     "eslint-plugin-react": "^7.24.0",
@@ -89,9 +92,9 @@
     "husky": "^6.0.0",
     "jest": "^27.0.4",
     "jest-dom": "^3.0.0",
-    "microbundle": "^0.13.2",
+    "microbundle": "^0.13.3",
     "parcel-bundler": "^1.12.4",
-    "prettier": "^2.2.1",
+    "prettier": "^2.3.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-test-renderer": "^17.0.2",

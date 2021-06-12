@@ -15,24 +15,33 @@
     "bundler": "microbundle --no-css-modules --name persian-mobile-datepicker --strict --jsx React.createElement",
     "build": "npm run bundler -- --raw --sourcemap false --compress",
     "dev": "npm run bundler -- watch",
-    "test": "jest --coverage --config=jest.config.js",
+    "prerelease": "npm run test",
+    "release": "npm run build",
+    "postrelease": "standard-version && npm run deploy-storybook",
+    "release:beta": "npm run micro:build",
+    "postrelease:beta": "standard-version --prerelease beta",
+    "test": "jest --coverage --config=jest.config.js --passWithNoTests",
     "report-coverage": "cat ./coverage/lcov.info | coveralls",
     "storybook": "start-storybook -p 6006 --ci",
     "build-storybook": "build-storybook",
     "deploy-storybook": "storybook-to-ghpages",
-    "semantic-release": "semantic-release"
+    "prepare": "is-ci || husky install",
+    "prepublishOnly": "pinst --disable",
+    "postpublish": "pinst --enable"
   },
   "home": "https:///persian-tools.github.io//persian-mobile-datepicker",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/persian-tools/persian-mobile-datepicker.git"
   },
+  "directories": {
+    "test": "tests"
+  },
   "keywords": [
-    "persian",
     "datepicker",
-    "mobile-datepicker",
-    "persian-datepicker",
-    "persian-mobile-datepicker"
+    "mobile datepicker",
+    "persian datepicker",
+    "persian mobile datepicker"
   ],
   "files": [
     "build"
@@ -60,6 +69,8 @@
     "@babel/polyfill": "^7.2.5",
     "@babel/preset-env": "^7.14.5",
     "@babel/preset-react": "^7.14.5",
+    "@commitlint/cli": "^12.1.1",
+    "@commitlint/config-conventional": "^12.1.1",
     "@persian-tools/persian-tools": "^1.6.1",
     "@semantic-release/changelog": "^5.0.1",
     "@semantic-release/git": "^9.0.0",
@@ -92,17 +103,19 @@
     "eslint-plugin-react": "^7.24.0",
     "eslint-plugin-react-hooks": "^4.2.0",
     "husky": "^6.0.0",
+    "is-ci": "^3.0.0",
     "jest": "^27.0.4",
     "jest-dom": "^3.0.0",
     "microbundle": "^0.13.3",
     "parcel-bundler": "^1.12.4",
+    "pinst": "^2.1.6",
     "prettier": "^2.3.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-test-renderer": "^17.0.2",
     "react-testing-library": "^5.9.0",
     "regenerator-runtime": "^0.13.7",
-    "semantic-release": "^17.4.3",
+    "standard-version": "^9.3.0",
     "ts-jest": "^27.0.3",
     "typescript": "^4.2.2"
   },

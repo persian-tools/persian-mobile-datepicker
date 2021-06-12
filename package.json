@@ -12,7 +12,6 @@
   "module": "build/index.module.js",
   "typings": "build/index.d.ts",
   "scripts": {
-    "prepare": "npm run build",
     "bundler": "microbundle --no-css-modules --name persian-mobile-datepicker --strict --jsx React.createElement",
     "build": "npm run bundler -- --raw --sourcemap false --compress",
     "dev": "npm run bundler -- watch",

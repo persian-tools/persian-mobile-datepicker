@@ -1,1 +1,13 @@
 node_modules
+src
+.storybook
+tests
+.rts2_cache_cjs
+.eslintrc
+.prettierrc
+.eslintignore
+.tsconfig.json
+.babelrc
+release.config.js
+jest.init.js
+jest.config.js

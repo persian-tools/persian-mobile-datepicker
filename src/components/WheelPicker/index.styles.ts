@@ -13,7 +13,9 @@ export const StyledCaption = styled.div<CaptionProps>`
   color: #616161;
   padding-bottom: 5px;
   font-size: 1.1em;
-  border-bottom: 1px solid #e0e0e0;
+  &:not(:empty) {
+    border-bottom: 1px solid #e0e0e0;
+  }
 `;
 StyledCaption.displayName = 'PersianTools(WheelPicker)(Caption)';
 

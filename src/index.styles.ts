@@ -15,6 +15,7 @@ export const StyledSubmitButton = styled.button`
   font-size: 1rem;
   line-height: 1.5;
   -webkit-appearance: button;
+  margin-right: 15px;
 `;
 StyledSubmitButton.displayName = 'PersianTools(Picker)(SubmitButton)';
 
@@ -22,6 +23,7 @@ export const StyledCancelButton = styled(StyledSubmitButton)`
   color: #616161;
   background-color: transparent;
   border: 1px solid #c0c0c0;
+  margin-left: 15px;
 `;
 StyledCancelButton.displayName = 'PersianTools(Picker)(CancelButton)';
 
@@ -30,8 +32,8 @@ export const StyledFooter = styled.div`
   bottom: 0;
   right: 0;
   width: 100%;
-  height: 70px;
-  padding: 15px;
+  height: 40px;
+  padding: 15px 0;
   display: flex;
   justify-content: space-between;
   align-content: center;

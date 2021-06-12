@@ -1,5 +1,4 @@
 {
-  "extends": ["airbnb"],
   "plugins": ["react", "react-hooks", "@typescript-eslint"],
   "env": {
     "browser": true,

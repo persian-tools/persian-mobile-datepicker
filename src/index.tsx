@@ -41,7 +41,7 @@ const Picker: React.FC<PickerProps> = (props) => {
     <Sheet
       isOpen={isOpen}
       onClose={() => handleClose()}
-      snapPoints={[385 + (props.title ? 55 : 0)]}
+      snapPoints={[400 + (props.title ? 55 : 0)]}
       initialSnap={0}
     >
       <Sheet.Container>

@@ -1,6 +1,6 @@
 {
   "name": "@persian-tools/persian-mobile-datepicker",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Modern Persian mobile date picker",
   "publishConfig": {
     "access": "public"
@@ -60,11 +60,14 @@
     "@babel/polyfill": "^7.2.5",
     "@babel/preset-env": "^7.14.5",
     "@babel/preset-react": "^7.14.5",
+    "@persian-tools/persian-tools": "^1.6.1",
     "@semantic-release/changelog": "^5.0.1",
     "@semantic-release/git": "^9.0.0",
     "@storybook/addon-actions": "^6.2.9",
+    "@storybook/addon-docs": "^6.2.9",
     "@storybook/addon-essentials": "^6.2.9",
     "@storybook/addon-links": "^6.2.9",
+    "@storybook/addon-viewport": "^6.2.9",
     "@storybook/addons": "^6.2.9",
     "@storybook/preset-create-react-app": "^3.1.7",
     "@storybook/react": "^6.2.9",
@@ -100,7 +103,8 @@
     "react-testing-library": "^5.9.0",
     "regenerator-runtime": "^0.13.7",
     "semantic-release": "^17.4.3",
-    "ts-jest": "^27.0.3"
+    "ts-jest": "^27.0.3",
+    "typescript": "^4.2.2"
   },
   "resolutions": {
     "@babel/core": "^7.5.4"

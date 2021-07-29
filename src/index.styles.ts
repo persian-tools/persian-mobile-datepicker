@@ -16,6 +16,7 @@ export const StyledSubmitButton = styled.button`
   line-height: 1.5;
   -webkit-appearance: button;
   margin-right: 15px;
+  margin-left: 15px;
 `;
 StyledSubmitButton.displayName = 'PersianTools(Picker)(SubmitButton)';
 

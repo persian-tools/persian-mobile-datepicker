@@ -58,13 +58,6 @@ export const jalaliMonths = {
 /**
  * Convert Jallali Date to Gregorian
  *
- * @param {number} $0.year
- * @param {number} $0.month
- * @param {number} $0.day
- * @param {number} $0.hour
- * @param {number} $0.minute
- * @param {number} $0.second
- *
  * @public
  */
 export function createDateInstance({
@@ -83,8 +76,6 @@ export function createDateInstance({
 /**
  * Convert entered date to an object
  *
- * @param {Date} date
- * @return {RequiredPickerDateModel}
  * @public
  */
 export const convertDateInstanceToDateObject = (
@@ -103,9 +94,6 @@ export const convertDateInstanceToDateObject = (
 /**
  * Convert an object of date to an instance of date function
  *
- * @param {PickerDateModel} dateObject
- * @return {Date}
- *
  * @public
  */
 export const convertDateObjectToDateInstance = (
@@ -117,10 +105,6 @@ export const convertDateObjectToDateInstance = (
 /**
  * Get the number of days in a month of a year
  *
- * @param {number} year
- * @param {number} month
- * @return {number} number of days in a month of a year
- *
  * @public
  */
 export function daysInMonth(year: number, month: number): number {
@@ -129,12 +113,6 @@ export function daysInMonth(year: number, month: number): number {
 
 /**
  * Get the day of the week of the given date.
-
-
- * @param {number} year
- * @param {number} month
- * @param {number} day
- * @return {number}
  *
  * @public
  */
@@ -144,11 +122,8 @@ export function getWeekDay(year: number, month: number, day: number): number {
 
 /**
  * Get the day of the year of the given date.
-
- * @param {number} year
- * @param {number} month
- * @param {number} day
- * @return {number}
+ *
+ * @public
  */
 export function getDayOfYear(year: number, month: number, day: number): number {
   return getDayOfYearFns(createDateInstance({ year, month, day }));
@@ -157,10 +132,6 @@ export function getDayOfYear(year: number, month: number, day: number): number {
 /**
  * Return if the Date is at the Weekend
  *
- * @param {number} year
- * @param {number} month
- * @param {number} day
- * @return {boolean}
  * @public
  */
 export function isWeekend(year: number, month: number, day: number): boolean {
@@ -170,10 +141,6 @@ export function isWeekend(year: number, month: number, day: number): boolean {
 /**
  * Get weekday's name by date
  *
- * @param {number} year
- * @param {number} month
- * @param {number} day
- * @return {WeekDayText} شنبه،...
  * @public
  */
 export function getWeekDayText(
@@ -193,8 +160,7 @@ export function getWeekDayText(
  * Argument is converted to Date using toDate.
  * See toDate Invalid Date is a Date, whose time value is NaN.
  *
- * @param {Date} date
- * @return {boolean}
+ * @public
  */
 export function isValid(date: Date): boolean {
   return dateIsValid(date);
@@ -203,9 +169,6 @@ export function isValid(date: Date): boolean {
 /**
  * Is the first date before the second one?
  *
- * @param {Date} date
- * @param {Date} dateToCompare
- * @return {boolean}
  * @public
  */
 export function isBefore(date: Date, dateToCompare: Date): boolean {
@@ -215,14 +178,20 @@ export function isBefore(date: Date, dateToCompare: Date): boolean {
 /**
  * Is the first date after the second one?
  *
- * @param {Date} date
- * @param {Date} dateToCompare
- * @return {boolean}
+ * @public
  */
 export function isAfter(date: Date, dateToCompare: Date): boolean {
   return isAfterFns(date, dateToCompare);
 }
 
+/**
+ * Return the formatted date string in the given format. The result may vary by locale.
+ *
+ * > ⚠️ Please note that the `format` tokens differ from Moment.js and other libraries.
+ * > See: https://git.io/fxCyr
+ *
+ * @public
+ */
 export function format(date: Date | number, formatBy: string): string {
   return formatFns(date, formatBy);
 }
@@ -230,9 +199,7 @@ export function format(date: Date | number, formatBy: string): string {
 /**
  * Are the given dates equal?
  *
- * @param {Date} dateLeft
- * @param {Date} dateRight
- * @return {boolean}
+ * @public
  */
 export function isEqual(dateLeft: Date, dateRight: Date): boolean {
   return isEqualFns(dateLeft, dateRight);
@@ -241,7 +208,6 @@ export function isEqual(dateLeft: Date, dateRight: Date): boolean {
 /**
  * Return the current Year
  *
- * @return {number}
  * @public
  */
 export function getCurrentYear(): number {
@@ -253,7 +219,6 @@ export type CurrentDateObject = Required<Record<keyof PickerDateModel, number>>;
  * Convert date instance string to an object.
  * The result may vary by locale.
  *
- * @return {CurrentDateObject}
  * @public
  */
 export function currentDateObject(): CurrentDateObject {
@@ -271,9 +236,6 @@ export function currentDateObject(): CurrentDateObject {
 /**
  * Generate a Range of Years to show into the Date Picker
  *
- * @param {number} min Min year range
- * @param {number} max Max year range
- * @return {Array<number>}
  * @private
  */
 function generateYearsRange(min: number, max: number): Array<number> {
@@ -287,8 +249,6 @@ function generateYearsRange(min: number, max: number): Array<number> {
 /**
  * Check if the entered year is Leap
  *
- * @param {number} year
- * @return {boolean}
  * @public
  */
 export function isLeapYear(year: number): boolean {
@@ -299,10 +259,6 @@ export function isLeapYear(year: number): boolean {
  * Calculate the minimum year items which picker should render in Year Column
  *
  * @public
- *
- * @param {number} year
- * @return {number} this value should assign to the [startYear] picker prop
- *
  * @example
  * assume that currentYear is 1400
  * startYear(1380) // 20(currentYear - 1380)
@@ -322,10 +278,6 @@ export function startYear(year: number) {
  * Calculate the maximum year items which picker should render in Year Column
  *
  * @public
- *
- * @param {number} year
- * @return {number} this value should assign to the [endYear] picker prop
- *
  * @example
  * assume that currentYear is 1400
  * endYear(1410) // 10(year - currentYear)
@@ -344,7 +296,6 @@ export function endYear(year: number) {
 /**
  * Combine and Generate all picker columns value
  *
- * @type {Record<string, (inp?: any) => Array<PickerItemModel>>}
  * @private
  */
 export const pickerData: Record<string, (inp?: any) => Array<PickerItemModel>> =

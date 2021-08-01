@@ -15,6 +15,13 @@ export default {
       },
     },
   },
+  parameters: {
+    docs: {
+      source: {
+        type: 'code',
+      },
+    },
+  },
   decorators: [(Story): JSX.Element => <Story />],
 } as Meta<PickerProps>;
 

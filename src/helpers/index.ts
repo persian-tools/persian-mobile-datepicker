@@ -8,9 +8,6 @@ import type { PickerDateModel } from '../components/WheelPicker/index.types';
 export function prefixClassName(prefix: string) {
   /**
    * Classname with returns itself with a prefix value
-   *
-   * @param {string} className
-   * @return {string}
    */
   return (className: string) => `${prefix}-${className}`;
 }
@@ -18,8 +15,7 @@ export function prefixClassName(prefix: string) {
 /**
  * Generate an Array of Numbers with a fixed length
  *
- * @param {number} length
- * @return {Array<number>}
+ * @private
  * @example
  * generateAnArrayOfNumbers(5) // [1,2,3,4,5]
  */
@@ -30,9 +26,7 @@ export function generateAnArrayOfNumbers(length: number): Array<number> {
 /**
  * Generate an array of numbers in range of [start] and [end]
  *
- * @param {number} start
- * @param {number} end
- * @return {Array<number>}
+ * @private
  * @example
  * generateArrayInRangeOfNumbers(1400, 1405) // [1400, 1401, 1402, 1403, 1404, 1405]
  */
@@ -51,8 +45,7 @@ export function generateArrayInRangeOfNumbers(
 /**
  * WheelPicker selected items value is an array of strings which can't help us to finger out the selected date, but we can convert it to a valid date
  *
- * @param {Array<string>} selectedDate
- * @return {PickerDateModel}
+ * @private
  * @example
  * const selectedDate = ["year-1400", "month-3", "day-10"];
  * const parsedSelectedDate = convertSelectedDateToObject(selectedDate);
@@ -80,8 +73,7 @@ export function convertSelectedDateToObject(
 /**
  * Convert the Object of Selected Date to an Array of string which WheelPicker can use to figure out the current selected columns' values by the Date format order
  *
- * @param {PickerDateModel} selectedDate
- * @return {Array<string>}
+ * @private
  * @example
  * const selectedDate = {
  *   month: 3,
@@ -126,8 +118,7 @@ export function isObjectEmpty(obj: Object): boolean {
 /**
  * Convert negative number to positive
  *
- * @param {number} n negative number
- * @return {number} positive number
+ * @private
  * @example
  * toPositive(-10) // 10
  */

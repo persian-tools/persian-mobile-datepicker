@@ -46,9 +46,6 @@ export function usePicker(props: WheelPickerProps) {
   const selectedDateRef = useRef<PickerDateModel>();
   /**
    * Date picker columns config
-   *
-   * @return {Required<DatePickerConfig>}
-   * @private
    */
   const configs = useMemo<Required<DatePickerConfig>>(() => {
     const config = { ...props.config } as Required<DatePickerConfig>;
@@ -61,50 +58,34 @@ export function usePicker(props: WheelPickerProps) {
 
   /**
    * Picker CSS classnames prefix name
-   *
-   * @type {(str: string) => string}
-   * @private
    */
   const classNamePrefix = prefixClassName(props.classNamePrefix!);
 
   /**
-   * * Check if the [Min Date] is valid and has filled
-   *
-   * @type {boolean}
-   * @private
+   * Check if the [Min Date] is valid and has filled
    */
   const isMinDateValid = isValid(props.minDate!);
   /**
-   * * Parse and convert [minDate] to an object
-   *
-   * @type {RequiredPickerDateModel}
+   * Parse and convert [minDate] to an object
    */
   const minDateObject = useMemo<RequiredPickerDateModel>(
     () => convertDateInstanceToDateObject(props.minDate!),
     [props.minDate],
   );
   /**
-   * * Parse and convert [maxDate] to an object
-   *
-   * @type {RequiredPickerDateModel}
+   * Parse and convert [maxDate] to an object
    */
   const maxDateObject = useMemo<RequiredPickerDateModel>(
     () => convertDateInstanceToDateObject(props.maxDate!),
     [props.maxDate],
   );
   /**
-   * * Check if the [Max Date] is valid and has filled
-   *
-   * @type {boolean}
-   * @private
+   * Check if the [Max Date] is valid and has filled
    */
   const isMaxDateValid = isValid(props.maxDate!);
 
   /**
-   * * Parse and convert the [initialValue] that filled as a prop to an Object
-   *
-   * @type {RequiredPickerDateModel}
-   * @private
+   * Parse and convert the [initialValue] that filled as a prop to an Object
    */
   const initialValueDateObject = useMemo<RequiredPickerDateModel>(
     () => convertDateInstanceToDateObject(props.initialValue!),
@@ -112,17 +93,11 @@ export function usePicker(props: WheelPickerProps) {
   );
   /**
    * Check if the Default Value Date is valid and has filled
-   *
-   * @type {boolean}
-   * @private
    */
   const isInitialValueValid = isValid(props.initialValue!);
 
   /**
    * Get Min Year of the Year Column which should be rendered
-   *
-   * @type {number}
-   * @private
    */
   const minYear = useMemo<number>(() => {
     const currentYear = getCurrentYear();
@@ -149,10 +124,7 @@ export function usePicker(props: WheelPickerProps) {
   ]);
 
   /**
-   * * Get Max Year of the [Year Column] which should be rendered
-   *
-   * @type {number}
-   * @private
+   * Get Max Year of the [Year Column] which should be rendered
    */
   const maxYear = useMemo<number>(() => {
     const currentYear = getCurrentYear();
@@ -180,9 +152,6 @@ export function usePicker(props: WheelPickerProps) {
 
   /**
    * Get default selected date by [MinDate], [MaxDate], [initialValue] or current date
-   *
-   * @type {PickerDateModel}
-   * @private
    */
   const defaultSelectedDateObject = useMemo<PickerDateModel>(() => {
     if (
@@ -271,9 +240,6 @@ export function usePicker(props: WheelPickerProps) {
   ]);
   /**
    * Default Picker selected columns value which goes from the parent to local changes
-   *
-   * @type {Array<string>}
-   * @private
    */
   const defaultPickerValueAsString = useMemo<Array<string>>(() => {
     return convertSelectedDateObjectToArray(defaultSelectedDateObject);
@@ -313,12 +279,6 @@ export function usePicker(props: WheelPickerProps) {
   // Handlers
   /**
    * This function will call `shouldRender` in the Config object, which gave us one of the DatePicker component's props and checks to render the Item(This property is optional).
-   *
-   * @param {PickerDateModel} currentSelectedDate
-   * @param {DateConfigTypes} key
-   * @param {PickerSelectedDateValue} value
-   * @return {boolean}
-   * @private
    */
   function configShouldRender(
     currentSelectedDate: PickerDateModel,
@@ -337,11 +297,6 @@ export function usePicker(props: WheelPickerProps) {
 
   /**
    * Check if entered Year is in Range of Min and Max
-   *
-   * @param {PickerDateModel} selectedDate - Selected date which is an Object
-   * @param {number} value - year value as a number
-   * @return {boolean} entered year is allowed to render
-   * @private
    */
   function shouldRenderYearItem(
     selectedDate: PickerDateModel,
@@ -363,13 +318,7 @@ export function usePicker(props: WheelPickerProps) {
   }
 
   /**
-   * * Check if the Month or Day Column's item should be rendered or not
-   *
-   * @param {PickerDateModel} selectedDate
-   * @param {DateConfigTypes} key
-   * @param {PickerSelectedDateValue} value
-   * @return {boolean}
-   * @private
+   * Check if the Month or Day Column's item should be rendered or not
    */
   function shouldRenderItem(
     selectedDate: PickerDateModel,
@@ -417,12 +366,7 @@ export function usePicker(props: WheelPickerProps) {
   }
 
   /**
-   * * Filter all Columns values and only return the Column's items which should be displayed
-   *
-   * @param {Array<PickerItemModel>} pickerList list of Column's items
-   * @param {DateConfigTypes} type type of column
-   * @return {Array<PickerItemModel>} new list of Column's items which should be displayed in the DatePicker
-   * @private
+   * Filter all Columns values and only return the Column's items which should be displayed
    */
   function filterAllowedColumnRows(
     pickerList: Array<PickerItemModel>,
@@ -450,10 +394,6 @@ export function usePicker(props: WheelPickerProps) {
   // Picker Config's Formatters
   /**
    * Format the Picker items' text content
-   *
-   * @param {PickerItemModel} pickerItem
-   * @return {PickerSelectedDateValue | string} columns text content
-   * @private
    */
   function pickerItemTextFormatter(
     pickerItem: PickerItemModel,
@@ -475,10 +415,6 @@ export function usePicker(props: WheelPickerProps) {
 
   /**
    * Get Picker columns Caption and its styles if has
-   *
-   * @param {DateConfigTypes} type
-   * @return {PickerColumnCaption} Caption text and styles
-   * @private
    */
   function getPickerColumnsCaption(
     type: DateConfigTypes,
@@ -488,10 +424,6 @@ export function usePicker(props: WheelPickerProps) {
 
   /**
    * Handle every single of columns' row Classname by their type and value
-   *
-   * @param {PickerItemModel} pickerItem
-   * @return {string}
-   * @private
    */
   function getPickerItemClassNames(pickerItem: PickerItemModel): string {
     const classNamesFormatter = configs[pickerItem.type]?.classname;
@@ -521,10 +453,6 @@ export function usePicker(props: WheelPickerProps) {
 
   /**
    * Highlight Weekends by adding a className dynamically
-   *
-   * @param {number} day
-   * @return {string}
-   * @private
    */
   function highlightWeekendClassName(day: number): string {
     return checkDayIsWeekend(day) ? classNamePrefix('weekend') : '';
@@ -532,9 +460,6 @@ export function usePicker(props: WheelPickerProps) {
 
   /**
    * Check that the day is a weekend or not?
-   *
-   * @param {number} day
-   * @return {boolean}
    */
   function checkDayIsWeekend(day: number): boolean {
     return isWeekend(
@@ -546,9 +471,6 @@ export function usePicker(props: WheelPickerProps) {
 
   /**
    * Check the given day of year is holiday or not?
-   *
-   * @param {number} dayOfYear
-   * @return {boolean}
    */
   function checkDateIsHoliday(dayOfYear: number): boolean {
     return solarEvents[dayOfYear]?.holiday;
@@ -557,11 +479,6 @@ export function usePicker(props: WheelPickerProps) {
   // Utilities
   /**
    * Find WeekDay and WeekName by a selected date and add to the Date object
-   *
-   * @param {PickerDateModel} currentSelectedDate
-   * @param {PickerItemModel} pickerItem
-   * @return {PickerExtraDateInfo}
-   * @private
    */
   function addExtraDateInfo(
     currentSelectedDate: PickerDateModel,

@@ -22,9 +22,6 @@ export interface WheelPickerProps {
   title?: string;
   /**
    * Gets called when value of the picker changes
-   *
-   * @param {WheelPickerSelectEvent} selected
-   * @return {void}
    */
   onChange?: (selected: WheelPickerSelectEvent) => void;
   // Set config to configure year, month, day, hour, minute and seconds

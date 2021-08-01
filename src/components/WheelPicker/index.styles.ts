@@ -3,7 +3,12 @@ import Picker from 'rmc-picker/es/Picker';
 // @ts-ignore
 import styles from 'rmc-picker/assets/index.css';
 
-export const GlobalStyle = createGlobalStyle`${styles}`;
+export const GlobalStyle = createGlobalStyle`
+  .rmc-multi-picker {
+    user-select: none;
+  }
+  ${styles}
+`;
 
 export type CaptionProps = { columnSize: number };
 export const StyledCaption = styled.div<CaptionProps>`

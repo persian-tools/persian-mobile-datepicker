@@ -59,10 +59,6 @@ export const WheelPicker: FC<WheelPickerProps> = (props) => {
   // Memo list
   /**
    * Generate Picker's columns with their values
-   *
-   * @category watchers
-   * @return {PickerColumns}
-   * @private
    */
   const pickerColumns = useMemo<PickerColumns>(() => {
     return Object.keys(props.config).map((column) => {
@@ -124,9 +120,6 @@ export const WheelPicker: FC<WheelPickerProps> = (props) => {
 
   /**
    * Picker onChange event which includes every columns' selected value
-   *
-   * @param { Array<string>} value date
-   * @return {void}
    */
   function onChange(value: Array<string>): void {
     const convertSelectedDate = convertSelectedDateToObject(value);
@@ -194,12 +187,6 @@ export const WheelPicker: FC<WheelPickerProps> = (props) => {
 
   /**
    * Get Picker's item styles such as selected and none selected styles
-   *
-   * @param {DateConfigTypes} type
-   * @param {boolean} isSelected
-   * @return {CSSProperties}
-   *
-   * @private
    */
   const pickerItemStyles = React.useCallback<
     (type: DateConfigTypes, isSelected: boolean) => CSSProperties
@@ -216,11 +203,6 @@ export const WheelPicker: FC<WheelPickerProps> = (props) => {
 
   /**
    * Get Picker's text content styles if the day is weekend or holiday
-   *
-   * @param {PickerItemModel} pickerItem
-   * @return {CSSProperties}
-   *
-   * @private
    */
   const pickerTextContentStyles = React.useCallback<
     (pickerItem: PickerItemModel) => CSSProperties

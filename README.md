@@ -276,6 +276,14 @@ import { convertDateInstanceToDateObject } from '@persian-tools/persian-mobile-d
 const convertDateToObject = convertDateInstanceToDateObject(new Date()); // {year: 1400, month: 5, day: 15, hour: 22, minute: 20,second: 10}
 ```
 
+- `daysInMonth`: Get the number of days in a month of a year
+
+```javascript
+import { daysInMonth } from '@persian-tools/persian-mobile-datepicker';
+
+const getDaysInMonth = daysInMonth(1400, 1); // 31
+```
+
 ## Roadmap
 
 - [ ] Add hour, minute and seconds

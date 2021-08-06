@@ -1,13 +1,23 @@
-import { createBaseStory, Template } from './base';
-import { createDateInstance } from '../index';
+import React from 'react';
+import { createBaseStory, BaseTemplate } from './base';
+import {
+  createDateInstance,
+  format,
+  Picker,
+  WheelPickerSelectEvent,
+} from '../index'; // in your code: @persian-tools/persian-mobile-datepicker
+import { storiesOf } from '@storybook/react';
+import { action } from '@storybook/addon-actions';
 import { digitsEnToFa } from '@persian-tools/persian-tools';
 // Types
-import type { DatePickerConfig } from '../index';
+import type { ComponentStory } from '@storybook/react';
+import type { Event } from '../components/WheelPicker/index.types';
 
 export default createBaseStory('Columns Text Formatter');
 
-export const ColumnsTextFormatter = Template.bind({});
-const ColumnsTextFormatterConfig: DatePickerConfig = {
+const stories = storiesOf('persian-mobile-datepicker', module);
+
+const configs = {
   year: {
     caption: {
       text: 'سال',
@@ -15,7 +25,7 @@ const ColumnsTextFormatterConfig: DatePickerConfig = {
         color: '#1672ec',
       },
     },
-    formatter(value) {
+    formatter(value: Record<string, any>) {
       return digitsEnToFa(value.year);
     },
   },
@@ -34,16 +44,51 @@ const ColumnsTextFormatterConfig: DatePickerConfig = {
         color: '#1672ec',
       },
     },
-    formatter(value) {
+    formatter(value: Record<string, any>) {
       return digitsEnToFa(value.day);
     },
   },
 };
-ColumnsTextFormatter.args = {
-  isOpen: true,
-  theme: 'light',
-  highlightHolidays: true,
-  highlightWeekends: true,
-  config: ColumnsTextFormatterConfig,
-  initialValue: createDateInstance({ year: 1400, month: 1, day: 1 }),
+
+const BasePickerTemplate: ComponentStory<typeof Picker> = (args) => {
+  const [selectedDateValue, setSelectedDateValue] = React.useState<string>();
+  const [selectedDateEvents, setSelectedDateEvents] = React.useState<
+    Array<Event>
+  >([]);
+
+  function handleOnChange(data: WheelPickerSelectEvent) {
+    setSelectedDateValue(format(data.date!, 'd MMMM yyyy'));
+    setSelectedDateEvents(data.events);
+    action('onClick')(data);
+  }
+
+  return (
+    <BaseTemplate value={selectedDateValue!} events={selectedDateEvents!}>
+      <Picker {...args} onChange={handleOnChange} onSubmit={handleOnChange} />
+    </BaseTemplate>
+  );
 };
+
+stories.add(
+  'Columns Text Formatter',
+  (args: any) => <BasePickerTemplate {...args} />,
+  {
+    component: Picker,
+    args: {
+      isOpen: true,
+      theme: 'auto',
+      highlightHolidays: true,
+      highlightWeekends: true,
+      config: configs,
+      initialValue: createDateInstance({ year: 1400, month: 1, day: 1 }),
+    },
+    argTypes: {
+      theme: {
+        control: {
+          type: 'inline-radio',
+          options: ['light', 'dark', 'auto'],
+        },
+      },
+    },
+  },
+);

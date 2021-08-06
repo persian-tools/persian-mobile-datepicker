@@ -1,18 +1,47 @@
-import { createDateInstance } from '../index';
-import { createBaseStory, Template } from './base';
+import React from 'react';
+import { createBaseStory, BaseTemplate } from './base';
+import {
+  createDateInstance,
+  format,
+  Picker,
+  WheelPickerSelectEvent,
+} from '../index'; // in your code: @persian-tools/persian-mobile-datepicker
+import { storiesOf } from '@storybook/react';
+import { action } from '@storybook/addon-actions';
 import { digitsEnToFa } from '@persian-tools/persian-tools';
 // Types
-import type { DatePickerConfig } from '../index';
+import type { ComponentStory } from '@storybook/react';
+import type { Event } from '../components/WheelPicker/index.types';
 
 export default createBaseStory('Columns with styles');
 
-export const FirstColumnsStyles = Template.bind({});
-const FirstColumnsStylesConfig: DatePickerConfig = {
+const stories = storiesOf('persian-mobile-datepicker', module);
+
+const BasePickerTemplate: ComponentStory<typeof Picker> = (args) => {
+  const [selectedDateValue, setSelectedDateValue] = React.useState<string>();
+  const [selectedDateEvents, setSelectedDateEvents] = React.useState<
+    Array<Event>
+  >([]);
+
+  function handleOnChange(data: WheelPickerSelectEvent) {
+    setSelectedDateValue(format(data.date!, 'd MMMM yyyy'));
+    setSelectedDateEvents(data.events);
+    action('onClick')(data);
+  }
+
+  return (
+    <BaseTemplate value={selectedDateValue!} events={selectedDateEvents!}>
+      <Picker {...args} onChange={handleOnChange} onSubmit={handleOnChange} />
+    </BaseTemplate>
+  );
+};
+
+const firstColumnsStylesConfig = {
   year: {
     caption: {
       text: 'سال',
     },
-    formatter(value) {
+    formatter(value: Record<string, any>) {
       return digitsEnToFa(value.year);
     },
     columnStyle: {
@@ -37,7 +66,7 @@ const FirstColumnsStylesConfig: DatePickerConfig = {
     caption: {
       text: 'روز',
     },
-    formatter(value) {
+    formatter(value: Record<string, any>) {
       return digitsEnToFa(value.day);
     },
     columnStyle: {
@@ -48,23 +77,13 @@ const FirstColumnsStylesConfig: DatePickerConfig = {
     },
   },
 };
-FirstColumnsStyles.args = {
-  isOpen: true,
-  height: 400,
-  theme: 'light',
-  highlightHolidays: true,
-  highlightWeekends: true,
-  config: FirstColumnsStylesConfig,
-  initialValue: createDateInstance({ year: 1400, month: 1, day: 1 }),
-};
 
-export const SecondColumnsStyles = Template.bind({});
-const SecondColumnsStylesConfig: DatePickerConfig = {
+const secondColumnsStylesConfig = {
   year: {
     caption: {
       text: 'سال',
     },
-    formatter(value) {
+    formatter(value: Record<string, any>) {
       return digitsEnToFa(value.year);
     },
     selectedItemStyle: {
@@ -96,7 +115,7 @@ const SecondColumnsStylesConfig: DatePickerConfig = {
     caption: {
       text: 'روز',
     },
-    formatter(value) {
+    formatter(value: Record<string, any>) {
       return digitsEnToFa(value.day);
     },
     itemStyle: {
@@ -109,12 +128,51 @@ const SecondColumnsStylesConfig: DatePickerConfig = {
     },
   },
 };
-SecondColumnsStyles.args = {
-  isOpen: true,
-  height: 400,
-  theme: 'light',
-  highlightHolidays: true,
-  highlightWeekends: true,
-  config: SecondColumnsStylesConfig,
-  initialValue: createDateInstance({ year: 1400, month: 1, day: 1 }),
-};
+
+stories
+  .add(
+    'Columns with styles 1',
+    (args: any) => <BasePickerTemplate {...args} />,
+    {
+      component: Picker,
+      args: {
+        isOpen: true,
+        theme: 'auto',
+        highlightHolidays: true,
+        highlightWeekends: true,
+        config: firstColumnsStylesConfig,
+        initialValue: createDateInstance({ year: 1400, month: 1, day: 1 }),
+      },
+      argTypes: {
+        theme: {
+          control: {
+            type: 'inline-radio',
+            options: ['light', 'dark', 'auto'],
+          },
+        },
+      },
+    },
+  )
+  .add(
+    'Columns with styles 2',
+    (args: any) => <BasePickerTemplate {...args} />,
+    {
+      component: Picker,
+      args: {
+        isOpen: true,
+        theme: 'auto',
+        highlightHolidays: true,
+        highlightWeekends: true,
+        config: secondColumnsStylesConfig,
+        initialValue: createDateInstance({ year: 1400, month: 1, day: 1 }),
+      },
+      argTypes: {
+        theme: {
+          control: {
+            type: 'inline-radio',
+            options: ['light', 'dark', 'auto'],
+          },
+        },
+      },
+    },
+  );

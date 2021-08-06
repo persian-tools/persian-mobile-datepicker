@@ -1,25 +1,17 @@
-# persian-mobile-datepicker
+# Persian Mobile Date and Time picker
 
-Persian Mobile Date and Time picker
-
-persian-mobile-datepicker provides a component that can set year, month, day, hour, minute and second by sliding up or down.
+This library provides a component that can set year, month, day, hour, minute and second by sliding up or down.
 
 ## Theme
-
-### android-light
-
 <div style="padding:30px;display:flex; flex-direction:row; justify-content: space-between">
-
   <div>
-  Light theme
-
-  <img src="./src/assets/images/light.PNG" width="250" style="margin-top: 20px" />
+    <p>Light theme</p>
+    <img src="./images/light.png" width="250" style="margin-top: 20px" />
   </div>
 
   <div>
-  Dark theme
-
-  <img src="./src/assets/images/dark.PNG" width="250"  style="margin-top: 20px" />
+    <P>Dark theme</P>
+    <img src="./images/dark.png" width="250"  style="margin-top: 20px" />
   </div>
 </div>
 
@@ -29,7 +21,11 @@ persian-mobile-datepicker provides a component that can set year, month, day, ho
 
 Using [npm](https://www.npmjs.com/):
 
-    $ npm install @persian-tools/persian-mobile-datepicker --save
+    $ npm install --save @persian-tools/persian-mobile-datepicker
+
+Using [yarn](https://yarnpkg.com):
+
+    $ yarn add --save @persian-tools/persian-mobile-datepicker
 
 ### Import what you need
 
@@ -192,7 +188,7 @@ You can do it with the help of formatter props of month in config
 ```
 
 <div style="padding:30px">
-  <img src="./src/assets/images/monthFormatter.PNG" width="300" />
+  <img src="./images/monthFormatter.png" width="300" />
 </div>
 
 ### Removing a day
@@ -223,7 +219,7 @@ the following config code will remove the 6th day of 3rd month
 ```
 
 <div style="padding:30px">
-  <img src="./src/assets/images/shouldRenderer.PNG" width="300" />
+  <img src="./images/shouldRenderer.png" width="300" />
 </div>
 
 ### Styling columns
@@ -242,8 +238,8 @@ If you want to change the inline style of columns or cells of datepicker you can
       text: "ماه",
     },
     columnStyle: { background: "#aaa", color: "green" },
-		itemStyle: { color: "green" },
-		selectedItemStyle: { color: "blue" },
+    itemStyle: { color: "green" },
+    selectedItemStyle: { color: "blue" },
   },
   day: {
     caption: {
@@ -254,7 +250,7 @@ If you want to change the inline style of columns or cells of datepicker you can
 ```
 
 <div style="padding:30px">
-  <img src="./src/assets/images/columnStyle.PNG" width="300" />
+  <img src="./images/columnStyle.png" width="300" />
 </div>
 
 ## Roadmap

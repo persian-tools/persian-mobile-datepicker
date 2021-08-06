@@ -25,8 +25,6 @@
     "storybook": "start-storybook -p 6006 --ci",
     "build-storybook": "build-storybook",
     "deploy-storybook": "storybook-to-ghpages",
-    "demo:dev": "styleguidist server",
-    "demo:build": "styleguidist build",
     "prepare": "is-ci || husky install",
     "prepublishOnly": "pinst --disable",
     "postpublish": "pinst --enable"

@@ -29,6 +29,11 @@
     "prepublishOnly": "pinst --disable",
     "postpublish": "pinst --enable"
   },
+  "storybook-deployer": {
+    "gitUsername": "ali-master",
+    "gitEmail": "ali_4286@live.com",
+    "commitMessage": "ci: deploy Storybook to GitHub Pages [skip ci]"
+  },
   "home": "https:///persian-tools.github.io//persian-mobile-datepicker",
   "repository": {
     "type": "git",

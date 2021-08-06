@@ -1,4 +1,4 @@
-import { CSSProperties } from 'react';
+import { CSSProperties, ReactNode } from 'react';
 
 export type EventTypes = 'solar' | 'persian';
 export interface Event {
@@ -19,7 +19,7 @@ export interface WheelPickerProps {
   // Current picker value
   value?: WheelPickerSelectEvent;
   // WheelPicker title
-  title?: string;
+  title?: ReactNode;
   /**
    * Gets called when value of the picker changes
    */
@@ -43,16 +43,16 @@ export interface WheelPickerProps {
   /**
    * The Minimum selectable year
    *
-   * @description Picker will calculate the StartYear by this approach: currentYear + startYear
-   * @default 30
+   * @description Picker will calculate the StartYear by this approach: currentYear + endYear
+   * @default currentYear + 30 next year
    * @type {number}
    */
   endYear?: number;
   /**
    * The Maximum selectable year
    *
-   * @description Picker will calculate the StartYear by this approach: currentYear + startYear
-   * @default 30
+   * @description Picker will calculate the StartYear by this approach: currentYear - startYear
+   * @default currentYear - 30 years ago
    * @type {number}
    */
   startYear?: number;

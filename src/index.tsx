@@ -57,6 +57,11 @@ const Picker: React.FC<PickerProps> = (props) => {
     setIsOpen(props.isOpen);
   }, [props.isOpen]);
 
+  function handleCancel() {
+    props.onCancel?.();
+    handleClose();
+  }
+
   function handleClose() {
     setIsOpen(false);
     props.onClose?.();
@@ -68,21 +73,21 @@ const Picker: React.FC<PickerProps> = (props) => {
   }
 
   function handleSubmit() {
-    handleClose();
     props.onSubmit(selectedDate!);
+    handleClose();
   }
 
   return (
     <StyledSheet
       isOpen={isOpen}
-      onClose={() => handleClose()}
+      onClose={() => handleCancel()}
       snapPoints={[props.height! + (props.title ? 55 : 0)]}
       initialSnap={0}
       style={props.sheetStyles!}
       theme={theme}
     >
       <Sheet.Container>
-        <Sheet.Header />
+        <Sheet.Header disableDrag={props.disableSheetHeaderDrag} />
         <Sheet.Content disableDrag={props.disableSheetDrag}>
           <WheelPicker
             title={props.title}
@@ -104,12 +109,13 @@ const Picker: React.FC<PickerProps> = (props) => {
             {props.showCancelButton && (
               <StyledCancelButton
                 className="sheet-footer__cancel"
-                onClick={handleClose}
+                onClick={handleCancel}
               >
                 {props.cancelText}
               </StyledCancelButton>
             )}
             <StyledSubmitButton
+              fullWidth={!props.showCancelButton}
               className="sheet-footer__submit"
               onClick={handleSubmit}
             >
@@ -132,6 +138,7 @@ Picker.defaultProps = {
   cancelText: 'انصراف',
   showCancelButton: true,
   disableSheetDrag: true,
+  disableSheetHeaderDrag: true,
   addDayName: false,
   height: 385,
   sheetStyles: {},

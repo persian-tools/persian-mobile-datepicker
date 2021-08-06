@@ -12,20 +12,22 @@ export interface PickerProps extends WheelPickerProps {
   classNamePrefix?: string;
   // Picker open status
   isOpen: boolean;
-  // Call when Picker Sheet modal has closed
+  // Call when Picker Sheet modal has closed or User clicked on Cancel Button or User manually closed the Sheet modal by drag and drop
   onClose?: () => void;
+  // Call when user clicked on Cancel Button
+  onCancel?: () => void;
   // Submit button text
   submitText?: string;
   // Cancel button text
   cancelText?: string;
   // Triggered when you click OK
   onSubmit: (selected: WheelPickerSelectEvent) => void;
-  // Triggered when click Cancel,
-  onCancel?: () => void;
   // Display Cancel button
   showCancelButton?: boolean;
-  // Disable drag for the whole sheet.
+  // Disable drag for the sheet content.
   disableSheetDrag?: boolean;
+  // Disable drag for the sheet header.
+  disableSheetHeaderDrag?: boolean;
   /**
    * Height of Picker Sheet modal
    *

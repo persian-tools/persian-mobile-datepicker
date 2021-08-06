@@ -234,19 +234,6 @@ export function currentDateObject(): CurrentDateObject {
 }
 
 /**
- * Generate a Range of Years to show into the Date Picker
- *
- * @private
- */
-function generateYearsRange(min: number, max: number): Array<number> {
-  const currentYear = getCurrentYear();
-  const minRange = currentYear - min;
-  const maxRange = currentYear + max;
-
-  return generateArrayInRangeOfNumbers(minRange, maxRange);
-}
-
-/**
  * Check if the entered year is Leap
  *
  * @public
@@ -289,7 +276,6 @@ export function endYear(year: number) {
       `[PersianMobileDatePicker] Invalid Year, Usage: endYearTo(1410), means Year picker's column should end in 1410`,
     );
   }
-
   return toPositive(currentYear - year);
 }
 
@@ -301,7 +287,7 @@ export function endYear(year: number) {
 export const pickerData: Record<string, (inp?: any) => Array<PickerItemModel>> =
   {
     getYears: ({ min, max } = {}) =>
-      generateYearsRange(min, max).map((year) => ({
+      generateArrayInRangeOfNumbers(min, max).map((year) => ({
         value: year,
         type: 'year',
       })),

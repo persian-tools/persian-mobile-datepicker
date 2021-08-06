@@ -20,6 +20,7 @@ import {
   pickerData,
   getDayOfYear,
   convertDateObjectToDateInstance,
+  getCurrentYear,
 } from '../../helpers/date';
 // Events
 import { solarEvents } from '../../events/solar';
@@ -304,8 +305,8 @@ export const WheelPicker: FC<WheelPickerProps> = (props) => {
 
 WheelPicker.displayName = 'PersianTools(WheelPicker)';
 WheelPicker.defaultProps = {
-  startYear: 30, // past 30 years
-  endYear: 30, // next 30 years
+  startYear: getCurrentYear() - 30, // since 30 years ago
+  endYear: getCurrentYear() + 30, // up to next 30 years
   addDayName: false,
   classNamePrefix: 'persian-datepicker',
 };

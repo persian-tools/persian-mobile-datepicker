@@ -17,14 +17,12 @@ export const StyledFooter = styled.div`
 `;
 StyledFooter.displayName = 'PersianTools(Picker)(Footer)';
 
-export const StyledSubmitButton = styled.button`
-  width: 140px;
+const StyledButton = styled.button`
   height: 45px;
   color: #c5dcfa;
   background: #1672ec;
   border-radius: 8px;
   border: none;
-  display: inline-block;
   text-align: center;
   vertical-align: middle;
   user-select: none;
@@ -35,9 +33,15 @@ export const StyledSubmitButton = styled.button`
   margin-right: 15px;
   margin-left: 15px;
 `;
+export const StyledSubmitButton = styled(StyledButton)<{ fullWidth: boolean }>`
+  width: ${(props) => (props.fullWidth ? '100%' : '140px')};
+  display: ${(props) => (props.fullWidth ? 'block' : 'inline-block')};
+`;
 StyledSubmitButton.displayName = 'PersianTools(Picker)(SubmitButton)';
 
-export const StyledCancelButton = styled(StyledSubmitButton)`
+export const StyledCancelButton = styled(StyledButton)`
+  width: 140px;
+  display: inline-block;
   color: #616161;
   background-color: transparent;
   border: 1px solid #c0c0c0;

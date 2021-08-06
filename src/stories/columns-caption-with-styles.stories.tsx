@@ -28,10 +28,10 @@ const configs = {
   month: {
     caption: {
       text: 'ماه',
-      style: {
-        color: '#1672ec',
-      },
     },
+    columnStyle: { background: '#aaa', color: 'green' },
+    itemStyle: { color: 'green' },
+    selectedItemStyle: { color: 'blue' },
   },
   day: {
     caption: {

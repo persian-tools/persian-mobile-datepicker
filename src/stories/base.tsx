@@ -1,26 +1,23 @@
 import React from 'react';
 // Storybook
-import { action } from '@storybook/addon-actions';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { ComponentMeta } from '@storybook/react';
 // Local Components
 import StoryWrapper from './wrapper/StoryWrapper';
 // Picker Component
 import { Picker } from '../index';
-// Picker Utilities
-import { format } from '../index';
 // Types
-import type { PickerProps } from '../index.types';
-import type { WheelPickerSelectEvent } from '../index';
 import type { Event } from '../components/WheelPicker/index.types';
 
 interface Props {
   value: string;
+  info?: string;
   events: Array<Event>;
 }
 
 export const BaseTemplate: React.FC<Props> = (props) => {
   return (
     <StoryWrapper>
+      {props.info && <h3 className="info">{props.info}</h3>}
       <p>تاریخ انتخابی:</p>
       <input type="string" readOnly value={props.value} className="input" />
       <p>رویداد های روز:</p>

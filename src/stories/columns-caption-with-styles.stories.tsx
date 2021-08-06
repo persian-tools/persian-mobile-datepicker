@@ -49,15 +49,21 @@ const BasePickerTemplate: ComponentStory<typeof Picker> = (args) => {
     Array<Event>
   >([]);
 
-  function handleOnChange(data: WheelPickerSelectEvent) {
-    setSelectedDateValue(format(data.date!, 'd MMMM yyyy'));
-    setSelectedDateEvents(data.events);
-    action('onClick')(data);
+  function handleEvent(eventType: string) {
+    return (data: WheelPickerSelectEvent) => {
+      setSelectedDateValue(format(data.date!, 'd MMMM yyyy'));
+      setSelectedDateEvents(data.events);
+      action(eventType)(data);
+    };
   }
 
   return (
     <BaseTemplate value={selectedDateValue!} events={selectedDateEvents!}>
-      <Picker {...args} onChange={handleOnChange} onSubmit={handleOnChange} />
+      <Picker
+        {...args}
+        onChange={handleEvent('onChange')}
+        onSubmit={handleEvent('onSubmit')}
+      />
     </BaseTemplate>
   );
 };

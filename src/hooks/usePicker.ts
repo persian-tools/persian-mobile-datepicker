@@ -43,7 +43,7 @@ import type {
 import type { PickerColumnCaption } from '../components/WheelPicker/index.types';
 
 export function usePicker(props: WheelPickerProps) {
-  const selectedDateRef = useRef<PickerDateModel>();
+  const selectedDateRef = useRef<PickerDateModel>({});
   /**
    * Date picker columns config
    */
@@ -102,17 +102,23 @@ export function usePicker(props: WheelPickerProps) {
   const minYear = useMemo<number>(() => {
     const currentYear = getCurrentYear();
     const startYear = Number(props.startYear);
+    const startYearIsGreaterThanEquals1000 = startYear >= 1000;
+    const startYearPrecision = startYearIsGreaterThanEquals1000
+      ? toPositive(startYear - currentYear)
+      : startYear;
 
     let year: number;
     if (isMinDateValid) {
       year = minDateObject.year;
-    } else if (isInitialValueValid) {
-      year = initialValueDateObject.year + startYear;
+    } else if (isInitialValueValid && !startYearIsGreaterThanEquals1000) {
+      year = initialValueDateObject.year - startYearPrecision;
+    } else if (startYearIsGreaterThanEquals1000) {
+      year = startYear;
     } else {
-      year = currentYear + startYear;
+      year = currentYear - startYearPrecision;
     }
 
-    const result = toPositive(currentYear - year);
+    const result = toPositive(year);
 
     return result === 0 ? year : result;
   }, [
@@ -129,17 +135,23 @@ export function usePicker(props: WheelPickerProps) {
   const maxYear = useMemo<number>(() => {
     const currentYear = getCurrentYear();
     const endYear = Number(props.endYear);
+    const endYearIsGreaterThanEquals1000 = endYear >= 1000;
+    const endYearPrecision = toPositive(
+      endYearIsGreaterThanEquals1000 ? currentYear - endYear : endYear,
+    );
 
     let year: number;
     if (isMaxDateValid) {
       year = maxDateObject.year;
-    } else if (isInitialValueValid) {
-      year = initialValueDateObject.year + endYear;
+    } else if (isInitialValueValid && !endYearIsGreaterThanEquals1000) {
+      year = initialValueDateObject.year + endYearPrecision;
+    } else if (endYearIsGreaterThanEquals1000) {
+      year = endYear;
     } else {
-      year = currentYear + endYear;
+      year = currentYear + endYearPrecision;
     }
 
-    const result = toPositive(currentYear - year);
+    const result = toPositive(year);
 
     return result === 0 ? currentYear : result;
   }, [
@@ -164,34 +176,33 @@ export function usePicker(props: WheelPickerProps) {
     if (isValid(props.value?.date!)) {
       return props.value?.object!;
     } else if (isInitialValueValid) {
-      const defaultSelectedDateObject = convertDateInstanceToDateObject(
-        props.initialValue!,
-      );
       // Default value has no overlap with [minDate], [maxDate] and also can be rendered by the shouldRender in Component's Config prop
       if (
         // [initialValue] is in Range of [MinDate] and [MaxDate] - /start
         shouldRenderItem(
-          defaultSelectedDateObject,
+          initialValueDateObject,
           'month',
-          defaultSelectedDateObject.month,
+          initialValueDateObject.month,
         ) &&
         shouldRenderItem(
-          defaultSelectedDateObject,
+          initialValueDateObject,
           'day',
-          defaultSelectedDateObject.day,
+          initialValueDateObject.day,
         ) &&
         shouldRenderYearItem(
-          defaultSelectedDateObject,
-          defaultSelectedDateObject.year,
+          initialValueDateObject,
+          initialValueDateObject.year,
         ) &&
+        initialValueDateObject.year >= minYear &&
+        initialValueDateObject.year <= maxYear &&
         // /end
         // [initialValue] can be rendered by the [shouldRender] Config method - /start
-        configShouldRender(defaultSelectedDateObject, 'year') &&
-        configShouldRender(defaultSelectedDateObject, 'month') &&
-        configShouldRender(defaultSelectedDateObject, 'day')
+        configShouldRender(initialValueDateObject, 'year') &&
+        configShouldRender(initialValueDateObject, 'month') &&
+        configShouldRender(initialValueDateObject, 'day')
         // /end
       ) {
-        return defaultSelectedDateObject;
+        return initialValueDateObject;
       }
     }
 
@@ -207,7 +218,6 @@ export function usePicker(props: WheelPickerProps) {
       ) {
         return currentDateAsObject;
       }
-
       return minDateObject;
     } else if (isMaxDateValid) {
       // We goes here if `initialValue` is not valid as valid date
@@ -218,9 +228,17 @@ export function usePicker(props: WheelPickerProps) {
       ) {
         return currentDateAsObject;
       }
-
       // `Current Date` is not in range of [maxDate] and Max Date should be used as `initialValue`
       return maxDateObject;
+    }
+
+    // Check if initialValue's year is in Range of minYear and maxYear
+    if (
+      isInitialValueValid &&
+      initialValueDateObject.year >= minYear &&
+      initialValueDateObject.year <= maxYear
+    ) {
+      return initialValueDateObject;
     }
 
     // I tried my best but `value`, `initialValue`, `maxDate` and `minDate` are not valid dates.

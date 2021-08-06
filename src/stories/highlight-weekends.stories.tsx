@@ -6,6 +6,7 @@ export default createBaseStory('Highlight Weekends');
 export const HighlightWeekends = Template.bind({});
 HighlightWeekends.args = {
   isOpen: true,
+  theme: 'light',
   highlightWeekends: true,
   config: {
     year: {},

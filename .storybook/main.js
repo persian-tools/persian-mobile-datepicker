@@ -12,7 +12,8 @@ module.exports = {
       name: '@storybook/addon-storysource',
       options: {
         rule: {
-          include: [path.resolve(__dirname, '../src')],
+          // test: /\.stories\.tsx?$/,
+          include: [path.resolve(__dirname, '../src/stories')],
         },
         loaderOptions: {
           prettierConfig: fs.readFileSync(

@@ -41,6 +41,7 @@ const ColumnsTextFormatterConfig: DatePickerConfig = {
 };
 ColumnsTextFormatter.args = {
   isOpen: true,
+  theme: 'light',
   highlightHolidays: true,
   highlightWeekends: true,
   config: ColumnsTextFormatterConfig,

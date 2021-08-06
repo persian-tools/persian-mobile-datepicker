@@ -34,6 +34,7 @@ const ColumnsCaptionWithStyleConfig: DatePickerConfig = {
 };
 ColumnsCaptionWithStyles.args = {
   isOpen: true,
+  theme: 'light',
   highlightHolidays: true,
   highlightWeekends: true,
   config: ColumnsCaptionWithStyleConfig,

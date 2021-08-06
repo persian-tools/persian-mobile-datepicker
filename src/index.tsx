@@ -11,13 +11,47 @@ import {
   StyledSheet,
 } from './index.styles';
 // Types
-import type { PickerProps } from './index.types';
+import type { PickerProps, Theme } from './index.types';
 import type { WheelPickerSelectEvent } from './components/WheelPicker/index.types';
 
 const Picker: React.FC<PickerProps> = (props) => {
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
   const [selectedDate, setSelectedDate] =
     React.useState<WheelPickerSelectEvent>();
+  const [theme, setTheme] = React.useState<Omit<Theme, 'auto'>>('light');
+
+  React.useEffect(() => {
+    if (props.theme === 'auto') {
+      // Check for the first initialization
+      if (
+        window.matchMedia &&
+        window.matchMedia('(prefers-color-scheme: dark)').matches
+      ) {
+        setTheme('dark');
+      } else {
+        setTheme('light');
+      }
+
+      // Watch native system theme changes
+      window
+        .matchMedia('(prefers-color-scheme: dark)')
+        .addEventListener('change', (e) => {
+          const newColorScheme = e.matches ? 'dark' : 'light';
+          setTheme(newColorScheme);
+        });
+    } else {
+      setTheme(props.theme!);
+    }
+
+    return () => {
+      window
+        .matchMedia('(prefers-color-scheme: dark)')
+        .removeEventListener('change', (e) => {
+          const newColorScheme = e.matches ? 'dark' : 'light';
+          setTheme(newColorScheme);
+        });
+    };
+  }, [props.theme]);
 
   React.useEffect(() => {
     setIsOpen(props.isOpen);
@@ -45,7 +79,7 @@ const Picker: React.FC<PickerProps> = (props) => {
       snapPoints={[props.height! + (props.title ? 55 : 0)]}
       initialSnap={0}
       style={props.sheetStyles!}
-      theme={props.theme}
+      theme={theme}
     >
       <Sheet.Container>
         <Sheet.Header />

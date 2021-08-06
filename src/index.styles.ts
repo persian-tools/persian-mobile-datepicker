@@ -66,6 +66,17 @@ export const StyledSheet = styled(Sheet)<{ theme: Theme }>`
             ),
             linear-gradient(to top, rgba(34, 34, 34, 0.95), rgba(34, 34, 34, 0.6));
         }
+        .rmc-picker-item-content {
+          background: #313133;
+          height: 30px;
+          font-size: 15px;
+          line-height: 30px;
+          border-radius: 5px;
+          color: #fff;
+        }
+        .rmc-picker-item-selected .rmc-picker-item-content {
+          background: #7048ec;
+        }
         .sheet-footer {
           border-top: none;
           

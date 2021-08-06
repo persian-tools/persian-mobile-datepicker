@@ -14,7 +14,7 @@ import type { WheelPickerSelectEvent } from '../index';
 import type { Event } from '../components/WheelPicker/index.types';
 
 export const Template: Story<Partial<PickerProps>> = (args) => {
-  const pickerProps = args as Required<PickerProps>;
+  const pickerProps = { theme: 'light', ...args } as Required<PickerProps>;
   const [selectedDateValue, setSelectedDateValue] = React.useState<string>();
   const [selectedDateEvents, setSelectedDateEvents] = React.useState<
     Array<Event>

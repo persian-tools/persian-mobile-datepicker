@@ -4,7 +4,7 @@ import type {
   WheelPickerSelectEvent,
 } from './components/WheelPicker/index.types';
 
-export type Theme = 'dark' | 'light';
+export type Theme = 'dark' | 'light' | 'auto';
 export interface PickerProps extends WheelPickerProps {
   // Picker Theme
   theme?: Theme;

@@ -51,6 +51,7 @@ const FirstColumnsStylesConfig: DatePickerConfig = {
 FirstColumnsStyles.args = {
   isOpen: true,
   height: 400,
+  theme: 'light',
   highlightHolidays: true,
   highlightWeekends: true,
   config: FirstColumnsStylesConfig,
@@ -111,6 +112,7 @@ const SecondColumnsStylesConfig: DatePickerConfig = {
 SecondColumnsStyles.args = {
   isOpen: true,
   height: 400,
+  theme: 'light',
   highlightHolidays: true,
   highlightWeekends: true,
   config: SecondColumnsStylesConfig,

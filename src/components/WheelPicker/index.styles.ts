@@ -10,6 +10,12 @@ export const GlobalStyle = createGlobalStyle`
   .rmc-picker-indicator {
     display: none;
   }
+  .rmc-picker-item-content {
+    unicode-bidi: plaintext;
+    direction: rtl;
+    color: #3f3f3e;
+    transition: all 250ms cubic-bezier(0.55, 0.085, 0.68, 0.53) 0s;
+  }
   ${styles}
 `;
 

@@ -16,32 +16,10 @@ const DarkThemeConfig: DatePickerConfig = {
       return digitsEnToFa(value.year);
     },
     columnStyle: {},
-    selectedItemStyle: {
-      background: '#7048ec',
-    },
-    itemStyle: {
-      background: '#313133',
-      height: 30,
-      fontSize: '15px',
-      lineHeight: '30px',
-      borderRadius: 5,
-      color: '#fff',
-    },
   },
   month: {
     caption: {
       text: 'ماه',
-    },
-    itemStyle: {
-      background: '#313133',
-      height: 30,
-      fontSize: '15px',
-      lineHeight: '30px',
-      borderRadius: 5,
-      color: '#fff',
-    },
-    selectedItemStyle: {
-      background: '#7048ec',
     },
   },
   day: {
@@ -50,17 +28,6 @@ const DarkThemeConfig: DatePickerConfig = {
     },
     formatter(value) {
       return digitsEnToFa(value.day);
-    },
-    itemStyle: {
-      color: '#fff',
-      background: '#313133',
-      height: 30,
-      fontSize: '15px',
-      lineHeight: '30px',
-      borderRadius: 5,
-    },
-    selectedItemStyle: {
-      background: '#7048ec',
     },
   },
 };

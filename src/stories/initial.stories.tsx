@@ -6,6 +6,7 @@ export default createBaseStory('Picker With Sheet Modal');
 export const PickerWithSheetModal = Template.bind({});
 PickerWithSheetModal.args = {
   isOpen: true,
+  theme: 'light',
   config: {
     year: {},
     month: {},

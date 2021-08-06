@@ -5,8 +5,8 @@ import MultiPicker from 'rmc-picker/es/MultiPicker';
 import {
   StyledCaption,
   GlobalStyle,
-  PickerItemWithStyle,
-  PickerWithStyle,
+  StyledWheelPickerItem,
+  StyledWheelPicker,
   StyledTitle,
 } from './index.styles';
 // Hooks
@@ -154,33 +154,16 @@ export const WheelPicker: FC<WheelPickerProps> = (props) => {
     });
   }
 
-  // Columns style
-  const columnStyles = useCallback<(type: DateConfigTypes) => CSSProperties>(
-    (type) => {
-      return configs[type].columnStyle || {};
-    },
-    [configs],
-  );
-
-  // Columns items style
-  const columnItemStyles = useCallback<
-    (type: DateConfigTypes) => CSSProperties
+  // Columns styles value
+  const getColumnStylesByKey = useCallback<
+    (
+      type: DateConfigTypes,
+      styleKey: 'itemStyle' | 'columnStyle' | 'selectedItemStyle',
+    ) => CSSProperties
   >(
-    (type) => {
-      return {
-        ...{ color: '#3f3f3e' },
-        ...(configs[type].itemStyle || {}),
-      };
-    },
-    [configs],
-  );
-
-  // Column selected item styles
-  const columnSelectedItemStyles = useCallback<
-    (type: DateConfigTypes) => CSSProperties
-  >(
-    (type) => {
-      return configs[type].selectedItemStyle || {};
+    (type, styleKey) => {
+      const styleConfig = configs[type];
+      return styleConfig[styleKey] || {};
     },
     [configs],
   );
@@ -193,12 +176,11 @@ export const WheelPicker: FC<WheelPickerProps> = (props) => {
   >(
     (type, isSelected) => {
       return {
-        ...{ unicodeBidi: 'plaintext', direction: 'rtl' },
-        ...columnItemStyles(type),
-        ...(isSelected ? columnSelectedItemStyles(type) : {}),
+        ...getColumnStylesByKey(type, 'itemStyle'),
+        ...(isSelected ? getColumnStylesByKey(type, 'selectedItemStyle') : {}),
       };
     },
-    [columnSelectedItemStyles, columnItemStyles],
+    [configs],
   );
 
   /**
@@ -273,9 +255,9 @@ export const WheelPicker: FC<WheelPickerProps> = (props) => {
       >
         {pickerColumns.map((column, index) => {
           return (
-            <PickerWithStyle
+            <StyledWheelPicker
               key={`Picker_${index}`}
-              style={columnStyles(column.type)}
+              style={getColumnStylesByKey(column.type, 'columnStyle')}
               indicatorClassName={`${classNamePrefix(
                 `indicator`,
               )} ${classNamePrefix(`${column.type}-column`)}`}
@@ -287,9 +269,9 @@ export const WheelPicker: FC<WheelPickerProps> = (props) => {
                     pickerItem.value ===
                     defaultSelectedDateObject[pickerItem.type];
                   return (
-                    <PickerItemWithStyle
+                    <StyledWheelPickerItem
                       // @ts-ignore
-                      style={pickerItemStyles(column.type, isSelectedItem)}
+                      // style={pickerItemStyles(column.type, isSelectedItem)}
                       key={`Picker_Item_${pickerItem.type}_${pickerItem.value}`}
                       className={`${
                         isSelectedItem ? classNamePrefix('active-selected') : ''
@@ -298,14 +280,20 @@ export const WheelPicker: FC<WheelPickerProps> = (props) => {
                       )} ${getPickerItemClassNames(pickerItem)}`}
                       value={`${pickerItem.type}-${pickerItem.value}`}
                     >
-                      <div style={pickerTextContentStyles(pickerItem)}>
+                      <div
+                        className="rmc-picker-item-content"
+                        style={{
+                          ...pickerTextContentStyles(pickerItem),
+                          ...pickerItemStyles(column.type, isSelectedItem),
+                        }}
+                      >
                         {handlePickerItemTextContent(pickerItem)}
                       </div>
-                    </PickerItemWithStyle>
+                    </StyledWheelPickerItem>
                   );
                 },
               )}
-            </PickerWithStyle>
+            </StyledWheelPicker>
           );
         })}
       </MultiPicker>

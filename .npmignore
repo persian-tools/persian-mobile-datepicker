@@ -11,3 +11,7 @@ tests
 release.config.js
 jest.init.js
 jest.config.js
+coverage
+storybook-static
+.huskyrc.json
+.husky

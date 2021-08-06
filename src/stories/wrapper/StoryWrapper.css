@@ -1,0 +1,37 @@
+.story-wrapper {
+  font-weight: normal;
+  font-style: normal;
+  margin: 0 auto;
+  direction: rtl;
+  text-align: right;
+  color: #666;
+}
+
+* {
+  font-family: Vazir, 'Nunito Sans', 'Helvetica Neue', Helvetica, Arial,
+    sans-serif;
+}
+
+.story-wrapper .input {
+  direction: rtl;
+  unicode-bidi: plaintext;
+  text-align: right;
+  height: 40px;
+  line-height: 40px;
+  background: #fff;
+  border: 2px solid #104fe2;
+  border-radius: 5px;
+  padding: 0 5px;
+}
+
+.story-wrapper .event-label {
+  display: inline-block;
+  margin-left: 10px;
+  margin-bottom: 10px;
+}
+.story-wrapper .event-label .event-label-value {
+  background-color: rgb(82, 196, 26);
+  padding: 3px 8px 0 8px;
+  color: #fff;
+  border-radius: 5px;
+}

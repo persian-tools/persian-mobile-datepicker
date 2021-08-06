@@ -7,6 +7,15 @@ export const GlobalStyle = createGlobalStyle`
   .rmc-multi-picker {
     user-select: none;
   }
+  .rmc-picker-indicator {
+    display: none;
+  }
+  .rmc-picker-item-content {
+    unicode-bidi: plaintext;
+    direction: rtl;
+    color: #3f3f3e;
+    transition: all 250ms cubic-bezier(0.55, 0.085, 0.68, 0.53) 0s;
+  }
   ${styles}
 `;
 
@@ -18,6 +27,8 @@ export const StyledCaption = styled.div<CaptionProps>`
   color: #616161;
   padding-bottom: 5px;
   font-size: 1.1em;
+  cursor: default;
+  user-select: none;
   &:not(:empty) {
     border-bottom: 1px solid #e0e0e0;
   }
@@ -34,8 +45,8 @@ export const StyledTitle = styled.div`
 `;
 StyledTitle.displayName = 'PersianTools(WheelPicker)(Title)';
 
-export const PickerWithStyle = styled(Picker)``;
-PickerWithStyle.displayName = 'PersianTools(WheelPicker)(PickerColumns)';
+export const StyledWheelPicker = styled(Picker)``;
+StyledWheelPicker.displayName = 'PersianTools(WheelPicker)(PickerColumns)';
 
-export const PickerItemWithStyle = styled(Picker.Item)``;
-PickerItemWithStyle.displayName = 'PersianTools(WheelPicker)(PickerItems)';
+export const StyledWheelPickerItem = styled(Picker.Item)``;
+StyledWheelPickerItem.displayName = 'PersianTools(WheelPicker)(PickerItems)';

@@ -8,15 +8,50 @@ import {
   StyledFooter,
   StyledSubmitButton,
   StyledCancelButton,
+  StyledSheet,
 } from './index.styles';
 // Types
-import type { PickerProps } from './index.types';
+import type { PickerProps, Theme } from './index.types';
 import type { WheelPickerSelectEvent } from './components/WheelPicker/index.types';
 
 const Picker: React.FC<PickerProps> = (props) => {
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
   const [selectedDate, setSelectedDate] =
     React.useState<WheelPickerSelectEvent>();
+  const [theme, setTheme] = React.useState<Omit<Theme, 'auto'>>('light');
+
+  React.useEffect(() => {
+    if (props.theme === 'auto') {
+      // Check for the first initialization
+      if (
+        window.matchMedia &&
+        window.matchMedia('(prefers-color-scheme: dark)').matches
+      ) {
+        setTheme('dark');
+      } else {
+        setTheme('light');
+      }
+
+      // Watch native system theme changes
+      window
+        .matchMedia('(prefers-color-scheme: dark)')
+        .addEventListener('change', (e) => {
+          const newColorScheme = e.matches ? 'dark' : 'light';
+          setTheme(newColorScheme);
+        });
+    } else {
+      setTheme(props.theme!);
+    }
+
+    return () => {
+      window
+        .matchMedia('(prefers-color-scheme: dark)')
+        .removeEventListener('change', (e) => {
+          const newColorScheme = e.matches ? 'dark' : 'light';
+          setTheme(newColorScheme);
+        });
+    };
+  }, [props.theme]);
 
   React.useEffect(() => {
     setIsOpen(props.isOpen);
@@ -38,11 +73,13 @@ const Picker: React.FC<PickerProps> = (props) => {
   }
 
   return (
-    <Sheet
+    <StyledSheet
       isOpen={isOpen}
       onClose={() => handleClose()}
-      snapPoints={[385 + (props.title ? 55 : 0)]}
+      snapPoints={[props.height! + (props.title ? 55 : 0)]}
       initialSnap={0}
+      style={props.sheetStyles!}
+      theme={theme}
     >
       <Sheet.Container>
         <Sheet.Header />
@@ -63,33 +100,41 @@ const Picker: React.FC<PickerProps> = (props) => {
             highlightHolidays={props.highlightHolidays}
           />
 
-          <StyledFooter>
+          <StyledFooter className="sheet-footer">
             {props.showCancelButton && (
-              <StyledCancelButton onClick={handleClose}>
+              <StyledCancelButton
+                className="sheet-footer__cancel"
+                onClick={handleClose}
+              >
                 {props.cancelText}
               </StyledCancelButton>
             )}
-            <StyledSubmitButton onClick={handleSubmit}>
+            <StyledSubmitButton
+              className="sheet-footer__submit"
+              onClick={handleSubmit}
+            >
               {props.submitText}
             </StyledSubmitButton>
           </StyledFooter>
         </Sheet.Content>
       </Sheet.Container>
       <Sheet.Backdrop />
-    </Sheet>
+    </StyledSheet>
   );
 };
 
 Picker.displayName = 'PersianTools(Picker)';
 Picker.defaultProps = {
   isOpen: false,
-  theme: 'android-light',
+  theme: 'light',
   classNamePrefix: 'persian-datepicker',
   submitText: 'تایید',
   cancelText: 'انصراف',
   showCancelButton: true,
   disableSheetDrag: true,
   addDayName: false,
+  height: 385,
+  sheetStyles: {},
 };
 
 export { Picker, WheelPicker };

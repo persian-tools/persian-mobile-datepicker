@@ -9,7 +9,12 @@ module.exports = {
   addons: [
     '@storybook/addon-viewport',
     '@storybook/addon-links',
-    '@storybook/addon-essentials',
+    {
+      name: '@storybook/addon-essentials',
+      options: {
+        docs: false,
+      },
+    },
     {
       name: '@storybook/addon-storysource',
       options: {

@@ -18,7 +18,7 @@
     "prerelease": "npm run test",
     "release": "npm run build",
     "postrelease": "standard-version && npm run deploy-storybook",
-    "release:beta": "npm run micro:build",
+    "release:beta": "npm run build",
     "postrelease:beta": "standard-version --prerelease beta",
     "test": "jest --coverage --config=jest.config.js --passWithNoTests",
     "report-coverage": "cat ./coverage/lcov.info | coveralls",

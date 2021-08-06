@@ -12,8 +12,8 @@
   "module": "build/index.module.js",
   "typings": "build/index.d.ts",
   "scripts": {
-    "bundler": "microbundle --no-css-modules --name PersianMobileDatepicker --strict --jsx React.createElement",
-    "build": "microbundle --no-css-modules --name PersianMobileDatepicker --strict --jsx React.createElement --raw --sourcemap false --compress",
+    "bundler": "microbundle --no-css-modules --name PersianMobileDatePicker --strict --jsx React.createElement",
+    "build": "microbundle --no-css-modules --name PersianMobileDatePicker --strict --jsx React.createElement --raw --sourcemap false --compress",
     "dev": "npm run bundler watch",
     "prerelease": "npm run test",
     "release": "npm run build",

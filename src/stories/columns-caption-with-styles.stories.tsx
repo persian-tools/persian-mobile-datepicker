@@ -5,43 +5,18 @@ import {
   format,
   Picker,
   WheelPickerSelectEvent,
-} from '../index';
-// Types
-import type { DatePickerConfig } from '../index';
-import { ComponentStory } from '@storybook/react';
-import { PickerProps } from '../index.types';
+} from '../index'; // in your code: @persian-tools/persian-mobile-datepicker
+import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
+// Types
+import type { ComponentStory } from '@storybook/react';
 import type { Event } from '../components/WheelPicker/index.types';
 
 export default createBaseStory('Columns Caption With Styles');
 
-const Template: ComponentStory<typeof Picker> = (args) => {
-  const pickerProps = { theme: 'light', ...args } as Required<PickerProps>;
-  const [selectedDateValue, setSelectedDateValue] = React.useState<string>();
-  const [selectedDateEvents, setSelectedDateEvents] = React.useState<
-    Array<Event>
-  >([]);
+const stories = storiesOf('persian-mobile-datepicker', module);
 
-  function handleOnChange(data: WheelPickerSelectEvent) {
-    setSelectedDateValue(format(data.date!, 'd MMMM yyyy'));
-    setSelectedDateEvents(data.events);
-    action('onClick')(data);
-  }
-
-  return (
-    <BaseTemplate value={selectedDateValue!} events={selectedDateEvents!}>
-      <Picker
-        {...pickerProps}
-        onChange={handleOnChange}
-        onSubmit={handleOnChange}
-      />
-    </BaseTemplate>
-  );
-};
-
-export const ColumnsCaptionWithStyles = Template.bind({});
-
-const ColumnsCaptionWithStyleConfig: DatePickerConfig = {
+const configs = {
   year: {
     caption: {
       text: 'سال',
@@ -67,11 +42,46 @@ const ColumnsCaptionWithStyleConfig: DatePickerConfig = {
     },
   },
 };
-ColumnsCaptionWithStyles.args = {
-  isOpen: true,
-  theme: 'light',
-  highlightHolidays: true,
-  highlightWeekends: true,
-  config: ColumnsCaptionWithStyleConfig,
-  initialValue: createDateInstance({ year: 1400, month: 1, day: 1 }),
+
+const BasePickerTemplate: ComponentStory<typeof Picker> = (args) => {
+  const [selectedDateValue, setSelectedDateValue] = React.useState<string>();
+  const [selectedDateEvents, setSelectedDateEvents] = React.useState<
+    Array<Event>
+  >([]);
+
+  function handleOnChange(data: WheelPickerSelectEvent) {
+    setSelectedDateValue(format(data.date!, 'd MMMM yyyy'));
+    setSelectedDateEvents(data.events);
+    action('onClick')(data);
+  }
+
+  return (
+    <BaseTemplate value={selectedDateValue!} events={selectedDateEvents!}>
+      <Picker {...args} onChange={handleOnChange} onSubmit={handleOnChange} />
+    </BaseTemplate>
+  );
 };
+
+stories.add(
+  'Columns caption with styles',
+  (args: any) => <BasePickerTemplate {...args} />,
+  {
+    component: Picker,
+    args: {
+      isOpen: true,
+      theme: 'auto',
+      highlightHolidays: true,
+      highlightWeekends: true,
+      config: configs,
+      initialValue: createDateInstance({ year: 1400, month: 1, day: 1 }),
+    },
+    argTypes: {
+      theme: {
+        control: {
+          type: 'inline-radio',
+          options: ['light', 'dark', 'auto'],
+        },
+      },
+    },
+  },
+);

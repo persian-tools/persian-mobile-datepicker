@@ -268,6 +268,14 @@ const createDateByJalalliValues = createDateInstance({
 }); // Sun Mar 21 2021 00:00:00 GMT+0330 (Iran Standard Time)
 ```
 
+- `convertDateInstanceToDateObject`: Convert entered date to an object
+
+```javascript
+import { convertDateInstanceToDateObject } from '@persian-tools/persian-mobile-datepicker';
+
+const convertDateToObject = convertDateInstanceToDateObject(new Date()); // {year: 1400, month: 5, day: 15, hour: 22, minute: 20,second: 10}
+```
+
 ## Roadmap
 
 - [ ] Add hour, minute and seconds

@@ -14,7 +14,7 @@ import type { Event } from '../components/WheelPicker/index.types';
 
 export default createBaseStory('Columns Caption With Styles');
 
-const stories = storiesOf('persian-mobile-datepicker', module);
+const stories = storiesOf('Columns Caption With Styles', module);
 
 const configs = {
   year: {
@@ -63,7 +63,7 @@ const BasePickerTemplate: ComponentStory<typeof Picker> = (args) => {
 };
 
 stories.add(
-  'Columns caption with styles',
+  'Columns Caption With Styles',
   (args: any) => <BasePickerTemplate {...args} />,
   {
     component: Picker,

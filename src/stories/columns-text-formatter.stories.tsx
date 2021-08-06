@@ -15,7 +15,7 @@ import type { Event } from '../components/WheelPicker/index.types';
 
 export default createBaseStory('Columns Text Formatter');
 
-const stories = storiesOf('persian-mobile-datepicker', module);
+const stories = storiesOf('Columns Text Formatter', module);
 
 const configs = {
   year: {

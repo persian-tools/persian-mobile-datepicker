@@ -15,7 +15,7 @@ import type { Event } from '../components/WheelPicker/index.types';
 
 export default createBaseStory('Dark Theme');
 
-const stories = storiesOf('persian-mobile-datepicker', module);
+const stories = storiesOf('Dark Theme', module);
 
 const configs = {
   year: {

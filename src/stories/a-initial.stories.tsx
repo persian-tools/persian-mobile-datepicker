@@ -12,9 +12,9 @@ import { action } from '@storybook/addon-actions';
 import type { ComponentStory } from '@storybook/react';
 import type { Event } from '../components/WheelPicker/index.types';
 
-export default createBaseStory('Picker With Sheet Modal');
+export default createBaseStory('Initial design');
 
-const stories = storiesOf('persian-mobile-datepicker', module);
+const stories = storiesOf('Initial design', module);
 
 const BasePickerTemplate: ComponentStory<typeof Picker> = (args) => {
   const [selectedDateValue, setSelectedDateValue] = React.useState<string>();
@@ -35,28 +35,24 @@ const BasePickerTemplate: ComponentStory<typeof Picker> = (args) => {
   );
 };
 
-stories.add(
-  'Picker With Sheet Modal',
-  (args: any) => <BasePickerTemplate {...args} />,
-  {
-    component: Picker,
-    args: {
-      isOpen: true,
-      theme: 'light',
-      config: {
-        year: {},
-        month: {},
-        day: {},
-      },
-      initialValue: createDateInstance({ year: 1400, month: 1, day: 1 }),
+stories.add('Initial design', (args: any) => <BasePickerTemplate {...args} />, {
+  component: Picker,
+  args: {
+    isOpen: true,
+    theme: 'light',
+    config: {
+      year: {},
+      month: {},
+      day: {},
     },
-    argTypes: {
-      theme: {
-        control: {
-          type: 'inline-radio',
-          options: ['light', 'dark', 'auto'],
-        },
+    initialValue: createDateInstance({ year: 1400, month: 1, day: 1 }),
+  },
+  argTypes: {
+    theme: {
+      control: {
+        type: 'inline-radio',
+        options: ['light', 'dark', 'auto'],
       },
     },
   },
-);
+});

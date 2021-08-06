@@ -15,7 +15,7 @@ import type { Event } from '../components/WheelPicker/index.types';
 
 export default createBaseStory('Columns with styles');
 
-const stories = storiesOf('persian-mobile-datepicker', module);
+const stories = storiesOf('Columns with styles', module);
 
 const BasePickerTemplate: ComponentStory<typeof Picker> = (args) => {
   const [selectedDateValue, setSelectedDateValue] = React.useState<string>();
@@ -130,49 +130,41 @@ const secondColumnsStylesConfig = {
 };
 
 stories
-  .add(
-    'Columns with styles 1',
-    (args: any) => <BasePickerTemplate {...args} />,
-    {
-      component: Picker,
-      args: {
-        isOpen: true,
-        theme: 'auto',
-        highlightHolidays: true,
-        highlightWeekends: true,
-        config: firstColumnsStylesConfig,
-        initialValue: createDateInstance({ year: 1400, month: 1, day: 1 }),
-      },
-      argTypes: {
-        theme: {
-          control: {
-            type: 'inline-radio',
-            options: ['light', 'dark', 'auto'],
-          },
+  .add('Example 1', (args: any) => <BasePickerTemplate {...args} />, {
+    component: Picker,
+    args: {
+      isOpen: true,
+      theme: 'auto',
+      highlightHolidays: true,
+      highlightWeekends: true,
+      config: firstColumnsStylesConfig,
+      initialValue: createDateInstance({ year: 1400, month: 1, day: 1 }),
+    },
+    argTypes: {
+      theme: {
+        control: {
+          type: 'inline-radio',
+          options: ['light', 'dark', 'auto'],
         },
       },
     },
-  )
-  .add(
-    'Columns with styles 2',
-    (args: any) => <BasePickerTemplate {...args} />,
-    {
-      component: Picker,
-      args: {
-        isOpen: true,
-        theme: 'auto',
-        highlightHolidays: true,
-        highlightWeekends: true,
-        config: secondColumnsStylesConfig,
-        initialValue: createDateInstance({ year: 1400, month: 1, day: 1 }),
-      },
-      argTypes: {
-        theme: {
-          control: {
-            type: 'inline-radio',
-            options: ['light', 'dark', 'auto'],
-          },
+  })
+  .add('Example 2', (args: any) => <BasePickerTemplate {...args} />, {
+    component: Picker,
+    args: {
+      isOpen: true,
+      theme: 'auto',
+      highlightHolidays: true,
+      highlightWeekends: true,
+      config: secondColumnsStylesConfig,
+      initialValue: createDateInstance({ year: 1400, month: 1, day: 1 }),
+    },
+    argTypes: {
+      theme: {
+        control: {
+          type: 'inline-radio',
+          options: ['light', 'dark', 'auto'],
         },
       },
     },
-  );
+  });

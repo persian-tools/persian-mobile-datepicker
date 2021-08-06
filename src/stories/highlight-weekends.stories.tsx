@@ -14,7 +14,7 @@ import type { Event } from '../components/WheelPicker/index.types';
 
 export default createBaseStory('Highlight Weekends');
 
-const stories = storiesOf('persian-mobile-datepicker', module);
+const stories = storiesOf('Highlight Weekends', module);
 
 const BasePickerTemplate: ComponentStory<typeof Picker> = (args) => {
   const [selectedDateValue, setSelectedDateValue] = React.useState<string>();

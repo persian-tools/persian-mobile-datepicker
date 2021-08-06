@@ -2,17 +2,19 @@ const path = require('path');
 const fs = require('fs');
 
 module.exports = {
+  core: {
+    builder: 'webpack5',
+  },
   stories: ['../src/**/*.stories.mdx', '../src/**/*.stories.tsx'],
   addons: [
     '@storybook/addon-viewport',
     '@storybook/addon-links',
     '@storybook/addon-essentials',
-    '@storybook/preset-create-react-app',
     {
       name: '@storybook/addon-storysource',
       options: {
         rule: {
-          // test: /\.stories\.tsx?$/,
+          test: /\.stories\.tsx?$/,
           include: [path.resolve(__dirname, '../src/stories')],
         },
         loaderOptions: {

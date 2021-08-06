@@ -1,7 +1,7 @@
 import React from 'react';
 // Storybook
 import { action } from '@storybook/addon-actions';
-import { Meta, Story } from '@storybook/react/types-6-0';
+import { ComponentStory, ComponentMeta } from '@storybook/react';
 // Local Components
 import StoryWrapper from './wrapper/StoryWrapper';
 // Picker Component
@@ -13,7 +13,7 @@ import type { PickerProps } from '../index.types';
 import type { WheelPickerSelectEvent } from '../index';
 import type { Event } from '../components/WheelPicker/index.types';
 
-export const Template: Story<Partial<PickerProps>> = (args) => {
+export const Template: ComponentStory<typeof Picker> = (args) => {
   const pickerProps = { theme: 'light', ...args } as Required<PickerProps>;
   const [selectedDateValue, setSelectedDateValue] = React.useState<string>();
   const [selectedDateEvents, setSelectedDateEvents] = React.useState<
@@ -57,7 +57,7 @@ export const Template: Story<Partial<PickerProps>> = (args) => {
   );
 };
 
-export function createBaseStory(title: string): Meta<PickerProps> {
+export function createBaseStory(title: string): ComponentMeta<typeof Picker> {
   return {
     title,
     component: Picker,

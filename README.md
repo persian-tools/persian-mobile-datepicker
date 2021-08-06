@@ -284,6 +284,14 @@ import { daysInMonth } from '@persian-tools/persian-mobile-datepicker';
 const getDaysInMonth = daysInMonth(1400, 1); // 31
 ```
 
+- `getWeekDay`: Get the day of the week of the given date.
+
+```javascript
+import { getWeekDay } from '@persian-tools/persian-mobile-datepicker';
+
+const getDayNumberOfWeek = getWeekDay(1400, 5, 15); // 7
+```
+
 ## Roadmap
 
 - [ ] Add hour, minute and seconds

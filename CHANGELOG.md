@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.4-beta.0](https://github.com/persian-tools/persian-mobile-datepicker/compare/v0.0.3...v0.0.4-beta.0) (2021-08-06)
+
+
+### Features
+
+* add documentations ([3c48e16](https://github.com/persian-tools/persian-mobile-datepicker/commit/3c48e164728ce5949c9ed20252b1a602309ba878))
+* add roadmap ([b18bea6](https://github.com/persian-tools/persian-mobile-datepicker/commit/b18bea6bb4a2d51f28ab51f5e53e00d4e41d0ec7))
+* added onCancel click event and minor improvements ([04a7de4](https://github.com/persian-tools/persian-mobile-datepicker/commit/04a7de4a60feb818c36aead17ae63737acf377a9))
+* improve document ([6763585](https://github.com/persian-tools/persian-mobile-datepicker/commit/676358561c7d7404eec466e28f45494d085eb8f9))
+* move template inside story ([9bfba3d](https://github.com/persian-tools/persian-mobile-datepicker/commit/9bfba3d1d0371430d0f7deb04d3cb6b5c1999003))
+
+
+### Bug Fixes
+
+* all of stories ([d7a713a](https://github.com/persian-tools/persian-mobile-datepicker/commit/d7a713a87548f3ccaf31d3912a82f1edb6441d90))
+* minYear, maxYear and minDate, maxDate issue ([d4b42f1](https://github.com/persian-tools/persian-mobile-datepicker/commit/d4b42f197e60a8118c99e02f3313cec78a42a32a))
+* storybook ([1bb63a5](https://github.com/persian-tools/persian-mobile-datepicker/commit/1bb63a5681cdd838f3f73ec0a21db6de682cb509))
+
 ### 0.0.3 (2021-06-12)
 
 

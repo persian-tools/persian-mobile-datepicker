@@ -13,31 +13,19 @@ import type { PickerProps } from '../index.types';
 import type { WheelPickerSelectEvent } from '../index';
 import type { Event } from '../components/WheelPicker/index.types';
 
-export const Template: ComponentStory<typeof Picker> = (args) => {
-  const pickerProps = { theme: 'light', ...args } as Required<PickerProps>;
-  const [selectedDateValue, setSelectedDateValue] = React.useState<string>();
-  const [selectedDateEvents, setSelectedDateEvents] = React.useState<
-    Array<Event>
-  >([]);
+interface Props {
+  value: string;
+  events: Array<Event>;
+}
 
-  function handleOnChange(data: WheelPickerSelectEvent) {
-    setSelectedDateValue(format(data.date!, 'd MMMM yyyy'));
-    setSelectedDateEvents(data.events);
-    action('onClick')(data);
-  }
-
+export const BaseTemplate: React.FC<Props> = (props) => {
   return (
     <StoryWrapper>
       <p>تاریخ انتخابی:</p>
-      <input
-        type="string"
-        readOnly
-        value={selectedDateValue}
-        className="input"
-      />
+      <input type="string" readOnly value={props.value} className="input" />
       <p>رویداد های روز:</p>
       <ul>
-        {selectedDateEvents.map((event, index) => (
+        {props.events.map((event, index) => (
           <li key={`events_${index}`}>
             <label className="event-label">
               دسته بندی: <span className="event-label-value">{event.type}</span>
@@ -48,11 +36,7 @@ export const Template: ComponentStory<typeof Picker> = (args) => {
           </li>
         ))}
       </ul>
-      <Picker
-        {...pickerProps}
-        onChange={handleOnChange}
-        onSubmit={handleOnChange}
-      />
+      {props.children}
     </StoryWrapper>
   );
 };

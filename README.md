@@ -3,6 +3,7 @@
 This library provides a component that can set year, month, day, hour, minute and second by sliding up or down.
 
 ## Theme
+
 <div style="padding:30px;display:flex; flex-direction:row; justify-content: space-between">
   <div>
     <p>Light theme</p>
@@ -252,6 +253,20 @@ If you want to change the inline style of columns or cells of datepicker you can
 <div style="padding:30px">
   <img src="./images/columnStyle.png" width="300" />
 </div>
+
+## Date helpers
+
+- `createDateInstance`: Convert Jallali Date to Gregorian and returns a Gregorian Date instance
+
+```javascript
+import { createDateInstance } from '@persian-tools/persian-mobile-datepicker';
+
+const createDateByJalalliValues = createDateInstance({
+  year: 1400,
+  month: 1,
+  day: 0,
+}); // Sun Mar 21 2021 00:00:00 GMT+0330 (Iran Standard Time)
+```
 
 ## Roadmap
 

@@ -284,3 +284,8 @@ If you want to change the inline style of columns or cells of datepicker you can
 <div style="padding:30px">
 <img src="./src/assets/images/inlineStyle.PNG" width="300" />
 </div>
+
+## Roadmap
+
+- [ ] Add hour, minute and seconds
+- [ ] Implement react native component

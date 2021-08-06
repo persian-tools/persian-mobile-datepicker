@@ -27,6 +27,8 @@ export const StyledCaption = styled.div<CaptionProps>`
   color: #616161;
   padding-bottom: 5px;
   font-size: 1.1em;
+  cursor: default;
+  user-select: none;
   &:not(:empty) {
     border-bottom: 1px solid #e0e0e0;
   }

@@ -8,6 +8,7 @@ import {
   StyledFooter,
   StyledSubmitButton,
   StyledCancelButton,
+  StyledSheet,
 } from './index.styles';
 // Types
 import type { PickerProps } from './index.types';
@@ -38,11 +39,13 @@ const Picker: React.FC<PickerProps> = (props) => {
   }
 
   return (
-    <Sheet
+    <StyledSheet
       isOpen={isOpen}
       onClose={() => handleClose()}
-      snapPoints={[385 + (props.title ? 55 : 0)]}
+      snapPoints={[props.height! + (props.title ? 55 : 0)]}
       initialSnap={0}
+      style={props.sheetStyles!}
+      theme={props.theme}
     >
       <Sheet.Container>
         <Sheet.Header />
@@ -63,33 +66,41 @@ const Picker: React.FC<PickerProps> = (props) => {
             highlightHolidays={props.highlightHolidays}
           />
 
-          <StyledFooter>
+          <StyledFooter className="sheet-footer">
             {props.showCancelButton && (
-              <StyledCancelButton onClick={handleClose}>
+              <StyledCancelButton
+                className="sheet-footer__cancel"
+                onClick={handleClose}
+              >
                 {props.cancelText}
               </StyledCancelButton>
             )}
-            <StyledSubmitButton onClick={handleSubmit}>
+            <StyledSubmitButton
+              className="sheet-footer__submit"
+              onClick={handleSubmit}
+            >
               {props.submitText}
             </StyledSubmitButton>
           </StyledFooter>
         </Sheet.Content>
       </Sheet.Container>
       <Sheet.Backdrop />
-    </Sheet>
+    </StyledSheet>
   );
 };
 
 Picker.displayName = 'PersianTools(Picker)';
 Picker.defaultProps = {
   isOpen: false,
-  theme: 'android-light',
+  theme: 'light',
   classNamePrefix: 'persian-datepicker',
   submitText: 'تایید',
   cancelText: 'انصراف',
   showCancelButton: true,
   disableSheetDrag: true,
   addDayName: false,
+  height: 385,
+  sheetStyles: {},
 };
 
 export { Picker, WheelPicker };

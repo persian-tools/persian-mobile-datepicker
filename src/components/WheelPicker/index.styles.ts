@@ -7,6 +7,9 @@ export const GlobalStyle = createGlobalStyle`
   .rmc-multi-picker {
     user-select: none;
   }
+  .rmc-picker-indicator {
+    display: none;
+  }
   ${styles}
 `;
 
@@ -34,8 +37,8 @@ export const StyledTitle = styled.div`
 `;
 StyledTitle.displayName = 'PersianTools(WheelPicker)(Title)';
 
-export const PickerWithStyle = styled(Picker)``;
-PickerWithStyle.displayName = 'PersianTools(WheelPicker)(PickerColumns)';
+export const StyledWheelPicker = styled(Picker)``;
+StyledWheelPicker.displayName = 'PersianTools(WheelPicker)(PickerColumns)';
 
-export const PickerItemWithStyle = styled(Picker.Item)``;
-PickerItemWithStyle.displayName = 'PersianTools(WheelPicker)(PickerItems)';
+export const StyledWheelPickerItem = styled(Picker.Item)``;
+StyledWheelPickerItem.displayName = 'PersianTools(WheelPicker)(PickerItems)';

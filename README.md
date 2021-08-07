@@ -292,6 +292,14 @@ import { getWeekDay } from '@persian-tools/persian-mobile-datepicker';
 const getDayNumberOfWeek = getWeekDay(1400, 5, 15); // 7
 ```
 
+- `getDayOfYear`: Get the day of the year of the given date.
+
+```javascript
+import { getDayOfYear } from '@persian-tools/persian-mobile-datepicker';
+
+const getDayNumberOfYear = getDayOfYear(1400, 5, 15); // 139
+```
+
 ## Roadmap
 
 - [ ] Add hour, minute and seconds

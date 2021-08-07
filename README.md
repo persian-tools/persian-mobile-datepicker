@@ -397,6 +397,14 @@ import { currentDateObject } from '@persian-tools/persian-mobile-datepicker';
 currentDateObject(); // {day: 16, hour: 5, minute: 51, month: 5, second: 1, year: 1400}
 ```
 
+- `generateYearsRange`: Generate a Range of Years to show into the Date Picker
+
+```javascript
+import { generateYearsRange } from '@persian-tools/persian-mobile-datepicker';
+
+generateYearsRange(); // {day: 16, hour: 5, minute: 51, month: 5, second: 1, year: 1400}
+```
+
 ## Roadmap
 
 - [ ] Add hour, minute and seconds

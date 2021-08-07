@@ -9,6 +9,7 @@ import {
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { digitsEnToFa } from '@persian-tools/persian-tools';
+import { BADGE } from '@geometricpanda/storybook-addon-badges';
 // Types
 import type { ComponentStory } from '@storybook/react';
 import type { Event } from '../components/WheelPicker/index.types';
@@ -147,6 +148,7 @@ stories
       initialValue: createDateInstance({ year: 1400, month: 1, day: 1 }),
     },
     argTypes: baseArgs,
+    badges: [BADGE.STABLE],
   })
   .add('Example 2', (args: any) => <BasePickerTemplate {...args} />, {
     component: Picker,
@@ -159,4 +161,5 @@ stories
       initialValue: createDateInstance({ year: 1400, month: 1, day: 1 }),
     },
     argTypes: baseArgs,
+    badges: [BADGE.STABLE],
   });

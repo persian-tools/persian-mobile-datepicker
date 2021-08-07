@@ -6,6 +6,7 @@ import {
   Picker,
   WheelPickerSelectEvent,
 } from '../index'; // in your code: @persian-tools/persian-mobile-datepicker
+import { BADGE } from '@geometricpanda/storybook-addon-badges';
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 // Types
@@ -83,6 +84,7 @@ stories
       maxDate: createDateInstance({ year: 1400, month: 5, day: 31 }),
     },
     argTypes: baseArgs,
+    badges: [BADGE.STABLE],
   })
   .add('Min Date', (args: any) => <BasePickerTemplate {...args} />, {
     component: Picker,
@@ -97,6 +99,7 @@ stories
       minDate: createDateInstance({ year: 1396, month: 3, day: 1 }),
     },
     argTypes: baseArgs,
+    badges: [BADGE.STABLE],
   })
   .add('Max Date', (args: any) => <BasePickerTemplate {...args} />, {
     component: Picker,
@@ -111,6 +114,7 @@ stories
       maxDate: createDateInstance({ year: 1396, month: 3, day: 20 }),
     },
     argTypes: baseArgs,
+    badges: [BADGE.STABLE],
   })
   .add('Max Year', (args: any) => <BasePickerTemplate {...args} />, {
     component: Picker,
@@ -125,6 +129,7 @@ stories
       endYear: 1398,
     },
     argTypes: baseArgs,
+    badges: [BADGE.STABLE],
   })
   .add('Min Year', (args: any) => <BasePickerTemplate {...args} />, {
     component: Picker,
@@ -139,6 +144,7 @@ stories
       startYear: 1380,
     },
     argTypes: baseArgs,
+    badges: [BADGE.STABLE],
   })
   .add('Min and Max Year', (args: any) => <BasePickerTemplate {...args} />, {
     component: Picker,
@@ -154,6 +160,7 @@ stories
       endYear: 1388,
     },
     argTypes: baseArgs,
+    badges: [BADGE.STABLE],
   })
   .add(
     'Min, Max Year and Min, Max Date Range',
@@ -179,5 +186,6 @@ stories
         endYear: 1399,
       },
       argTypes: baseArgs,
+      badges: [BADGE.STABLE],
     },
   );

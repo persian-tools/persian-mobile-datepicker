@@ -6,6 +6,7 @@ import {
   Picker,
   WheelPickerSelectEvent,
 } from '../index'; // in your code: @persian-tools/persian-mobile-datepicker
+import { BADGE } from '@geometricpanda/storybook-addon-badges';
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { digitsEnToFa } from '@persian-tools/persian-tools';
@@ -81,4 +82,5 @@ stories.add('Dark Theme', (args: any) => <BasePickerTemplate {...args} />, {
   backgrounds: {
     default: 'dark',
   },
+  badges: [BADGE.EXPERIMENTAL],
 });

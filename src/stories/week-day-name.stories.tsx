@@ -8,6 +8,7 @@ import {
 } from '../index'; // in your code: @persian-tools/persian-mobile-datepicker
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
+import { BADGE } from '@geometricpanda/storybook-addon-badges';
 // Types
 import type { ComponentStory } from '@storybook/react';
 import type { Event } from '../components/WheelPicker/index.types';
@@ -56,4 +57,5 @@ stories.add(title, (args: any) => <BasePickerTemplate {...args} />, {
     initialValue: createDateInstance({ year: 1400, month: 1, day: 6 }),
   },
   argTypes: baseArgs,
+  badges: [BADGE.STABLE],
 });

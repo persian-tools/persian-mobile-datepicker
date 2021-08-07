@@ -61,6 +61,7 @@
   },
   "homepage": "https://github.com/persian-tools/persian-mobile-datepicker#readme",
   "dependencies": {
+    "@geometricpanda/storybook-addon-badges": "^0.0.4",
     "date-fns-jalali": "^2.23.0-0",
     "framer-motion": "^4.1.17",
     "react-modal-sheet": "^1.4.0",

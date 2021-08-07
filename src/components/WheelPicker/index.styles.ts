@@ -10,7 +10,7 @@ export const GlobalStyle = createGlobalStyle`
   .rmc-picker-indicator {
     display: none;
   }
-  .rmc-picker-item-content {
+  .rmc-column-item-content {
     unicode-bidi: plaintext;
     direction: rtl;
     color: #3f3f3e;

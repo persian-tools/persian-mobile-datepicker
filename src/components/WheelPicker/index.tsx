@@ -172,7 +172,7 @@ export const WheelPicker: FC<WheelPickerProps> = (props) => {
   /**
    * Get Picker's item styles such as selected and none selected styles
    */
-  const pickerItemStyles = React.useCallback<
+  const getPickerItemStyles = React.useCallback<
     (type: DateConfigTypes, isSelected: boolean) => CSSProperties
   >(
     (type, isSelected) => {
@@ -187,7 +187,7 @@ export const WheelPicker: FC<WheelPickerProps> = (props) => {
   /**
    * Get Picker's text content styles if the day is weekend or holiday
    */
-  const pickerTextContentStyles = React.useCallback<
+  const getPickerTextContentStyles = React.useCallback<
     (pickerItem: PickerItemModel) => CSSProperties
   >(
     (pickerItem) => {
@@ -220,9 +220,32 @@ export const WheelPicker: FC<WheelPickerProps> = (props) => {
     [selectedDate, props.highlightHolidays, props.highlightWeekends],
   );
 
+  /**
+   * Get every Picker Item's content styles
+   */
+  const getPickerItemContentStyles = React.useCallback<
+    (
+      pickerItem: PickerItemModel,
+      type: DateConfigTypes,
+      isSelectedItem: boolean,
+    ) => React.CSSProperties
+  >(
+    (pickerItem, type, isSelectedItem) => {
+      return {
+        ...getPickerTextContentStyles(pickerItem),
+        ...getPickerItemStyles(type, isSelectedItem),
+      };
+    },
+    [configs],
+  );
+
   return (
     <React.Fragment>
-      {props.title && <StyledTitle>{props.title}</StyledTitle>}
+      {props.title && (
+        <StyledTitle className={classNamePrefix('title')}>
+          {props.title}
+        </StyledTitle>
+      )}
       {pickerColumns.map((column, index) => {
         const caption = getPickerColumnsCaption(column.type);
         if (caption) {
@@ -254,6 +277,7 @@ export const WheelPicker: FC<WheelPickerProps> = (props) => {
         className={classNamePrefix('multi-picker')}
         onValueChange={onChange}
       >
+        {/* Render Picker Columns */}
         {pickerColumns.map((column, index) => {
           return (
             <StyledWheelPicker
@@ -263,30 +287,33 @@ export const WheelPicker: FC<WheelPickerProps> = (props) => {
                 `indicator`,
               )} ${classNamePrefix(`${column.type}-column`)}`}
             >
+              {/* Filter columns items and only render item which can be rendered */}
               {filterAllowedColumnRows(column.value, column.type).map(
                 (pickerItem) => {
-                  // is current column's item selected?.
+                  // Is this Column item selected and viewed to the User now?
                   const isSelectedItem =
                     pickerItem.value ===
                     defaultSelectedDateObject[pickerItem.type];
                   return (
                     <StyledWheelPickerItem
-                      // @ts-ignore
-                      // style={pickerItemStyles(column.type, isSelectedItem)}
                       key={`Picker_Item_${pickerItem.type}_${pickerItem.value}`}
                       className={`${
                         isSelectedItem ? classNamePrefix('active-selected') : ''
                       } ${classNamePrefix(
-                        'view-item',
+                        'column-item',
                       )} ${getPickerItemClassNames(pickerItem)}`}
                       value={`${pickerItem.type}-${pickerItem.value}`}
                     >
+                      {/* Every Picker Item's content */}
                       <div
-                        className="rmc-picker-item-content"
-                        style={{
-                          ...pickerTextContentStyles(pickerItem),
-                          ...pickerItemStyles(column.type, isSelectedItem),
-                        }}
+                        className={`rmc-column-item-content ${classNamePrefix(
+                          'column-item-content',
+                        )}`}
+                        style={getPickerItemContentStyles(
+                          pickerItem,
+                          column.type,
+                          isSelectedItem,
+                        )}
                       >
                         {handlePickerItemTextContent(pickerItem)}
                       </div>

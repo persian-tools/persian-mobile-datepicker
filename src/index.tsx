@@ -9,12 +9,20 @@ import {
   StyledSubmitButton,
   StyledCancelButton,
   StyledSheet,
+  StyledSheetContainer,
+  StyledSheetHeader,
+  StyledSheetContent,
 } from './index.styles';
+// Helpers
+import { prefixClassName } from './helpers';
 // Types
 import type { PickerProps, Theme } from './index.types';
 import type { WheelPickerSelectEvent } from './components/WheelPicker/index.types';
 
 const Picker: React.FC<PickerProps> = (props) => {
+  // Local Variables
+  const classNamePrefix = prefixClassName(props.classNamePrefix!);
+  // Local States
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
   const [selectedDate, setSelectedDate] =
     React.useState<WheelPickerSelectEvent>();
@@ -83,12 +91,18 @@ const Picker: React.FC<PickerProps> = (props) => {
       onClose={() => handleCancel()}
       snapPoints={[props.height! + (props.title ? 55 : 0)]}
       initialSnap={0}
-      style={props.sheetStyles!}
       theme={theme}
+      className={classNamePrefix('sheet')}
     >
-      <Sheet.Container>
-        <Sheet.Header disableDrag={props.disableSheetHeaderDrag} />
-        <Sheet.Content disableDrag={props.disableSheetDrag}>
+      <StyledSheetContainer className={classNamePrefix('sheet-container')}>
+        <StyledSheetHeader
+          disableDrag={props.disableSheetHeaderDrag}
+          className={classNamePrefix('sheet-header')}
+        />
+        <StyledSheetContent
+          disableDrag={props.disableSheetDrag}
+          className={classNamePrefix('sheet-content')}
+        >
           <WheelPicker
             title={props.title}
             value={props.value}
@@ -105,10 +119,10 @@ const Picker: React.FC<PickerProps> = (props) => {
             highlightHolidays={props.highlightHolidays}
           />
 
-          <StyledFooter className="sheet-footer">
+          <StyledFooter className={classNamePrefix('sheet-footer')}>
             {props.showCancelButton && (
               <StyledCancelButton
-                className="sheet-footer__cancel"
+                className={classNamePrefix('sheet-footer__cancel')}
                 onClick={handleCancel}
               >
                 {props.cancelText}
@@ -116,14 +130,14 @@ const Picker: React.FC<PickerProps> = (props) => {
             )}
             <StyledSubmitButton
               fullWidth={!props.showCancelButton}
-              className="sheet-footer__submit"
+              className={classNamePrefix('sheet-footer__submit')}
               onClick={handleSubmit}
             >
               {props.submitText}
             </StyledSubmitButton>
           </StyledFooter>
-        </Sheet.Content>
-      </Sheet.Container>
+        </StyledSheetContent>
+      </StyledSheetContainer>
       <Sheet.Backdrop />
     </StyledSheet>
   );
@@ -138,10 +152,9 @@ Picker.defaultProps = {
   cancelText: 'انصراف',
   showCancelButton: true,
   disableSheetDrag: true,
-  disableSheetHeaderDrag: true,
+  disableSheetHeaderDrag: false,
   addDayName: false,
   height: 385,
-  sheetStyles: {},
 };
 
 export { Picker, WheelPicker };

@@ -12,19 +12,39 @@ export interface WheelPickerSelectEvent {
 }
 
 export interface WheelPickerProps {
-  // CSS classnames prefix
+  /**
+   * CSS classnames prefix
+   *
+   * @default persian-datepicker
+   */
   classNamePrefix?: string;
-  // Initial picker value
+  /**
+   * Initial picker value
+   *
+   * @default null
+   */
   initialValue?: Date;
-  // Current picker value
+  /**
+   * Current picker value
+   *
+   * @default null
+   */
   value?: WheelPickerSelectEvent;
-  // WheelPicker title
+  /**
+   * WheelPicker title
+   *
+   * @default null
+   */
   title?: ReactNode;
   /**
    * Gets called when value of the picker changes
    */
   onChange?: (selected: WheelPickerSelectEvent) => void;
-  // Set config to configure year, month, day, hour, minute and seconds
+  /**
+   * Set config to configure year, month, day, hour, minute and seconds
+   *
+   * @default {}
+   */
   config: DatePickerConfig;
   /**
    * Specifies the minimum selectable day by user
@@ -70,7 +90,11 @@ export interface WheelPickerProps {
    * @type {boolean}
    */
   highlightHolidays?: boolean;
-  // Add the name of the day of the week
+  /**
+   * Add the name of the day of the week
+   *
+   * @default false
+   */
   addDayName?: boolean;
 }
 

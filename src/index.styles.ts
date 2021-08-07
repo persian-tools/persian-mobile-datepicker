@@ -70,7 +70,7 @@ export const StyledSheet = styled(Sheet)<{ theme: Theme }>`
             ),
             linear-gradient(to top, rgba(34, 34, 34, 0.95), rgba(34, 34, 34, 0.6));
         }
-        .rmc-picker-item-content {
+        .rmc-column-item-content {
           background: #313133;
           height: 30px;
           font-size: 15px;
@@ -78,7 +78,7 @@ export const StyledSheet = styled(Sheet)<{ theme: Theme }>`
           border-radius: 5px;
           color: #fff;
         }
-        .rmc-picker-item-selected .rmc-picker-item-content {
+        .rmc-picker-item-selected .rmc-column-item-content {
           background: #7048ec;
         }
         .sheet-footer {
@@ -97,3 +97,16 @@ export const StyledSheet = styled(Sheet)<{ theme: Theme }>`
   }}
 `;
 StyledSheet.displayName = 'PersianTools(Picker)(Sheet)';
+
+export const StyledSheetContainer = styled(Sheet.Container)<{
+  className: string;
+}>``;
+StyledSheetContainer.displayName = 'PersianTools(Picker)(SheetContainer)';
+
+export const StyledSheetHeader = styled(Sheet.Header)<{ className: string }>``;
+StyledSheetHeader.displayName = 'PersianTools(Picker)(SheetHeader)';
+
+export const StyledSheetContent = styled(Sheet.Content)<{
+  className: string;
+}>``;
+StyledSheetContent.displayName = 'PersianTools(Picker)(SheetContent)';

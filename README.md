@@ -340,6 +340,14 @@ import { isAfter } from '@persian-tools/persian-mobile-datepicker';
 const isAfterDate = isAfter(new Date('1361-10-10'), new Date('1372-10-10')); // false
 ```
 
+- `format`: export function format(date: Date | number, formatBy: string): string {
+
+```javascript
+import { format } from '@persian-tools/persian-mobile-datepicker';
+
+const formatDate = format(new Date('2020-10-10'), 'yyyy/MM/dd'); // 1399/07/19
+```
+
 ## Roadmap
 
 - [ ] Add hour, minute and seconds

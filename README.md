@@ -356,6 +356,14 @@ import { isEqual } from '@persian-tools/persian-mobile-datepicker';
 const isEqualDate = isEqual(new Date('1361-10-10'), new Date('1372-10-10')); // false
 ```
 
+- `getCurrentYear`: Return the current Year
+
+```javascript
+import { getCurrentYear } from '@persian-tools/persian-mobile-datepicker';
+
+const currentYear = getCurrentYear(); // 1400
+```
+
 ## Roadmap
 
 - [ ] Add hour, minute and seconds

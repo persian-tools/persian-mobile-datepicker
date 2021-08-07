@@ -3,7 +3,7 @@ import { useState, useRef, useMemo, useEffect, useCallback } from 'react';
 // Utilities
 import {
   convertDateInstanceToDateObject,
-  createDateInstance,
+  newDate,
   currentDateObject,
   daysInMonth as calculateDaysInMonth,
   getCurrentYear,
@@ -166,10 +166,7 @@ export function usePicker(props: WheelPickerProps) {
    * Get default selected date by [MinDate], [MaxDate], [initialValue] or current date
    */
   const defaultSelectedDateObject = useMemo<PickerDateModel>(() => {
-    if (
-      selectedDateRef.current &&
-      isValid(createDateInstance(selectedDateRef.current))
-    ) {
+    if (selectedDateRef.current && isValid(newDate(selectedDateRef.current))) {
       return selectedDateRef.current;
     }
 
@@ -293,7 +290,7 @@ export function usePicker(props: WheelPickerProps) {
     if (!configShouldRender($date, key, value)) return false;
 
     // Convert to a Date instance
-    const selectedDateValue = createDateInstance($date);
+    const selectedDateValue = newDate($date);
 
     // Date is not valid
     if (!isValid(selectedDateValue)) return true;

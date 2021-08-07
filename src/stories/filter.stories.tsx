@@ -1,11 +1,6 @@
 import React from 'react';
 import { createBaseStory, BaseTemplate, baseArgs } from './base';
-import {
-  createDateInstance,
-  format,
-  Picker,
-  WheelPickerSelectEvent,
-} from '../index'; // in your code: @persian-tools/persian-mobile-datepicker
+import { newDate, format, Picker, WheelPickerSelectEvent } from '../index'; // in your code: @persian-tools/persian-mobile-datepicker
 import { BADGE } from '@geometricpanda/storybook-addon-badges';
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
@@ -82,7 +77,7 @@ stories
             },
           },
         },
-        initialValue: createDateInstance({ year: 1400, month: 1, day: 1 }),
+        initialValue: newDate({ year: 1400, month: 1, day: 1 }),
       },
       argTypes: baseArgs,
       badges: [BADGE.STABLE],
@@ -121,7 +116,7 @@ stories
             },
           },
         },
-        initialValue: createDateInstance({ year: 1400, month: 1, day: 1 }),
+        initialValue: newDate({ year: 1400, month: 1, day: 1 }),
       },
       argTypes: baseArgs,
       badges: [BADGE.STABLE],
@@ -160,7 +155,7 @@ stories
             shouldRender: ({ dayOfYear }) => dayOfYear !== 1,
           },
         },
-        initialValue: createDateInstance({ year: 1400, month: 1, day: 1 }),
+        initialValue: newDate({ year: 1400, month: 1, day: 1 }),
       },
       argTypes: baseArgs,
       badges: [BADGE.STABLE],
@@ -200,7 +195,7 @@ stories
               year === 1401 ? dayOfYear !== 1 : true,
           },
         },
-        initialValue: createDateInstance({ year: 1400, month: 1, day: 1 }),
+        initialValue: newDate({ year: 1400, month: 1, day: 1 }),
       },
       argTypes: baseArgs,
       badges: [BADGE.STABLE],
@@ -240,7 +235,7 @@ stories
               year === 1401 && month === 2 ? day !== 1 : true,
           },
         },
-        initialValue: createDateInstance({ year: 1400, month: 2, day: 1 }),
+        initialValue: newDate({ year: 1400, month: 2, day: 1 }),
       },
       argTypes: baseArgs,
       badges: [BADGE.STABLE],
@@ -279,7 +274,7 @@ stories
             shouldRender: ({ weekDay }) => weekDay !== 6,
           },
         },
-        initialValue: createDateInstance({ year: 1400, month: 2, day: 1 }),
+        initialValue: newDate({ year: 1400, month: 2, day: 1 }),
       },
       argTypes: baseArgs,
       badges: [BADGE.STABLE],
@@ -318,7 +313,7 @@ stories
             shouldRender: ({ isHoliday }) => !isHoliday,
           },
         },
-        initialValue: createDateInstance({ year: 1400, month: 1, day: 1 }),
+        initialValue: newDate({ year: 1400, month: 1, day: 1 }),
       },
       argTypes: baseArgs,
       badges: [BADGE.STABLE],
@@ -358,7 +353,7 @@ stories
               year === 1400 ? !isHoliday : true,
           },
         },
-        initialValue: createDateInstance({ year: 1400, month: 1, day: 1 }),
+        initialValue: newDate({ year: 1400, month: 1, day: 1 }),
       },
       argTypes: baseArgs,
       badges: [BADGE.STABLE],
@@ -394,7 +389,7 @@ stories
             },
           },
         },
-        initialValue: createDateInstance({ year: 1400, month: 1, day: 1 }),
+        initialValue: newDate({ year: 1400, month: 1, day: 1 }),
       },
       argTypes: baseArgs,
       badges: [BADGE.STABLE],

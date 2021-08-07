@@ -1,11 +1,6 @@
 import React from 'react';
 import { createBaseStory, BaseTemplate, baseArgs } from './base';
-import {
-  createDateInstance,
-  format,
-  Picker,
-  WheelPickerSelectEvent,
-} from '../index'; // in your code: @persian-tools/persian-mobile-datepicker
+import { newDate, format, Picker, WheelPickerSelectEvent } from '../index'; // in your code: @persian-tools/persian-mobile-datepicker
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { digitsEnToFa, numberToWords } from '@persian-tools/persian-tools';
@@ -75,7 +70,7 @@ stories
             },
           },
         },
-        initialValue: createDateInstance({ year: 1400, month: 1, day: 1 }),
+        initialValue: newDate({ year: 1400, month: 1, day: 1 }),
       },
       argTypes: baseArgs,
       badges: [BADGE.STABLE],
@@ -127,7 +122,7 @@ stories
             },
           },
         },
-        initialValue: createDateInstance({ year: 1400, month: 1, day: 1 }),
+        initialValue: newDate({ year: 1400, month: 1, day: 1 }),
       },
       argTypes: baseArgs,
       badges: [BADGE.STABLE],
@@ -173,7 +168,7 @@ stories
           },
         },
       },
-      initialValue: createDateInstance({ year: 1400, month: 1, day: 1 }),
+      initialValue: newDate({ year: 1400, month: 1, day: 1 }),
     },
     argTypes: baseArgs,
     badges: [BADGE.STABLE],

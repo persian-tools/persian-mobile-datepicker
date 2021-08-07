@@ -1,11 +1,6 @@
 import React from 'react';
 import { createBaseStory, BaseTemplate, baseArgs } from './base';
-import {
-  createDateInstance,
-  format,
-  Picker,
-  WheelPickerSelectEvent,
-} from '../index'; // in your code: @persian-tools/persian-mobile-datepicker
+import { newDate, format, Picker, WheelPickerSelectEvent } from '../index'; // in your code: @persian-tools/persian-mobile-datepicker
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { BADGE } from '@geometricpanda/storybook-addon-badges';
@@ -65,7 +60,7 @@ stories
       highlightHolidays: true,
       highlightWeekends: true,
       config,
-      initialValue: createDateInstance({ year: 1400, month: 1, day: 1 }),
+      initialValue: newDate({ year: 1400, month: 1, day: 1 }),
     },
     argTypes: baseArgs,
     badges: [BADGE.STABLE],
@@ -84,7 +79,7 @@ stories
         config,
         submitText: 'تایید و انتخاب',
         cancelText: 'بستن',
-        initialValue: createDateInstance({ year: 1400, month: 1, day: 1 }),
+        initialValue: newDate({ year: 1400, month: 1, day: 1 }),
       },
       argTypes: baseArgs,
       badges: [BADGE.STABLE],
@@ -100,7 +95,7 @@ stories
       highlightWeekends: true,
       config,
       showCancelButton: false,
-      initialValue: createDateInstance({ year: 1400, month: 1, day: 1 }),
+      initialValue: newDate({ year: 1400, month: 1, day: 1 }),
     },
     argTypes: baseArgs,
     badges: [BADGE.EXPERIMENTAL],
@@ -114,7 +109,7 @@ stories
       highlightHolidays: true,
       highlightWeekends: true,
       config,
-      initialValue: createDateInstance({ year: 1400, month: 1, day: 1 }),
+      initialValue: newDate({ year: 1400, month: 1, day: 1 }),
     },
     argTypes: baseArgs,
     badges: [BADGE.STABLE],
@@ -133,7 +128,7 @@ stories
         config,
         disableSheetDrag: false,
         disableSheetHeaderDrag: true,
-        initialValue: createDateInstance({ year: 1400, month: 1, day: 1 }),
+        initialValue: newDate({ year: 1400, month: 1, day: 1 }),
       },
       argTypes: baseArgs,
       badges: [BADGE.STABLE],
@@ -153,7 +148,7 @@ stories
         config,
         disableSheetDrag: true,
         disableSheetHeaderDrag: false,
-        initialValue: createDateInstance({ year: 1400, month: 1, day: 1 }),
+        initialValue: newDate({ year: 1400, month: 1, day: 1 }),
       },
       argTypes: baseArgs,
       badges: [BADGE.STABLE],
@@ -167,7 +162,7 @@ stories
       title: 'انتخاب تاریخ',
       config,
       classNamePrefix: 'test',
-      initialValue: createDateInstance({ year: 1400, month: 1, day: 1 }),
+      initialValue: newDate({ year: 1400, month: 1, day: 1 }),
     },
     argTypes: baseArgs,
     badges: [BADGE.STABLE],

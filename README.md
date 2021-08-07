@@ -340,12 +340,20 @@ import { isAfter } from '@persian-tools/persian-mobile-datepicker';
 const isAfterDate = isAfter(new Date('1361-10-10'), new Date('1372-10-10')); // false
 ```
 
-- `format`: export function format(date: Date | number, formatBy: string): string {
+- `format`: Return the formatted date string in the given format. The result may vary by locale.
 
 ```javascript
 import { format } from '@persian-tools/persian-mobile-datepicker';
 
 const formatDate = format(new Date('2020-10-10'), 'yyyy/MM/dd'); // 1399/07/19
+```
+
+- `isEqual`: Are the given dates equal?
+
+```javascript
+import { isEqual } from '@persian-tools/persian-mobile-datepicker';
+
+const isEqualDate = isEqual(new Date('1361-10-10'), new Date('1372-10-10')); // false
 ```
 
 ## Roadmap

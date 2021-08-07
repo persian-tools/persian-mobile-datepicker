@@ -78,4 +78,7 @@ stories.add('Dark Theme', (args: any) => <BasePickerTemplate {...args} />, {
     initialValue: createDateInstance({ year: 1400, month: 1, day: 1 }),
   },
   argTypes: baseArgs,
+  backgrounds: {
+    default: 'dark',
+  },
 });

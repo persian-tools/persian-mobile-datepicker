@@ -364,6 +364,14 @@ import { getCurrentYear } from '@persian-tools/persian-mobile-datepicker';
 const currentYear = getCurrentYear(); // 1400
 ```
 
+- `currentDateObject`: Convert date instance string to an object.
+
+```javascript
+import { currentDateObject } from '@persian-tools/persian-mobile-datepicker';
+
+const currentYear = currentDateObject(); // {day: 16, hour: 5, minute: 51, month: 5, second: 1, year: 1400}
+```
+
 ## Roadmap
 
 - [ ] Add hour, minute and seconds

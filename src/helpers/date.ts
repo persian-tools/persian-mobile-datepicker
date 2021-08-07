@@ -17,6 +17,7 @@ import {
   isAfter as isAfterFns,
   getDayOfYear as getDayOfYearFns,
 } from 'date-fns-jalali';
+// @ts-ignore
 import { isValidJalaaliDate as isValidJalaaliDateFns } from 'date-fns-jalali/_jalali/index';
 // Helpers
 import {

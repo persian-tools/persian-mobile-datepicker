@@ -332,6 +332,14 @@ import { isBefore } from '@persian-tools/persian-mobile-datepicker';
 const isBeforeDate = isBefore(new Date('1361-10-10'), new Date('1372-10-10')); // true
 ```
 
+- `isAfter`: Is the first date after the second one?
+
+```javascript
+import { isAfter } from '@persian-tools/persian-mobile-datepicker';
+
+const isAfterDate = isAfter(new Date('1361-10-10'), new Date('1372-10-10')); // false
+```
+
 ## Roadmap
 
 - [ ] Add hour, minute and seconds

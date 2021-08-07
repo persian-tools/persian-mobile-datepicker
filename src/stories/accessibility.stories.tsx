@@ -1,5 +1,5 @@
 import React from 'react';
-import { createBaseStory, BaseTemplate } from './base';
+import { createBaseStory, BaseTemplate, baseArgs } from './base';
 import {
   createDateInstance,
   format,
@@ -71,14 +71,7 @@ stories
         cancelText: 'بستن',
         initialValue: createDateInstance({ year: 1400, month: 1, day: 1 }),
       },
-      argTypes: {
-        theme: {
-          control: {
-            type: 'inline-radio',
-            options: ['light', 'dark', 'auto'],
-          },
-        },
-      },
+      argTypes: baseArgs,
     },
   )
   .add('Hide Cancel button', (args: any) => <BasePickerTemplate {...args} />, {
@@ -93,14 +86,7 @@ stories
       showCancelButton: false,
       initialValue: createDateInstance({ year: 1400, month: 1, day: 1 }),
     },
-    argTypes: {
-      theme: {
-        control: {
-          type: 'inline-radio',
-          options: ['light', 'dark', 'auto'],
-        },
-      },
-    },
+    argTypes: baseArgs,
   })
   .add('Bottom Sheet Title', (args: any) => <BasePickerTemplate {...args} />, {
     component: Picker,
@@ -113,14 +99,7 @@ stories
       config,
       initialValue: createDateInstance({ year: 1400, month: 1, day: 1 }),
     },
-    argTypes: {
-      theme: {
-        control: {
-          type: 'inline-radio',
-          options: ['light', 'dark', 'auto'],
-        },
-      },
-    },
+    argTypes: baseArgs,
   })
   .add(
     'Drag for the sheet content',
@@ -138,14 +117,7 @@ stories
         disableSheetHeaderDrag: true,
         initialValue: createDateInstance({ year: 1400, month: 1, day: 1 }),
       },
-      argTypes: {
-        theme: {
-          control: {
-            type: 'inline-radio',
-            options: ['light', 'dark', 'auto'],
-          },
-        },
-      },
+      argTypes: baseArgs,
     },
   )
   .add(
@@ -164,13 +136,18 @@ stories
         disableSheetHeaderDrag: false,
         initialValue: createDateInstance({ year: 1400, month: 1, day: 1 }),
       },
-      argTypes: {
-        theme: {
-          control: {
-            type: 'inline-radio',
-            options: ['light', 'dark', 'auto'],
-          },
-        },
-      },
+      argTypes: baseArgs,
     },
-  );
+  )
+  .add('ClassName Prefix', (args: any) => <BasePickerTemplate {...args} />, {
+    component: Picker,
+    args: {
+      isOpen: true,
+      theme: 'auto',
+      title: 'انتخاب تاریخ',
+      config,
+      classNamePrefix: 'test',
+      initialValue: createDateInstance({ year: 1400, month: 1, day: 1 }),
+    },
+    argTypes: baseArgs,
+  });

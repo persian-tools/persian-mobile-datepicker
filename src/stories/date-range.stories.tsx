@@ -1,5 +1,5 @@
 import React from 'react';
-import { createBaseStory, BaseTemplate } from './base';
+import { createBaseStory, BaseTemplate, baseArgs } from './base';
 import {
   createDateInstance,
   format,
@@ -82,14 +82,7 @@ stories
       minDate: createDateInstance({ year: 1400, month: 1, day: 1 }),
       maxDate: createDateInstance({ year: 1400, month: 5, day: 31 }),
     },
-    argTypes: {
-      theme: {
-        control: {
-          type: 'inline-radio',
-          options: ['light', 'dark', 'auto'],
-        },
-      },
-    },
+    argTypes: baseArgs,
   })
   .add('Min Date', (args: any) => <BasePickerTemplate {...args} />, {
     component: Picker,
@@ -103,14 +96,7 @@ stories
       initialValue: createDateInstance({ year: 1396, month: 3, day: 1 }),
       minDate: createDateInstance({ year: 1396, month: 3, day: 1 }),
     },
-    argTypes: {
-      theme: {
-        control: {
-          type: 'inline-radio',
-          options: ['light', 'dark', 'auto'],
-        },
-      },
-    },
+    argTypes: baseArgs,
   })
   .add('Max Date', (args: any) => <BasePickerTemplate {...args} />, {
     component: Picker,
@@ -124,14 +110,7 @@ stories
       initialValue: createDateInstance({ year: 1396, month: 3, day: 20 }),
       maxDate: createDateInstance({ year: 1396, month: 3, day: 20 }),
     },
-    argTypes: {
-      theme: {
-        control: {
-          type: 'inline-radio',
-          options: ['light', 'dark', 'auto'],
-        },
-      },
-    },
+    argTypes: baseArgs,
   })
   .add('Max Year', (args: any) => <BasePickerTemplate {...args} />, {
     component: Picker,
@@ -145,14 +124,7 @@ stories
       initialValue: createDateInstance({ year: 1396, month: 3, day: 20 }),
       endYear: 1398,
     },
-    argTypes: {
-      theme: {
-        control: {
-          type: 'inline-radio',
-          options: ['light', 'dark', 'auto'],
-        },
-      },
-    },
+    argTypes: baseArgs,
   })
   .add('Min Year', (args: any) => <BasePickerTemplate {...args} />, {
     component: Picker,
@@ -166,14 +138,7 @@ stories
       initialValue: createDateInstance({ year: 1396, month: 3, day: 20 }),
       startYear: 1380,
     },
-    argTypes: {
-      theme: {
-        control: {
-          type: 'inline-radio',
-          options: ['light', 'dark', 'auto'],
-        },
-      },
-    },
+    argTypes: baseArgs,
   })
   .add('Min and Max Year', (args: any) => <BasePickerTemplate {...args} />, {
     component: Picker,
@@ -188,14 +153,7 @@ stories
       startYear: 1380,
       endYear: 1388,
     },
-    argTypes: {
-      theme: {
-        control: {
-          type: 'inline-radio',
-          options: ['light', 'dark', 'auto'],
-        },
-      },
-    },
+    argTypes: baseArgs,
   })
   .add(
     'Min, Max Year and Min, Max Date Range',
@@ -220,13 +178,6 @@ stories
         startYear: 1389,
         endYear: 1399,
       },
-      argTypes: {
-        theme: {
-          control: {
-            type: 'inline-radio',
-            options: ['light', 'dark', 'auto'],
-          },
-        },
-      },
+      argTypes: baseArgs,
     },
   );

@@ -1,5 +1,5 @@
 import React from 'react';
-import { createBaseStory, BaseTemplate } from './base';
+import { createBaseStory, BaseTemplate, baseArgs } from './base';
 import {
   createDateInstance,
   format,
@@ -77,12 +77,5 @@ stories.add(title, (args: any) => <BasePickerTemplate {...args} />, {
     config,
     initialValue: createDateInstance({ year: 1400, month: 1, day: 1 }),
   },
-  argTypes: {
-    theme: {
-      control: {
-        type: 'inline-radio',
-        options: ['light', 'dark', 'auto'],
-      },
-    },
-  },
+  argTypes: baseArgs,
 });

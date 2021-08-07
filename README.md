@@ -1,9 +1,12 @@
 # Persian Mobile Date and Time picker
 
 This library provides a component that can set year, month, day, hour, minute and second by sliding up or down.
+
 - `Note`:
   There is no need to use the `moment-jalaali` or any other Jalali libraries and every function you need has been documented and if you need a function that we don't have, let us know to implement it.
+
 ### Demo
+
 All functionalities and demos have documented here: [Demo](https://persian-tools.github.io/persian-mobile-datepicker)
 
 ## Theme
@@ -260,12 +263,24 @@ If you want to change the inline style of columns or cells of datepicker you can
 
 ## Date helpers
 
+- `newDate`: Convert Jallali Date to Gregorian and returns a Gregorian Date instance
+
+```javascript
+import { newDate } from '@persian-tools/persian-mobile-datepicker';
+
+newDate({
+  year: 1400,
+  month: 1,
+  day: 0,
+}); // Sun Mar 21 2021 00:00:00 GMT+0330 (Iran Standard Time)
+```
+
 - `createDateInstance`: Convert Jallali Date to Gregorian and returns a Gregorian Date instance
 
 ```javascript
 import { createDateInstance } from '@persian-tools/persian-mobile-datepicker';
 
-const createDateByJalalliValues = createDateInstance({
+createDateInstance({
   year: 1400,
   month: 1,
   day: 0,
@@ -277,7 +292,7 @@ const createDateByJalalliValues = createDateInstance({
 ```javascript
 import { convertDateInstanceToDateObject } from '@persian-tools/persian-mobile-datepicker';
 
-const convertDateToObject = convertDateInstanceToDateObject(new Date()); // {year: 1400, month: 5, day: 15, hour: 22, minute: 20,second: 10}
+convertDateInstanceToDateObject(new Date()); // {year: 1400, month: 5, day: 15, hour: 22, minute: 20,second: 10}
 ```
 
 - `daysInMonth`: Get the number of days in a month of a year
@@ -285,15 +300,15 @@ const convertDateToObject = convertDateInstanceToDateObject(new Date()); // {yea
 ```javascript
 import { daysInMonth } from '@persian-tools/persian-mobile-datepicker';
 
-const getDaysInMonth = daysInMonth(1400, 1); // 31
+daysInMonth(1400, 1); // 31
 ```
 
-- `getWeekDay`: Get the day of the week of the given date.
+- `getWeekDay`: Get the day of the week of the given date. Returns number starts from 0, 0 means the first day of Week and 6 means the last day of Week
 
 ```javascript
 import { getWeekDay } from '@persian-tools/persian-mobile-datepicker';
 
-const getDayNumberOfWeek = getWeekDay(1400, 5, 15); // 7
+getWeekDay(1400, 5, 15); // 6
 ```
 
 - `getDayOfYear`: Get the day of the year of the given date.
@@ -301,23 +316,25 @@ const getDayNumberOfWeek = getWeekDay(1400, 5, 15); // 7
 ```javascript
 import { getDayOfYear } from '@persian-tools/persian-mobile-datepicker';
 
-const getDayNumberOfYear = getDayOfYear(1400, 5, 15); // 139
+getDayOfYear(1400, 5, 15); // 139
 ```
 
-- `isWeekend`: Return if the Date is at the Weekend
+- `isWeekend`: Return true if the Date is at the Weekend
 
 ```javascript
 import { isWeekend } from '@persian-tools/persian-mobile-datepicker';
 
-const isTheDayWeekend = isWeekend(1400, 5, 15); // true
+isWeekend(1400, 5, 22); // true -> because it is friday
+isWeekend(1400, 5, 23); // false -> it is Saturday
 ```
 
-- `getWeekDayText`: Get weekday's name by date
+- `getWeekDayText`: Get Name the days of the week
 
 ```javascript
 import { getWeekDayText } from '@persian-tools/persian-mobile-datepicker';
 
-const getNameOfWeek = getWeekDayText(1400, 5, 15); // جمعه
+getWeekDayText(1400, 5, 22); // جمعه
+getWeekDayText(1400, 5, 23); // شنبه
 ```
 
 - `isValid`: Is the given date valid?
@@ -325,7 +342,8 @@ const getNameOfWeek = getWeekDayText(1400, 5, 15); // جمعه
 ```javascript
 import { isValid } from '@persian-tools/persian-mobile-datepicker';
 
-const isDateValid = isValid(new Date()); // true
+isValid(1399, 12, 30); // true -> because 1399 is leap
+isValid(1400, 12, 30); // false
 ```
 
 - `isBefore`: Is the first date before the second one?
@@ -333,7 +351,10 @@ const isDateValid = isValid(new Date()); // true
 ```javascript
 import { isBefore } from '@persian-tools/persian-mobile-datepicker';
 
-const isBeforeDate = isBefore(new Date('1361-10-10'), new Date('1372-10-10')); // true
+const firstDate = newDate(1399, 12, 30);
+const secondtDate = newDate(1400, 2, 1);
+
+isBefore(firstDate, secondtDate); // true
 ```
 
 - `isAfter`: Is the first date after the second one?
@@ -341,7 +362,7 @@ const isBeforeDate = isBefore(new Date('1361-10-10'), new Date('1372-10-10')); /
 ```javascript
 import { isAfter } from '@persian-tools/persian-mobile-datepicker';
 
-const isAfterDate = isAfter(new Date('1361-10-10'), new Date('1372-10-10')); // false
+isAfter(new Date('1361-10-10'), new Date('1372-10-10')); // false
 ```
 
 - `format`: Return the formatted date string in the given format. The result may vary by locale.
@@ -349,7 +370,7 @@ const isAfterDate = isAfter(new Date('1361-10-10'), new Date('1372-10-10')); // 
 ```javascript
 import { format } from '@persian-tools/persian-mobile-datepicker';
 
-const formatDate = format(new Date('2020-10-10'), 'yyyy/MM/dd'); // 1399/07/19
+format(new Date('2020-10-10'), 'yyyy/MM/dd'); // 1399/07/19
 ```
 
 - `isEqual`: Are the given dates equal?
@@ -357,7 +378,7 @@ const formatDate = format(new Date('2020-10-10'), 'yyyy/MM/dd'); // 1399/07/19
 ```javascript
 import { isEqual } from '@persian-tools/persian-mobile-datepicker';
 
-const isEqualDate = isEqual(new Date('1361-10-10'), new Date('1372-10-10')); // false
+isEqual(new Date('1361-10-10'), new Date('1372-10-10')); // false
 ```
 
 - `getCurrentYear`: Return the current Year
@@ -365,7 +386,7 @@ const isEqualDate = isEqual(new Date('1361-10-10'), new Date('1372-10-10')); // 
 ```javascript
 import { getCurrentYear } from '@persian-tools/persian-mobile-datepicker';
 
-const currentYear = getCurrentYear(); // 1400
+getCurrentYear(); // 1400
 ```
 
 - `currentDateObject`: Convert date instance string to an object.
@@ -373,7 +394,7 @@ const currentYear = getCurrentYear(); // 1400
 ```javascript
 import { currentDateObject } from '@persian-tools/persian-mobile-datepicker';
 
-const currentYear = currentDateObject(); // {day: 16, hour: 5, minute: 51, month: 5, second: 1, year: 1400}
+currentDateObject(); // {day: 16, hour: 5, minute: 51, month: 5, second: 1, year: 1400}
 ```
 
 ## Roadmap

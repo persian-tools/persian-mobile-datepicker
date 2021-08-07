@@ -263,24 +263,12 @@ If you want to change the inline style of columns or cells of datepicker you can
 
 ## Date helpers
 
-- `newDate`: Convert Jallali Date to Gregorian and returns a Gregorian Date instance
+- `newDate`: Convert Jalaali Date to Gregorian and returns a Date instance
 
 ```javascript
 import { newDate } from '@persian-tools/persian-mobile-datepicker';
 
 newDate({
-  year: 1400,
-  month: 1,
-  day: 0,
-}); // Sun Mar 21 2021 00:00:00 GMT+0330 (Iran Standard Time)
-```
-
-- `createDateInstance`: Convert Jallali Date to Gregorian and returns a Gregorian Date instance
-
-```javascript
-import { createDateInstance } from '@persian-tools/persian-mobile-datepicker';
-
-createDateInstance({
   year: 1400,
   month: 1,
   day: 0,
@@ -337,19 +325,19 @@ getWeekDayText(1400, 5, 22); // جمعه
 getWeekDayText(1400, 5, 23); // شنبه
 ```
 
-- `isValid`: Is the given date valid?
+- `isValidJalaaliDate`: Is the given Jalaali date valid?
 
 ```javascript
-import { isValid } from '@persian-tools/persian-mobile-datepicker';
+import { isValidJalaaliDate } from '@persian-tools/persian-mobile-datepicker';
 
-isValid(1399, 12, 30); // true -> because 1399 is leap
-isValid(1400, 12, 30); // false
+isValidJalaaliDate(1399, 12, 30); // true -> because 1399 is leap
+isValidJalaaliDate(1400, 12, 30); // false
 ```
 
 - `isBefore`: Is the first date before the second one?
 
 ```javascript
-import { isBefore } from '@persian-tools/persian-mobile-datepicker';
+import { isBefore, newDate } from '@persian-tools/persian-mobile-datepicker';
 
 const firstDate = newDate(1399, 12, 30);
 const secondtDate = newDate(1400, 2, 1);
@@ -360,12 +348,13 @@ isBefore(firstDate, secondtDate); // true
 - `isAfter`: Is the first date after the second one?
 
 ```javascript
-import { isAfter } from '@persian-tools/persian-mobile-datepicker';
+import { isAfter, newDate } from '@persian-tools/persian-mobile-datepicker';
 
-isAfter(new Date('1361-10-10'), new Date('1372-10-10')); // false
+isAfter(newDate(1361,10,10), newDate(1372,10,10)); // false
+isAfter(newDate(1372,10,10), newDate(1361,10,10)); // false
 ```
 
-- `format`: Return the formatted date string in the given format. The result may vary by locale.
+- `format`: Returns the formatted date string in the given format. The result may vary by locale.
 
 ```javascript
 import { format } from '@persian-tools/persian-mobile-datepicker';
@@ -376,12 +365,13 @@ format(new Date('2020-10-10'), 'yyyy/MM/dd'); // 1399/07/19
 - `isEqual`: Are the given dates equal?
 
 ```javascript
-import { isEqual } from '@persian-tools/persian-mobile-datepicker';
+import { isEqual, newDate } from '@persian-tools/persian-mobile-datepicker';
 
-isEqual(new Date('1361-10-10'), new Date('1372-10-10')); // false
+isEqual(newDate(1361,10,10), newDate(1372,10,10)); // false
+isEqual(newDate(1361,10,10), newDate(1361,10,10)); // true
 ```
 
-- `getCurrentYear`: Return the current Year
+- `getCurrentYear`: Get the year of the current date.
 
 ```javascript
 import { getCurrentYear } from '@persian-tools/persian-mobile-datepicker';
@@ -389,7 +379,7 @@ import { getCurrentYear } from '@persian-tools/persian-mobile-datepicker';
 getCurrentYear(); // 1400
 ```
 
-- `currentDateObject`: Convert date instance string to an object.
+- `currentDateObject`: Converts date instance to an object.
 
 ```javascript
 import { currentDateObject } from '@persian-tools/persian-mobile-datepicker';
@@ -402,7 +392,8 @@ currentDateObject(); // {day: 16, hour: 5, minute: 51, month: 5, second: 1, year
 ```javascript
 import { isLeapYear } from '@persian-tools/persian-mobile-datepicker';
 
-isLeapYear(2022); // true
+isLeapYear(1399); // true
+isLeapYear(1400); // false
 ```
 
 ## Roadmap

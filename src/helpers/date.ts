@@ -17,6 +17,7 @@ import {
   isAfter as isAfterFns,
   getDayOfYear as getDayOfYearFns,
 } from 'date-fns-jalali';
+import { isValidJalaaliDate as isValidJalaaliDateFns } from 'date-fns-jalali/_jalali/index';
 // Helpers
 import {
   generateAnArrayOfNumbers,
@@ -56,7 +57,7 @@ export const jalaliMonths = {
 };
 
 /**
- * Converts Jallali Date to Gregorian
+ * Converts Jalaali Date to Gregorian
  *
  * @public
  */
@@ -154,6 +155,19 @@ export function getWeekDayText(
  */
 export function isValid(date: Date): boolean {
   return dateIsValid(date);
+}
+
+/**
+ * Is the given Jalali date valid?
+ *
+ * @public
+ */
+export function isValidJalaaliDate(
+  jy: number,
+  jm: number,
+  jd: number,
+): boolean {
+  return isValidJalaaliDateFns(jy, jm, jd);
 }
 
 /**

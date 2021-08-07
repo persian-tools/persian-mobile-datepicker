@@ -300,6 +300,14 @@ import { getDayOfYear } from '@persian-tools/persian-mobile-datepicker';
 const getDayNumberOfYear = getDayOfYear(1400, 5, 15); // 139
 ```
 
+- `isWeekend`: Return if the Date is at the Weekend
+
+```javascript
+import { isWeekend } from '@persian-tools/persian-mobile-datepicker';
+
+const isTheDayWeekend = isWeekend(1400, 5, 15); // true
+```
+
 ## Roadmap
 
 - [ ] Add hour, minute and seconds

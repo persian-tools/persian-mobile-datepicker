@@ -19,8 +19,8 @@ import {
 import {
   pickerData,
   getDayOfYear,
-  convertDateObjectToDateInstance,
   getCurrentYear,
+  createDateInstance,
 } from '../../helpers/date';
 // Events
 import { solarEvents } from '../../events/solar';
@@ -151,7 +151,7 @@ export const WheelPicker: FC<WheelPickerProps> = (props) => {
     props.onChange?.({
       events,
       object: convertSelectedDate,
-      date: convertDateObjectToDateInstance(convertSelectedDate),
+      date: createDateInstance(convertSelectedDate),
     });
   }
 

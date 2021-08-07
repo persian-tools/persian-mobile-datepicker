@@ -92,17 +92,6 @@ export const convertDateInstanceToDateObject = (
 };
 
 /**
- * Convert an object of date to an instance of date function
- *
- * @public
- */
-export const convertDateObjectToDateInstance = (
-  dateObject: PickerDateModel,
-): Date => {
-  return createDateInstance(dateObject);
-};
-
-/**
  * Get the number of days in a month of a year
  *
  * @public

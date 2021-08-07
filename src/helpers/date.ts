@@ -103,6 +103,7 @@ export function daysInMonth(year: number, month: number): number {
 /**
  * Get the day of the week of the given date.
  *
+ * @description Returns number starts from 0, 0 means the first day of Week and 6 means the last day of Week
  * @public
  */
 export function getWeekDay(year: number, month: number, day: number): number {

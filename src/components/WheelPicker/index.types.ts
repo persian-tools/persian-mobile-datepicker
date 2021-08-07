@@ -163,8 +163,11 @@ export interface PickerDateModel {
 export type RequiredPickerDateModel = Required<PickerDateModel>;
 
 export interface PickerExtraDateInfo extends PickerDateModel {
-  // The day of the week of the given date.
-  // 0 represents Saturday(شنبه)
+  /**
+   * The day of the week of the given date.
+   *
+   * @description 0 represents Saturday(شنبه) and 6 represents Friday(جمعه)
+   */
   weekDay?: number;
   // The day's name of the week of the given date
   weekDayText?: WeekDayText;

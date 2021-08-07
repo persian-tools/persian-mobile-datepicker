@@ -15,5 +15,5 @@ coverage
 storybook-static
 .huskyrc.json
 .husky
-build/stories
-build/*.map
+build/stories/**
+build/**/*.map

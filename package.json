@@ -14,6 +14,7 @@
   "scripts": {
     "bundler": "microbundle --no-css-modules --name PersianMobileDatePicker --strict --jsx React.createElement",
     "build": "microbundle --no-css-modules --name PersianMobileDatePicker --strict --jsx React.createElement --raw --sourcemap false --compress",
+    "postbuild": "npx rimraf ./build/stories ./build/*.map ./build/**/*.stories.*",
     "dev": "npm run bundler watch",
     "prerelease": "npm run test",
     "release": "npm run build",

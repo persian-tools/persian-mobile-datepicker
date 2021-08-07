@@ -316,6 +316,14 @@ import { getWeekDayText } from '@persian-tools/persian-mobile-datepicker';
 const getNameOfWeek = getWeekDayText(1400, 5, 15); // جمعه
 ```
 
+- `isValid`: Is the given date valid?
+
+```javascript
+import { isValid } from '@persian-tools/persian-mobile-datepicker';
+
+const isDateValid = isValid(new Date()); // true
+```
+
 ## Roadmap
 
 - [ ] Add hour, minute and seconds

@@ -56,6 +56,20 @@ const BasePickerTemplate: ComponentStory<typeof Picker> = (args) => {
 };
 
 stories
+  .add('Columns Caption', (args: any) => <BasePickerTemplate {...args} />, {
+    component: Picker,
+    args: {
+      isOpen: true,
+      theme: 'auto',
+      title: 'انتخاب تاریخ',
+      highlightHolidays: true,
+      highlightWeekends: true,
+      config,
+      initialValue: createDateInstance({ year: 1400, month: 1, day: 1 }),
+    },
+    argTypes: baseArgs,
+    badges: [BADGE.STABLE],
+  })
   .add(
     'Submit and Cancel buttons text',
     (args: any) => <BasePickerTemplate {...args} />,

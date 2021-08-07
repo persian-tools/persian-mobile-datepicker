@@ -1,5 +1,5 @@
 // React Hooks
-import { useState, useRef, useMemo, useEffect } from 'react';
+import { useState, useRef, useMemo, useEffect, useCallback } from 'react';
 // Utilities
 import {
   convertDateInstanceToDateObject,
@@ -256,6 +256,7 @@ export function usePicker(props: WheelPickerProps) {
     isInitialValueValid,
     selectedDateRef.current,
   ]);
+
   /**
    * Default Picker selected columns value which goes from the parent to local changes
    */
@@ -270,6 +271,54 @@ export function usePicker(props: WheelPickerProps) {
   );
   // Hooks
   const previousSelectedDate = usePrevious<PickerDateModel>(selectedDate);
+
+  /**
+   * Check if the Month or Day Column's item should be rendered or not
+   */
+  function shouldRenderItem(
+    selectedDate: PickerDateModel,
+    key: DateConfigTypes,
+    value: PickerSelectedDateValue,
+  ): boolean {
+    // Create new Date object and clone the SelectedDate and assign the entered day to the Object
+    const $date = { ...selectedDate, [key]: value };
+
+    // If [minDate] is valid and we are validating the month column,
+    // we should pass the [minDate] day to the [selectedDate] as day value
+    if (key === 'month' && isMinDateValid) {
+      $date.day = minDateObject.day;
+    }
+    // Call the Config's shouldRender method to find that we should render this item or not
+    // User can prevent rendering the weekend's holidays in Date Picker
+    if (!configShouldRender($date, key, value)) return false;
+
+    // Convert to a Date instance
+    const selectedDateValue = createDateInstance($date);
+
+    // Date is not valid
+    if (!isValid(selectedDateValue)) return true;
+
+    // Selected Date is equals to the Min or Max Date
+    if (
+      isEqual(props.minDate!, selectedDateValue) ||
+      isEqual(props.maxDate!, selectedDateValue)
+    )
+      return true;
+
+    if (isMinDateValid && isMaxDateValid) {
+      // Date should be in range of min and max dates
+      return (
+        isAfter(selectedDateValue, props.minDate!) &&
+        isBefore(selectedDateValue, props.maxDate!)
+      );
+    } else if (isMinDateValid) {
+      return isAfter(selectedDateValue, props.minDate!);
+    } else if (isMaxDateValid) {
+      return isBefore(selectedDateValue, props.maxDate!);
+    }
+
+    return true;
+  }
 
   // Watchers
   // Calculate days in selected months
@@ -336,100 +385,60 @@ export function usePicker(props: WheelPickerProps) {
   }
 
   /**
-   * Check if the Month or Day Column's item should be rendered or not
-   */
-  function shouldRenderItem(
-    selectedDate: PickerDateModel,
-    key: DateConfigTypes,
-    value: PickerSelectedDateValue,
-  ): boolean {
-    // Create new Date object and clone the SelectedDate and assign the entered day to the Object
-    const $date = { ...selectedDate, [key]: value };
-
-    // If [minDate] is valid and we are validating the month column,
-    // we should pass the [minDate] day to the [selectedDate] as day value
-    if (key === 'month' && isMinDateValid) {
-      $date.day = minDateObject.day;
-    }
-    // Call the Config's shouldRender method to find that we should render this item or not
-    // User can prevent rendering the weekend's holidays in Date Picker
-    if (!configShouldRender($date, key, value)) return false;
-
-    // Convert to a Date instance
-    const selectedDateValue = createDateInstance($date);
-
-    // Date is not valid
-    if (!isValid(selectedDateValue)) return true;
-
-    // Selected Date is equals to the Min or Max Date
-    if (
-      isEqual(props.minDate!, selectedDateValue) ||
-      isEqual(props.maxDate!, selectedDateValue)
-    )
-      return true;
-
-    if (isMinDateValid && isMaxDateValid) {
-      // Date should be in range of min and max dates
-      return (
-        isAfter(selectedDateValue, props.minDate!) &&
-        isBefore(selectedDateValue, props.maxDate!)
-      );
-    } else if (isMinDateValid) {
-      return isAfter(selectedDateValue, props.minDate!);
-    } else if (isMaxDateValid) {
-      return isBefore(selectedDateValue, props.maxDate!);
-    }
-
-    return true;
-  }
-
-  /**
    * Filter all Columns values and only return the Column's items which should be displayed
    */
-  function filterAllowedColumnRows(
-    pickerList: Array<PickerItemModel>,
-    type: DateConfigTypes,
-  ): Array<PickerItemModel> {
-    return pickerList.filter((pickerItem) => {
-      // Check if Day or Month is in Range
-      if (
-        (type === 'day' || type === 'month') &&
-        !shouldRenderItem(selectedDate, pickerItem.type, pickerItem.value)
-      ) {
-        return false;
-        // Check if Month is in Range
-      } else if (
-        type === 'year' &&
-        !shouldRenderYearItem(selectedDate, pickerItem.value)
-      ) {
-        return false;
-      }
+  const filterAllowedColumnRows = useCallback<
+    (
+      pickerList: Array<PickerItemModel>,
+      type: DateConfigTypes,
+    ) => Array<PickerItemModel>
+  >(
+    (pickerList, type) => {
+      return pickerList.filter((pickerItem) => {
+        // Check if Day or Month is in Range
+        if (
+          (type === 'day' || type === 'month') &&
+          !shouldRenderItem(selectedDate, pickerItem.type, pickerItem.value)
+        ) {
+          return false;
+          // Check if Month is in Range
+        } else if (
+          type === 'year' &&
+          !shouldRenderYearItem(selectedDate, pickerItem.value)
+        ) {
+          return false;
+        }
 
-      return true;
-    });
-  }
+        return true;
+      });
+    },
+    [selectedDate],
+  );
 
   // Picker Config's Formatters
   /**
    * Format the Picker items' text content
    */
-  function pickerItemTextFormatter(
-    pickerItem: PickerItemModel,
-  ): PickerSelectedDateValue | string {
-    const dateValues = addExtraDateInfo(selectedDate, pickerItem);
-    const textContent =
-      configs[pickerItem.type]?.formatter?.(dateValues) ?? pickerItem.value;
-    const isDayColumn = pickerItem.type === 'day';
-    const shouldHighlightWeekends =
-      isDayColumn && !!props.highlightWeekends && dateValues.weekDay === 6;
-    const shouldAddDayName = isDayColumn && !!props.addDayName;
+  const pickerItemTextFormatter = useCallback<
+    (pickerItem: PickerItemModel) => PickerSelectedDateValue | string
+  >(
+    (pickerItem) => {
+      const dateValues = addExtraDateInfo(selectedDate, pickerItem);
+      const textContent =
+        configs[pickerItem.type]?.formatter?.(dateValues) ?? pickerItem.value;
+      const isDayColumn = pickerItem.type === 'day';
+      const shouldHighlightWeekends =
+        isDayColumn && !!props.highlightWeekends && dateValues.weekDay === 6;
+      const shouldAddDayName = isDayColumn && !!props.addDayName;
 
-    return shouldHighlightWeekends
-      ? `${textContent}(${weekDays[6]})`
-      : shouldAddDayName
-      ? `${textContent}(${weekDays[dateValues.weekDay]})`
-      : textContent;
-  }
+      return shouldHighlightWeekends
+        ? `${textContent}(${weekDays[6]})`
+        : shouldAddDayName
+        ? `${textContent}(${weekDays[dateValues.weekDay]})`
+        : textContent;
+    },
+    [props.config, props.highlightWeekends, props.addDayName],
+  );
 
   /**
    * Get Picker columns Caption and its styles if has
@@ -443,49 +452,60 @@ export function usePicker(props: WheelPickerProps) {
   /**
    * Handle every single of columns' row Classname by their type and value
    */
-  function getPickerItemClassNames(pickerItem: PickerItemModel): string {
-    const classNamesFormatter = configs[pickerItem.type]?.classname;
-    if (classNamesFormatter) {
-      const dateValues = addExtraDateInfo(selectedDate, pickerItem);
-      // Pass to the classname config's formatter
-      const classNames = classNamesFormatter(dateValues);
-      const classNameString = Array.isArray(classNames)
-        ? classNames.join(' ')
-        : classNames;
-      // Only add weekend className for the Day items
-      const highlightWeekendClassNameString =
-        pickerItem.type === 'day'
-          ? // Check result safely
-            highlightWeekendClassName(pickerItem.value) ?? ''
-          : '';
+  const getPickerItemClassNames = useCallback<
+    (pickerItem: PickerItemModel) => string
+  >(
+    (pickerItem) => {
+      const classNamesFormatter = configs[pickerItem.type]?.classname;
+      if (classNamesFormatter) {
+        const dateValues = addExtraDateInfo(selectedDate, pickerItem);
+        // Pass to the classname config's formatter
+        const classNames = classNamesFormatter(dateValues);
+        const classNameString = Array.isArray(classNames)
+          ? classNames.join(' ')
+          : classNames;
+        // Only add weekend className for the Day items
+        const highlightWeekendClassNameString =
+          pickerItem.type === 'day'
+            ? // Check result safely
+              highlightWeekendClassName(pickerItem.value) ?? ''
+            : '';
 
-      return [classNameString, highlightWeekendClassNameString]
-        .filter(Boolean)
-        .join(' ');
-    } else if (props.highlightWeekends && pickerItem.type === 'day') {
-      return highlightWeekendClassName(pickerItem.value) ?? '';
-    }
+        return [classNameString, highlightWeekendClassNameString]
+          .filter(Boolean)
+          .join(' ');
+      } else if (props.highlightWeekends && pickerItem.type === 'day') {
+        return highlightWeekendClassName(pickerItem.value) ?? '';
+      }
 
-    return '';
-  }
+      return '';
+    },
+    [props.config, props.highlightWeekends],
+  );
 
   /**
    * Highlight Weekends by adding a className dynamically
    */
-  function highlightWeekendClassName(day: number): string {
-    return checkDayIsWeekend(day) ? classNamePrefix('weekend') : '';
-  }
+  const highlightWeekendClassName = useCallback<(day: number) => string>(
+    (day) => {
+      return checkDayIsWeekend(day) ? classNamePrefix('weekend') : '';
+    },
+    [],
+  );
 
   /**
    * Check that the day is a weekend or not?
    */
-  function checkDayIsWeekend(day: number): boolean {
-    return isWeekend(
-      defaultSelectedDateObject.year!,
-      defaultSelectedDateObject.month!,
-      day,
-    );
-  }
+  const checkDayIsWeekend = useCallback<(day: number) => boolean>(
+    (day) => {
+      return isWeekend(
+        defaultSelectedDateObject.year!,
+        defaultSelectedDateObject.month!,
+        day,
+      );
+    },
+    [defaultSelectedDateObject.month, defaultSelectedDateObject.year],
+  );
 
   /**
    * Check the given day of year is holiday or not?

@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.5](https://github.com/persian-tools/persian-mobile-datepicker/compare/v0.0.4...v0.0.5) (2021-08-07)
+
+
+### Features
+
+* **README:** add demo url and some notes ([e267367](https://github.com/persian-tools/persian-mobile-datepicker/commit/e267367b5aa3f9911bae532d0e2d785f8e3fac26))
+
+
+### Bug Fixes
+
+* **npm:** add source map files and stories to npmignore file ([25e759b](https://github.com/persian-tools/persian-mobile-datepicker/commit/25e759b3c2f1c4a0402008b43ef42d7369ec3432))
+
 ### [0.0.4](https://github.com/persian-tools/persian-mobile-datepicker/compare/v0.0.4-beta.0...v0.0.4) (2021-08-07)
 
 ### [0.0.4-beta.0](https://github.com/persian-tools/persian-mobile-datepicker/compare/v0.0.3...v0.0.4-beta.0) (2021-08-06)

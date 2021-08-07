@@ -308,6 +308,14 @@ import { isWeekend } from '@persian-tools/persian-mobile-datepicker';
 const isTheDayWeekend = isWeekend(1400, 5, 15); // true
 ```
 
+- `getWeekDayText`: Get weekday's name by date
+
+```javascript
+import { getWeekDayText } from '@persian-tools/persian-mobile-datepicker';
+
+const getNameOfWeek = getWeekDayText(1400, 5, 15); // جمعه
+```
+
 ## Roadmap
 
 - [ ] Add hour, minute and seconds

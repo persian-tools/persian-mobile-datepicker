@@ -10,7 +10,7 @@ export const GlobalStyle = createGlobalStyle`
   .rmc-picker-indicator {
     display: none;
   }
-  .rmc-picker-item-content {
+  .rmc-column-item-content {
     unicode-bidi: plaintext;
     direction: rtl;
     color: #3f3f3e;
@@ -42,6 +42,8 @@ export const StyledTitle = styled.div`
   color: #1672ec;
   font-weight: bold;
   font-size: 1.1em;
+  cursor: default;
+  user-select: none;
 `;
 StyledTitle.displayName = 'PersianTools(WheelPicker)(Title)';
 

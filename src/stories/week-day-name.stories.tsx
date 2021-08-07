@@ -8,9 +8,10 @@ import { BADGE } from '@geometricpanda/storybook-addon-badges';
 import type { ComponentStory } from '@storybook/react';
 import type { Event } from '../components/WheelPicker/index.types';
 
-export default createBaseStory('Initial design');
+const title = 'Week day name';
+export default createBaseStory(title);
 
-const stories = storiesOf('Initial design', module);
+const stories = storiesOf(title, module);
 
 const BasePickerTemplate: ComponentStory<typeof Picker> = (args) => {
   const [selectedDateValue, setSelectedDateValue] = React.useState<string>();
@@ -18,30 +19,37 @@ const BasePickerTemplate: ComponentStory<typeof Picker> = (args) => {
     Array<Event>
   >([]);
 
-  function handleOnChange(data: WheelPickerSelectEvent) {
-    setSelectedDateValue(format(data.date!, 'd MMMM yyyy'));
-    setSelectedDateEvents(data.events);
-    action('onClick')(data);
+  function handleEvent(eventType: string) {
+    return (data: WheelPickerSelectEvent) => {
+      setSelectedDateValue(format(data.date!, 'd MMMM yyyy'));
+      setSelectedDateEvents(data.events);
+      action(eventType)(data);
+    };
   }
 
   return (
     <BaseTemplate value={selectedDateValue!} events={selectedDateEvents!}>
-      <Picker {...args} onChange={handleOnChange} onSubmit={handleOnChange} />
+      <Picker
+        {...args}
+        onChange={handleEvent('onChange')}
+        onSubmit={handleEvent('onSubmit')}
+      />
     </BaseTemplate>
   );
 };
 
-stories.add('Initial design', (args: any) => <BasePickerTemplate {...args} />, {
+stories.add(title, (args: any) => <BasePickerTemplate {...args} />, {
   component: Picker,
   args: {
     isOpen: true,
-    theme: 'auto',
+    theme: 'light',
     config: {
       year: {},
       month: {},
       day: {},
     },
-    initialValue: newDate({ year: 1400, month: 1, day: 1 }),
+    addDayName: true,
+    initialValue: newDate({ year: 1400, month: 1, day: 6 }),
   },
   argTypes: baseArgs,
   badges: [BADGE.STABLE],

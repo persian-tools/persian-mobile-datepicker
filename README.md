@@ -1,6 +1,10 @@
 # Persian Mobile Date and Time picker
 
 This library provides a component that can set year, month, day, hour, minute and second by sliding up or down.
+- `Note`:
+  There is no need to use the `moment-jalaali` or any other Jalali libraries and every function you need has been documented and if you need a function that we don't have, let us know to implement it.
+### Demo
+All functionalities and demos have documented here: [Demo](https://persian-tools.github.io/persian-mobile-datepicker)
 
 ## Theme
 

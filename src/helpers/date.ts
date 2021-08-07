@@ -2,7 +2,7 @@
 import {
   format as formatFns,
   getDay as dateGetDay,
-  newDate,
+  newDate as newDateFns,
   isValid as dateIsValid,
   isLeapYear as dateIsLeapYear,
   getDaysInMonth as dateGetDaysInMonth,
@@ -56,25 +56,25 @@ export const jalaliMonths = {
 };
 
 /**
- * Convert Jallali Date to Gregorian
+ * Converts Jallali Date to Gregorian
  *
  * @public
  */
-export function createDateInstance({
+export function newDate({
   year,
   month,
   day = 1,
-  hour,
-  minute,
-  second,
+  hour = 0,
+  minute = 0,
+  second = 0,
 }: PickerDateModel): Date {
   // date-fns month starts from 0, it means farvardin is 0 and esfand is 11
   month = month! - 1;
-  return newDate(year!, month, day, hour, minute, second);
+  return newDateFns(year!, month, day, hour, minute, second);
 }
 
 /**
- * Convert entered date to an object
+ * Converts entered date to an object
  *
  * @public
  */
@@ -92,32 +92,22 @@ export const convertDateInstanceToDateObject = (
 };
 
 /**
- * Convert an object of date to an instance of date function
- *
- * @public
- */
-export const convertDateObjectToDateInstance = (
-  dateObject: PickerDateModel,
-): Date => {
-  return createDateInstance(dateObject);
-};
-
-/**
  * Get the number of days in a month of a year
  *
  * @public
  */
 export function daysInMonth(year: number, month: number): number {
-  return dateGetDaysInMonth(createDateInstance({ year, month, day: 1 }));
+  return dateGetDaysInMonth(newDate({ year, month, day: 1 }));
 }
 
 /**
  * Get the day of the week of the given date.
  *
+ * @description Returns number, starts from 0, 0 means the first day of Week and 6 means the last day of Week
  * @public
  */
 export function getWeekDay(year: number, month: number, day: number): number {
-  return (dateGetDay(createDateInstance({ year, month, day })) + 1) % 7;
+  return (dateGetDay(newDate({ year, month, day })) + 1) % 7;
 }
 
 /**
@@ -126,11 +116,11 @@ export function getWeekDay(year: number, month: number, day: number): number {
  * @public
  */
 export function getDayOfYear(year: number, month: number, day: number): number {
-  return getDayOfYearFns(createDateInstance({ year, month, day }));
+  return getDayOfYearFns(newDate({ year, month, day }));
 }
 
 /**
- * Return if the Date is at the Weekend
+ * Returns true if the Date is at the Weekend
  *
  * @public
  */
@@ -139,7 +129,7 @@ export function isWeekend(year: number, month: number, day: number): boolean {
 }
 
 /**
- * Get weekday's name by date
+ * Get Name the days of the week
  *
  * @public
  */
@@ -206,7 +196,7 @@ export function isEqual(dateLeft: Date, dateRight: Date): boolean {
 }
 
 /**
- * Return the current Year
+ * Returns the current Year
  *
  * @public
  */
@@ -216,7 +206,7 @@ export function getCurrentYear(): number {
 
 export type CurrentDateObject = Required<Record<keyof PickerDateModel, number>>;
 /**
- * Convert date instance string to an object.
+ * Converts date instance string to an object.
  * The result may vary by locale.
  *
  * @public
@@ -234,25 +224,12 @@ export function currentDateObject(): CurrentDateObject {
 }
 
 /**
- * Generate a Range of Years to show into the Date Picker
- *
- * @private
- */
-function generateYearsRange(min: number, max: number): Array<number> {
-  const currentYear = getCurrentYear();
-  const minRange = currentYear - min;
-  const maxRange = currentYear + max;
-
-  return generateArrayInRangeOfNumbers(minRange, maxRange);
-}
-
-/**
  * Check if the entered year is Leap
  *
  * @public
  */
 export function isLeapYear(year: number): boolean {
-  return dateIsLeapYear(createDateInstance({ year, month: 1, day: 1 }));
+  return dateIsLeapYear(newDate({ year, month: 1, day: 1 }));
 }
 
 /**
@@ -289,19 +266,18 @@ export function endYear(year: number) {
       `[PersianMobileDatePicker] Invalid Year, Usage: endYearTo(1410), means Year picker's column should end in 1410`,
     );
   }
-
   return toPositive(currentYear - year);
 }
 
 /**
- * Combine and Generate all picker columns value
+ * Combines and Generates all picker columns value
  *
  * @private
  */
 export const pickerData: Record<string, (inp?: any) => Array<PickerItemModel>> =
   {
     getYears: ({ min, max } = {}) =>
-      generateYearsRange(min, max).map((year) => ({
+      generateArrayInRangeOfNumbers(min, max).map((year) => ({
         value: year,
         type: 'year',
       })),

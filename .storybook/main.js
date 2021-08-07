@@ -5,10 +5,15 @@ module.exports = {
   core: {
     builder: 'webpack5',
   },
-  stories: ['../src/**/*.stories.mdx', '../src/**/*.stories.tsx'],
+  reactOptions: {
+    fastRefresh: false,
+    strictMode: true,
+  },
+  stories: ['../src/**/*.stories.tsx'],
   addons: [
     '@storybook/addon-viewport',
     '@storybook/addon-links',
+    '@geometricpanda/storybook-addon-badges',
     {
       name: '@storybook/addon-essentials',
       options: {
@@ -22,7 +27,11 @@ module.exports = {
           test: /\.stories\.tsx?$/,
           include: [path.resolve(__dirname, '../src/stories')],
         },
+        sourceLoaderOptions: {
+          injectStoryParameters: true,
+        },
         loaderOptions: {
+          injectStoryParameters: true,
           prettierConfig: fs.readFileSync(
             path.resolve(__dirname, '../.prettierrc'),
             {

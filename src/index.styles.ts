@@ -17,14 +17,12 @@ export const StyledFooter = styled.div`
 `;
 StyledFooter.displayName = 'PersianTools(Picker)(Footer)';
 
-export const StyledSubmitButton = styled.button`
-  width: 140px;
+const StyledButton = styled.button`
   height: 45px;
   color: #c5dcfa;
   background: #1672ec;
   border-radius: 8px;
   border: none;
-  display: inline-block;
   text-align: center;
   vertical-align: middle;
   user-select: none;
@@ -35,9 +33,15 @@ export const StyledSubmitButton = styled.button`
   margin-right: 15px;
   margin-left: 15px;
 `;
+export const StyledSubmitButton = styled(StyledButton)<{ fullWidth: boolean }>`
+  width: ${(props) => (props.fullWidth ? '100%' : '140px')};
+  display: ${(props) => (props.fullWidth ? 'block' : 'inline-block')};
+`;
 StyledSubmitButton.displayName = 'PersianTools(Picker)(SubmitButton)';
 
-export const StyledCancelButton = styled(StyledSubmitButton)`
+export const StyledCancelButton = styled(StyledButton)`
+  width: 140px;
+  display: inline-block;
   color: #616161;
   background-color: transparent;
   border: 1px solid #c0c0c0;
@@ -66,7 +70,7 @@ export const StyledSheet = styled(Sheet)<{ theme: Theme }>`
             ),
             linear-gradient(to top, rgba(34, 34, 34, 0.95), rgba(34, 34, 34, 0.6));
         }
-        .rmc-picker-item-content {
+        .rmc-column-item-content {
           background: #313133;
           height: 30px;
           font-size: 15px;
@@ -74,7 +78,7 @@ export const StyledSheet = styled(Sheet)<{ theme: Theme }>`
           border-radius: 5px;
           color: #fff;
         }
-        .rmc-picker-item-selected .rmc-picker-item-content {
+        .rmc-picker-item-selected .rmc-column-item-content {
           background: #7048ec;
         }
         .sheet-footer {
@@ -93,3 +97,16 @@ export const StyledSheet = styled(Sheet)<{ theme: Theme }>`
   }}
 `;
 StyledSheet.displayName = 'PersianTools(Picker)(Sheet)';
+
+export const StyledSheetContainer = styled(Sheet.Container)<{
+  className: string;
+}>``;
+StyledSheetContainer.displayName = 'PersianTools(Picker)(SheetContainer)';
+
+export const StyledSheetHeader = styled(Sheet.Header)<{ className: string }>``;
+StyledSheetHeader.displayName = 'PersianTools(Picker)(SheetHeader)';
+
+export const StyledSheetContent = styled(Sheet.Content)<{
+  className: string;
+}>``;
+StyledSheetContent.displayName = 'PersianTools(Picker)(SheetContent)';

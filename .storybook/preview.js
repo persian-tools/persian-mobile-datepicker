@@ -6,4 +6,17 @@ export const parameters = {
     viewports: INITIAL_VIEWPORTS,
     defaultViewport: 'iphone6',
   },
+  backgrounds: {
+    default: 'light',
+    values: [
+      {
+        name: 'light',
+        value: '#f7f7f7',
+      },
+      {
+        name: 'dark',
+        value: '#333333',
+      },
+    ],
+  },
 };

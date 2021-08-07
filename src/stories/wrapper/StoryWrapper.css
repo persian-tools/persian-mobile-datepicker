@@ -35,3 +35,14 @@
   color: #fff;
   border-radius: 5px;
 }
+
+.info {
+  color: #004085;
+  background-color: #cce5ff;
+  position: relative;
+  padding: 0.75rem 1.25rem;
+  margin-bottom: 1rem;
+  border: 1px solid #b8daff;
+  border-radius: 0.25rem;
+  font-size: 1em;
+}

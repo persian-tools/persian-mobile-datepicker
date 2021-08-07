@@ -1,4 +1,4 @@
-import { CSSProperties } from 'react';
+import { CSSProperties, ReactNode } from 'react';
 
 export type EventTypes = 'solar' | 'persian';
 export interface Event {
@@ -12,19 +12,39 @@ export interface WheelPickerSelectEvent {
 }
 
 export interface WheelPickerProps {
-  // CSS classnames prefix
+  /**
+   * CSS classnames prefix
+   *
+   * @default persian-datepicker
+   */
   classNamePrefix?: string;
-  // Initial picker value
+  /**
+   * Initial picker value
+   *
+   * @default null
+   */
   initialValue?: Date;
-  // Current picker value
+  /**
+   * Current picker value
+   *
+   * @default null
+   */
   value?: WheelPickerSelectEvent;
-  // WheelPicker title
-  title?: string;
+  /**
+   * WheelPicker title
+   *
+   * @default null
+   */
+  title?: ReactNode;
   /**
    * Gets called when value of the picker changes
    */
   onChange?: (selected: WheelPickerSelectEvent) => void;
-  // Set config to configure year, month, day, hour, minute and seconds
+  /**
+   * Set config to configure year, month, day, hour, minute and seconds
+   *
+   * @default {}
+   */
   config: DatePickerConfig;
   /**
    * Specifies the minimum selectable day by user
@@ -43,16 +63,16 @@ export interface WheelPickerProps {
   /**
    * The Minimum selectable year
    *
-   * @description Picker will calculate the StartYear by this approach: currentYear + startYear
-   * @default 30
+   * @description Picker will calculate the StartYear by this approach: currentYear + endYear
+   * @default currentYear + 30 next year
    * @type {number}
    */
   endYear?: number;
   /**
    * The Maximum selectable year
    *
-   * @description Picker will calculate the StartYear by this approach: currentYear + startYear
-   * @default 30
+   * @description Picker will calculate the StartYear by this approach: currentYear - startYear
+   * @default currentYear - 30 years ago
    * @type {number}
    */
   startYear?: number;
@@ -70,7 +90,11 @@ export interface WheelPickerProps {
    * @type {boolean}
    */
   highlightHolidays?: boolean;
-  // Add the name of the day of the week
+  /**
+   * Add the name of the day of the week
+   *
+   * @default false
+   */
   addDayName?: boolean;
 }
 
@@ -139,8 +163,11 @@ export interface PickerDateModel {
 export type RequiredPickerDateModel = Required<PickerDateModel>;
 
 export interface PickerExtraDateInfo extends PickerDateModel {
-  // The day of the week of the given date.
-  // 0 represents Saturday(شنبه)
+  /**
+   * The day of the week of the given date.
+   *
+   * @description 0 represents Saturday(شنبه) and 6 represents Friday(جمعه)
+   */
   weekDay?: number;
   // The day's name of the week of the given date
   weekDayText?: WeekDayText;

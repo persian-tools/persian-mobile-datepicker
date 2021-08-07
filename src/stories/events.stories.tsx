@@ -1,27 +1,23 @@
 import React from 'react';
 import { createBaseStory, BaseTemplate, baseArgs } from './base';
 import { newDate, format, Picker, WheelPickerSelectEvent } from '../index'; // in your code: @persian-tools/persian-mobile-datepicker
-import { BADGE } from '@geometricpanda/storybook-addon-badges';
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
-import { digitsEnToFa } from '@persian-tools/persian-tools';
+import { BADGE } from '@geometricpanda/storybook-addon-badges';
 // Types
 import type { ComponentStory } from '@storybook/react';
 import type { Event } from '../components/WheelPicker/index.types';
 
-export default createBaseStory('Dark Theme');
+const title = 'Events';
+export default createBaseStory(title);
 
-const stories = storiesOf('Dark Theme', module);
+const stories = storiesOf(title, module);
 
-const configs = {
+const config = {
   year: {
     caption: {
       text: 'سال',
     },
-    formatter(value: Record<string, any>) {
-      return digitsEnToFa(value.year);
-    },
-    columnStyle: {},
   },
   month: {
     caption: {
@@ -31,9 +27,6 @@ const configs = {
   day: {
     caption: {
       text: 'روز',
-    },
-    formatter(value: Record<string, any>) {
-      return digitsEnToFa(value.day);
     },
   },
 };
@@ -53,29 +46,33 @@ const BasePickerTemplate: ComponentStory<typeof Picker> = (args) => {
   }
 
   return (
-    <BaseTemplate value={selectedDateValue!} events={selectedDateEvents!}>
+    <BaseTemplate
+      value={selectedDateValue!}
+      events={selectedDateEvents!}
+      info="برای مشاهده ایونت ها، از پنل پایین، بر روی تب Actions کلیک کنید"
+    >
       <Picker
         {...args}
         onChange={handleEvent('onChange')}
         onSubmit={handleEvent('onSubmit')}
+        onCancel={action('onCancel')}
+        onClose={action('onClose')}
       />
     </BaseTemplate>
   );
 };
 
-stories.add('Dark Theme', (args: any) => <BasePickerTemplate {...args} />, {
+stories.add(title, (args: any) => <BasePickerTemplate {...args} />, {
   component: Picker,
   args: {
     isOpen: true,
-    theme: 'dark',
+    theme: 'auto',
+    title: 'انتخاب تاریخ',
     highlightHolidays: true,
     highlightWeekends: true,
-    config: configs,
+    config,
     initialValue: newDate({ year: 1400, month: 1, day: 1 }),
   },
   argTypes: baseArgs,
-  backgrounds: {
-    default: 'dark',
-  },
-  badges: [BADGE.EXPERIMENTAL],
+  badges: [BADGE.STABLE],
 });

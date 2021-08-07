@@ -1,4 +1,3 @@
-import type { CSSProperties } from 'react';
 import type {
   WheelPickerProps,
   WheelPickerSelectEvent,
@@ -6,32 +5,58 @@ import type {
 
 export type Theme = 'dark' | 'light' | 'auto';
 export interface PickerProps extends WheelPickerProps {
-  // Picker Theme
+  /**
+   * Picker Theme
+   *
+   * @default light
+   */
   theme?: Theme;
-  // Elements className may have a prefix
-  classNamePrefix?: string;
-  // Picker open status
+  /**
+   * Picker open status
+   *
+   * @default false
+   */
   isOpen: boolean;
-  // Call when Picker Sheet modal has closed
+  // Call when Picker Sheet modal has closed or User clicked on Cancel Button or User manually closed the Sheet modal by drag and drop
   onClose?: () => void;
-  // Submit button text
+  // Call when user clicked on Cancel Button
+  onCancel?: () => void;
+  /**
+   * Submit button text
+   *
+   * @default تایید
+   */
   submitText?: string;
-  // Cancel button text
+  /**
+   * Cancel button text
+   *
+   * @default انصراف
+   */
   cancelText?: string;
   // Triggered when you click OK
   onSubmit: (selected: WheelPickerSelectEvent) => void;
-  // Triggered when click Cancel,
-  onCancel?: () => void;
-  // Display Cancel button
+  /**
+   * Display Cancel button
+   *
+   * @default true
+   */
   showCancelButton?: boolean;
-  // Disable drag for the whole sheet.
+  /**
+   * Disable drag for the sheet content.
+   *
+   * @default true
+   */
   disableSheetDrag?: boolean;
+  /**
+   * Disable drag for the sheet header.
+   *
+   * @default false
+   */
+  disableSheetHeaderDrag?: boolean;
   /**
    * Height of Picker Sheet modal
    *
    * @default 385
    */
   height?: number;
-  // Picker Sheet modal styles
-  sheetStyles?: CSSProperties;
 }

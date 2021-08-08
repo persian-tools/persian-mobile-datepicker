@@ -33,7 +33,7 @@ export interface PickerProps extends WheelPickerProps {
    * @default انصراف
    */
   cancelText?: string;
-  // Triggered when you click OK
+  // Triggered when you click on Submit button
   onSubmit: (selected: WheelPickerSelectEvent) => void;
   /**
    * Display Cancel button

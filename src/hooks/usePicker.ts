@@ -166,8 +166,64 @@ export function usePicker(props: WheelPickerProps) {
    * Get default selected date by [MinDate], [MaxDate], [initialValue] or current date
    */
   const defaultSelectedDateObject = useMemo<PickerDateModel>(() => {
-    if (selectedDateRef.current && isValid(newDate(selectedDateRef.current))) {
-      return selectedDateRef.current;
+    if (
+      !isObjectEmpty(selectedDateRef.current) &&
+      isValid(newDate(selectedDateRef.current))
+    ) {
+      if (
+        canRender(
+          selectedDateRef.current,
+          'month',
+          selectedDateRef.current.month!,
+        ) &&
+        canRender(selectedDateRef.current, 'day', selectedDateRef.current.day!)
+      ) {
+        return selectedDateRef.current;
+      } else if (
+        canRenderYear(selectedDateRef.current, selectedDateRef.current?.year!)
+      ) {
+        // Year can be rendered
+        const { year, day, month } = selectedDateRef.current;
+        const closest =
+          year! - minDateObject.year > maxDateObject.year - year!
+            ? 'upperBound' // Closest to `maxDate` Year
+            : 'lowerBound'; // Closest to `minDate` Year
+
+        if (
+          canRender(
+            selectedDateRef.current,
+            'month',
+            selectedDateRef.current.month!,
+          )
+        ) {
+          // Month can also render and day should be updated
+          selectedDateRef.current.day =
+            closest === 'upperBound'
+              ? day! <= maxDateObject.day
+                ? day
+                : maxDateObject.day
+              : day! >= minDateObject.day
+              ? day
+              : minDateObject.day;
+        } else {
+          // Month and day can't be rendered and both should be updated
+          if (closest === 'upperBound') {
+            selectedDateRef.current.day =
+              day! <= maxDateObject.day ? day : maxDateObject.day;
+            selectedDateRef.current.month =
+              month! <= maxDateObject.month ? month : maxDateObject.month;
+
+            return selectedDateRef.current;
+          } else {
+            selectedDateRef.current.day =
+              day! >= minDateObject.day ? day : minDateObject.day;
+            selectedDateRef.current.month =
+              month! >= minDateObject.month ? month : minDateObject.month;
+
+            return selectedDateRef.current;
+          }
+        }
+      }
     }
 
     if (isValid(props.value?.date!)) {
@@ -176,27 +232,20 @@ export function usePicker(props: WheelPickerProps) {
       // Default value has no overlap with [minDate], [maxDate] and also can be rendered by the shouldRender in Component's Config prop
       if (
         // [initialValue] is in Range of [MinDate] and [MaxDate] - /start
-        shouldRenderItem(
+        canRender(
           initialValueDateObject,
           'month',
           initialValueDateObject.month,
         ) &&
-        shouldRenderItem(
-          initialValueDateObject,
-          'day',
-          initialValueDateObject.day,
-        ) &&
-        shouldRenderYearItem(
-          initialValueDateObject,
-          initialValueDateObject.year,
-        ) &&
+        canRender(initialValueDateObject, 'day', initialValueDateObject.day) &&
+        canRenderYear(initialValueDateObject, initialValueDateObject.year) &&
         initialValueDateObject.year >= minYear &&
         initialValueDateObject.year <= maxYear &&
         // /end
         // [initialValue] can be rendered by the [shouldRender] Config method - /start
-        configShouldRender(initialValueDateObject, 'year') &&
-        configShouldRender(initialValueDateObject, 'month') &&
-        configShouldRender(initialValueDateObject, 'day')
+        canRenderByConfig(initialValueDateObject, 'year') &&
+        canRenderByConfig(initialValueDateObject, 'month') &&
+        canRenderByConfig(initialValueDateObject, 'day')
         // /end
       ) {
         return initialValueDateObject;
@@ -206,8 +255,8 @@ export function usePicker(props: WheelPickerProps) {
     const currentDate = new Date();
     const currentDateAsObject = currentDateObject();
 
-    if (isMinDateValid) {
-      // We goes here if `maxDate` or `initialValue` is not valid as valid date
+    if (isMinDateValid && !isMaxDateValid) {
+      // We goes here if `maxDate` or `initialValue` is not valid
       // Check if the `Current Date` is bigger than or Equals the `Min Date`, if was true, consider the `Current Date` as `initialValue`
       if (
         isAfter(currentDate, props.minDate!) ||
@@ -216,7 +265,7 @@ export function usePicker(props: WheelPickerProps) {
         return currentDateAsObject;
       }
       return minDateObject;
-    } else if (isMaxDateValid) {
+    } else if (isMaxDateValid && !isMinDateValid) {
       // We goes here if `initialValue` is not valid as valid date
       // Check if the `Current Date` is less than or Equals the `maxDate`, if was true, consider the `currentDate` as the `initialValue`
       if (
@@ -227,6 +276,17 @@ export function usePicker(props: WheelPickerProps) {
       }
       // `Current Date` is not in range of [maxDate] and Max Date should be used as `initialValue`
       return maxDateObject;
+    } else if (isMaxDateValid && isMinDateValid) {
+      if (
+        (isAfter(currentDate, props.minDate!) &&
+          isBefore(currentDate, props.maxDate!)) ||
+        isEqual(currentDate, props.maxDate!) ||
+        isEqual(currentDate, props.minDate!)
+      ) {
+        return currentDateAsObject;
+      }
+
+      return minDateObject;
     }
 
     // Check if initialValue's year is in Range of minYear and maxYear
@@ -272,7 +332,7 @@ export function usePicker(props: WheelPickerProps) {
   /**
    * Check if the Month or Day Column's item should be rendered or not
    */
-  function shouldRenderItem(
+  function canRender(
     selectedDate: PickerDateModel,
     key: DateConfigTypes,
     value: PickerSelectedDateValue,
@@ -287,7 +347,7 @@ export function usePicker(props: WheelPickerProps) {
     }
     // Call the Config's shouldRender method to find that we should render this item or not
     // User can prevent rendering the weekend's holidays in Date Picker
-    if (!configShouldRender($date, key, value)) return false;
+    if (!canRenderByConfig($date, key, value)) return false;
 
     // Convert to a Date instance
     const selectedDateValue = newDate($date);
@@ -344,7 +404,7 @@ export function usePicker(props: WheelPickerProps) {
   /**
    * This function will call `shouldRender` in the Config object, which gave us one of the DatePicker component's props and checks to render the Item(This property is optional).
    */
-  function configShouldRender(
+  function canRenderByConfig(
     currentSelectedDate: PickerDateModel,
     key: DateConfigTypes,
     value?: PickerSelectedDateValue,
@@ -362,13 +422,13 @@ export function usePicker(props: WheelPickerProps) {
   /**
    * Check if entered Year is in Range of Min and Max
    */
-  function shouldRenderYearItem(
+  function canRenderYear(
     selectedDate: PickerDateModel,
     value: number,
   ): boolean {
     // Call the Config's shouldRender method to find that we should render this item or not
     // User can prevent rendering specific year or a list of years in Picker's Year column
-    if (!configShouldRender(selectedDate, 'year', value)) return false;
+    if (!canRenderByConfig(selectedDate, 'year', value)) return false;
 
     if (isMinDateValid && isMaxDateValid) {
       return value >= minDateObject.year && value <= maxDateObject.year;
@@ -395,13 +455,13 @@ export function usePicker(props: WheelPickerProps) {
         // Check if Day or Month is in Range
         if (
           (type === 'day' || type === 'month') &&
-          !shouldRenderItem(selectedDate, pickerItem.type, pickerItem.value)
+          !canRender(selectedDate, pickerItem.type, pickerItem.value)
         ) {
           return false;
           // Check if Month is in Range
         } else if (
           type === 'year' &&
-          !shouldRenderYearItem(selectedDate, pickerItem.value)
+          !canRenderYear(selectedDate, pickerItem.value)
         ) {
           return false;
         }
@@ -584,8 +644,8 @@ export function usePicker(props: WheelPickerProps) {
     filterAllowedColumnRows,
     getPickerItemClassNames,
     getPickerColumnsCaption,
-    shouldRender: shouldRenderItem,
-    shouldRenderYear: shouldRenderYearItem,
+    shouldRender: canRender,
+    shouldRenderYear: canRenderYear,
     handlePickerItemTextContent: pickerItemTextFormatter,
   };
 }

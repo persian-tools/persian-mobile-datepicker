@@ -1,6 +1,6 @@
 {
   "name": "@persian-tools/persian-mobile-datepicker",
-  "version": "0.0.5",
+  "version": "0.0.8",
   "description": "Modern Persian mobile date picker",
   "publishConfig": {
     "access": "public"
@@ -14,6 +14,7 @@
   "scripts": {
     "bundler": "microbundle --no-css-modules --name PersianMobileDatePicker --strict --jsx React.createElement",
     "build": "microbundle --no-css-modules --name PersianMobileDatePicker --strict --jsx React.createElement --raw --sourcemap false --compress",
+    "postbuild": "npx rimraf ./build/stories ./build/*.map ./build/**/*.stories.*",
     "dev": "npm run bundler watch",
     "prerelease": "npm run test",
     "release": "npm run build",
@@ -59,7 +60,7 @@
   "bugs": {
     "url": "https://github.com/persian-tools/persian-mobile-datepicker/issues"
   },
-  "homepage": "https://github.com/persian-tools/persian-mobile-datepicker#readme",
+  "homepage": "https://persian-tools.github.io/persian-mobile-datepicker",
   "dependencies": {
     "@geometricpanda/storybook-addon-badges": "^0.0.4",
     "date-fns-jalali": "^2.23.0-0",
@@ -82,7 +83,6 @@
     "@semantic-release/git": "^9.0.0",
     "@storybook/addon-actions": "^6.4.0-alpha.24",
     "@storybook/addon-essentials": "^6.4.0-alpha.24",
-    "@storybook/addon-knobs": "^6.3.0",
     "@storybook/addon-links": "^6.4.0-alpha.24",
     "@storybook/addon-storysource": "^6.4.0-alpha.24",
     "@storybook/addon-viewport": "^6.4.0-alpha.24",

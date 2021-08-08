@@ -9,14 +9,13 @@ import {
   getDate,
   getYear,
   getMonth,
-  getHours,
-  getMinutes,
-  getSeconds,
   isEqual as isEqualFns,
   isBefore as isBeforeFns,
   isAfter as isAfterFns,
   getDayOfYear as getDayOfYearFns,
 } from 'date-fns-jalali';
+// @ts-ignore
+import { isValidJalaliDate as isValidJalaliDateFns } from 'date-fns-jalali/_jalali/index';
 // Helpers
 import {
   generateAnArrayOfNumbers,
@@ -56,21 +55,15 @@ export const jalaliMonths = {
 };
 
 /**
- * Converts Jallali Date to Gregorian
+ * Converts Jalaali Date to Gregorian
  *
  * @public
  */
-export function newDate({
-  year,
-  month,
-  day = 1,
-  hour = 0,
-  minute = 0,
-  second = 0,
-}: PickerDateModel): Date {
+export function newDate({ year, month, day = 1 }: PickerDateModel): Date {
   // date-fns month starts from 0, it means farvardin is 0 and esfand is 11
   month = month! - 1;
-  return newDateFns(year!, month, day, hour, minute, second);
+
+  return newDateFns(year!, month, day, 0, 0, 0);
 }
 
 /**
@@ -85,9 +78,9 @@ export const convertDateInstanceToDateObject = (
     year: getYear(date),
     month: getMonth(date) + 1,
     day: getDate(date),
-    hour: getHours(date),
-    minute: getMinutes(date),
-    second: getSeconds(date),
+    hour: 0,
+    minute: 0,
+    second: 0,
   };
 };
 
@@ -157,12 +150,25 @@ export function isValid(date: Date): boolean {
 }
 
 /**
+ * Is the given Jalali date valid?
+ *
+ * @public
+ */
+export function isValidJalaaliDate(
+  jy: number,
+  jm: number,
+  jd: number,
+): boolean {
+  return isValidJalaliDateFns(jy, jm, jd);
+}
+
+/**
  * Is the first date before the second one?
  *
  * @public
  */
-export function isBefore(date: Date, dateToCompare: Date): boolean {
-  return isBeforeFns(date, dateToCompare);
+export function isBefore(dateLeft: Date, dateRight: Date): boolean {
+  return isBeforeFns(dateLeft, dateRight);
 }
 
 /**
@@ -170,8 +176,8 @@ export function isBefore(date: Date, dateToCompare: Date): boolean {
  *
  * @public
  */
-export function isAfter(date: Date, dateToCompare: Date): boolean {
-  return isAfterFns(date, dateToCompare);
+export function isAfter(dateLeft: Date, dateRight: Date): boolean {
+  return isAfterFns(dateLeft, dateRight);
 }
 
 /**
@@ -191,7 +197,10 @@ export function format(date: Date | number, formatBy: string): string {
  *
  * @public
  */
-export function isEqual(dateLeft: Date, dateRight: Date): boolean {
+export function isEqual(
+  dateLeft: Date | number,
+  dateRight: Date | number,
+): boolean {
   return isEqualFns(dateLeft, dateRight);
 }
 

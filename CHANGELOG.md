@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.8](https://github.com/persian-tools/persian-mobile-datepicker/compare/v0.0.7...v0.0.8) (2021-08-08)
+
+### [0.0.7](https://github.com/persian-tools/persian-mobile-datepicker/compare/v0.0.6...v0.0.7) (2021-08-08)
+
+
+### Bug Fixes
+
+* **usePicker:** min and max date issue ([0bd3631](https://github.com/persian-tools/persian-mobile-datepicker/commit/0bd363112e1b8dce52682f35055bd53140e0fd07))
+
+### [0.0.6](https://github.com/persian-tools/persian-mobile-datepicker/compare/v0.0.5...v0.0.6) (2021-08-07)
+
+
+### Bug Fixes
+
+* build issue ([21f815d](https://github.com/persian-tools/persian-mobile-datepicker/commit/21f815dab8d2d393bd20f892ca6fd0beb2925bb2))
+
 ### [0.0.5](https://github.com/persian-tools/persian-mobile-datepicker/compare/v0.0.4...v0.0.5) (2021-08-07)
 
 

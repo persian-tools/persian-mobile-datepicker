@@ -60,7 +60,7 @@
   "bugs": {
     "url": "https://github.com/persian-tools/persian-mobile-datepicker/issues"
   },
-  "homepage": "https://github.com/persian-tools/persian-mobile-datepicker#readme",
+  "homepage": "https://persian-tools.github.io/persian-mobile-datepicker",
   "dependencies": {
     "@geometricpanda/storybook-addon-badges": "^0.0.4",
     "date-fns-jalali": "^2.23.0-0",

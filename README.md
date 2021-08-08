@@ -12,15 +12,8 @@ All functionalities and demos have documented here: [Demo](https://persian-tools
 ## Theme
 
 <div style="padding:30px;display:flex; flex-direction:row; justify-content: space-between">
-  <div>
-    <p>Light theme</p>
-    <img src="./images/light.png" width="250" style="margin-top: 20px" />
-  </div>
+    <img src="./images/theme.jpeg"  style="margin-top: 20px" />
 
-  <div>
-    <P>Dark theme</P>
-    <img src="./images/dark.png" width="250"  style="margin-top: 20px" />
-  </div>
 </div>
 
 ## Getting Started

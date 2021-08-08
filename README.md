@@ -3,23 +3,23 @@
 This library provides a component that can set year, month, day, hour, minute and second by sliding up or down.
 
 - `Note`:
-  There is no need to use the `moment-jalaali` or any other Jalali libraries and every function you need has been documented and if you need a function that we don't have, let us know to implement it.
+  There is no need to use the `moment-jalaali` or any other Jalali libraries and All details and functions are further explained in the [Date helpers](#date-helpers) section and if you need a function that we don't have, let us know to implement it.
 
 ### Demo
 
-All functionalities and demos have documented here: [Demo](https://persian-tools.github.io/persian-mobile-datepicker)
+All functionalities and demos have documented here: [Live Demo](https://persian-tools.github.io/persian-mobile-datepicker)
 
 ## Theme
 
 <div style="padding:30px;display:flex; flex-direction:row; justify-content: space-between">
   <div>
     <p>Light theme</p>
-    <img src="./images/light.png" width="250" style="margin-top: 20px" />
+    <img src="./images/light.png" width="300" style="margin-top: 20px" />
   </div>
 
   <div>
     <P>Dark theme</P>
-    <img src="./images/dark.png" width="250"  style="margin-top: 20px" />
+    <img src="./images/dark.png" width="300"  style="margin-top: 20px" />
   </div>
 </div>
 
@@ -289,7 +289,8 @@ If you want to change the inline style of columns or cells of datepicker you can
   <img src="./images/columnStyle.png" width="300" />
 </div>
 
-## Date helpers
+
+### Date helpers
 
 - `newDate`: Convert Jalaali Date to Gregorian and returns a Date instance
 

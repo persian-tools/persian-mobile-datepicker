@@ -39,16 +39,17 @@ Using [yarn](https://yarnpkg.com):
 
 The following guide assumes you have some sort of ES2015 build set up using babel and/or webpack/browserify/gulp/grunt/etc.
 
+1. Import functions, helpers and Types
 ```javascript
 import {
   Picker,
-  DateConfigValuesModel,
-  DateConfigTypes,
+  newDate,
+  DatePickerConfig,
 } from '@persian-tools/persian-mobile-datepicker';
 ```
-
+2. Create Picker Configuration model
 ```javascript
-const config: Partial<Record<DateConfigTypes, DateConfigValuesModel>> = {
+const config: DatePickerConfig = {
   year: {
     caption: {
       text: 'سال',
@@ -66,36 +67,63 @@ const config: Partial<Record<DateConfigTypes, DateConfigValuesModel>> = {
   },
 };
 ```
-
+3. Use **Picker** component
 ```JSX
 const App = () => {
+  const [showPicker, setShowPicker] = React.useState(true);
+  const [selectedDateValue, setSelectedDateValue] = React.useState();
+  const [selectedDateEvents, setSelectedDateEvents] = React.useState([]);
+  
+  function handleSubmit(selectedDate) {
+    const date = format(selectedDate.date, "d MMMM yyyy");
+    const events = selectedDate.events;
+
+    setSelectedDateValue(date);
+    setSelectedDateEvents(events);
+  }
+
   return <Picker
-    config={config}
-    minDate={sub(new Date(), { years: 2 })}
-    maxDate={new Date()}
-    onSubmit={handleSubmit}
     isOpen={showPicker}
+    config={config}
+    minDate={newDate({ year: 1399, month: 9, day: 11 })}
+    maxDate={newDate({ year: 1400, month: 1, day: 13 })}
+    onSubmit={handleSubmit}
+    onChange={handleSubmit}
+    onClose={() => setShowPicker(false)}
     highlightWeekends
-    />
+  />
   }
 ```
+[Live Example](https://codesandbox.io/s/persian-mobile-datepicker-initialization-5o87t)
 
-### PropTypes
+### Props
 
-| Property          | Type                                                                  | Description                                                                                                      |
-| :---------------- | :-------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------- |
-| config            | [DatePickerConfig](#datepickerconfig)                                 | configuration of datepicker                                                                                      |
-| classNamePrefix   | string                                                                | className of the datepicker                                                                                      |
-| initialValue      | Date                                                                  | initial date of datepicker                                                                                       |
-| value             | [WheelPickerSelectEvent](#wheelpickerselectevent)                     | value of datepicker                                                                                              |
-| title             | string                                                                | title of datepicker                                                                                              |
-| onChange          | (selected: [WheelPickerSelectEvent](#wheelpickerselectevent)) => void | Gets called when value of the picker changes                                                                     |
-| minDate           | Date                                                                  | Specifies the minimum selectable day by user                                                                     |
-| maxDate           | Date                                                                  | Specifies the maximum selectable day by user                                                                     |
-| endYear           | number                                                                | The Minimum selectable year(Picker will calculate the `StartYear` by this approach: `currentYear` + `startYear`) |
-| startYear         | number                                                                | The Maximum selectable year(Picker will calculate the `StartYear` by this approach: `currentYear` + `startYear`) |
-| highlightWeekends | boolean                                                               | Determines whether to mark weekend days with red or not. (weekend day is Friday)                                 |
-| highlightHolidays | boolean                                                               | Determines whether to mark holidays in day column.                                                               |
+| Property          | Rquired | Type                                                                  | Description                                                                                                      |
+| :----------------  | :------ | :------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------- |
+| isOpen            | Yes     | boolean                                                               | Picker open status                                                                                               |
+| theme             | No      | string                                                                | Picker Theme                                                                                                     |   
+| config            | Yes     | [DatePickerConfig](#datepickerconfig)                                 | configuration of datepicker                                                                                      |
+| classNamePrefix   | No     | string                                                                 | className of the datepicker                                                                                      |
+| initialValue      | No     | Date                                                                   | initial date of datepicker                                                                                       |
+| value             | No     | [WheelPickerSelectEvent](#wheelpickerselectevent)                      | value of datepicker                                                                                              |
+| title             | No     | string                                                                 | title of datepicker                                                                                              |
+| onChange          | No     | (selected: [WheelPickerSelectEvent](#wheelpickerselectevent)) => void  | Gets called when value of the picker changes                                                                     |
+| onSubmit          | No     | (selected: [WheelPickerSelectEvent](#wheelpickerselectevent)) => void  | Triggered when you click on Submit button                                                                     |
+| onCancel          | No     | () => void  | Call when user clicked on Cancel Button                                                                     |
+| onClose          | No     | () => void  | Call when Picker Sheet modal has closed or User clicked on Cancel Button or User manually closed the Sheet modal by drag and drop                                                                     |
+| minDate           | No     | Date                                                                  | Specifies the minimum selectable day by user                                                                     |
+| maxDate           | No     | Date                                                                  | Specifies the maximum selectable day by user                                                                     |
+| endYear           | No     | number                                                                | The Minimum selectable year(Picker will calculate the `StartYear` by this approach: `currentYear` + `startYear`) |
+| startYear         | No     | number                                                                | The Maximum selectable year(Picker will calculate the `StartYear` by this approach: `currentYear` + `startYear`) |
+| addDayName | No     | boolean                                                               | Add the name of the day of the week                                 |
+| highlightWeekends | No     | boolean                                                               | Determines whether to mark weekend days with red or not. (weekend day is Friday)                                 |
+| highlightHolidays | No     | boolean                                                               | Determines whether to mark holidays in day column.                                                               |
+| height            | No     | number                                                                | Height of Picker Sheet modal                                                               |
+| submitText        | No     | string                                                                | Submit button text                                                               |
+| cancelText        | No     | string                                                                | Cancel button text                                                               |
+| showCancelButton  | No     | boolean                                                                | Display Cancel button                                                               |
+| disableSheetDrag  | No     | boolean                                                                | Disable drag for the sheet content                                                               |
+| disableSheetHeaderDrag  | No     | boolean                                                                | Disable drag for the sheet header                                                               |
 
 ## Custom date unit
 
@@ -130,14 +158,14 @@ config = {
 
 where the DateConfigTypes is one of `"year", "month", "day", "hour", "minute", "second"`
 
-## DateConfigValuesModel
+## Picker config Object Dto
 
 | Property          | Type          | Description                                                                                                |
 | :---------------- | :------------ | :--------------------------------------------------------------------------------------------------------- |
-| caption           | Object        | and object with the props text `string` and style regular react style object                               |
-| formatter         | Function      | a function of [ PickerExtraDateInfo ](#pickerextradateinfo) to format the date                             |
-| classname         | Function      | a function of [ PickerExtraDateInfo ](#pickerextradateinfo) for specifiying the classNames                 |
-| shouldRender      | Function      | a function of [ PickerExtraDateInfo ](#pickerextradateinfo) to specify which functionalities should render |
+| caption           | Object        | an object with the props text `string` and style `CSSProperties` regular react style object                               |
+| formatter         | Function      | a function of [ PickerExtraDateInfo ](#PickerExtraDateInfo) to format every columns item text                             |
+| classname         | Function      | a function of [ PickerExtraDateInfo ](#PickerExtraDateInfo) for specifying the classNames                 |
+| shouldRender      | Function      | a function of [ PickerExtraDateInfo ](#PickerExtraDateInfo) to specify which functionalities should render |
 | columnStyle       | CSSProperties | the inline style of columns of datepicker                                                                  |
 | itemStyle         | CSSProperties | the inline style of each of cell items                                                                     |
 | selectedItemStyle | CSSProperties | the inline style of selected cell item                                                                     |
@@ -146,7 +174,7 @@ where the DateConfigTypes is one of `"year", "month", "day", "hour", "minute", "
 
 | Property | Type            | Description                                                                  |
 | :------- | :-------------- | :--------------------------------------------------------------------------- |
-| object   | PickerDateModel | and object with the props text `string` and style regular react style object |
+| object   | PickerDateModel | an object with the props text `string` and style `CSSProperties` regular react style object |
 | events   | Array           | the array of events                                                          |
 | date     | Date            | the value of date                                                            |
 

@@ -43,6 +43,7 @@ The following guide assumes you have some sort of ES2015 build set up using babe
 ```javascript
 import {
   Picker,
+  format,
   newDate,
   DatePickerConfig,
 } from '@persian-tools/persian-mobile-datepicker';
@@ -300,7 +301,7 @@ import { newDate } from '@persian-tools/persian-mobile-datepicker';
 newDate({
   year: 1400,
   month: 1,
-  day: 0,
+  day: 1,
 }); // Sun Mar 21 2021 00:00:00 GMT+0330 (Iran Standard Time)
 ```
 
@@ -309,7 +310,7 @@ newDate({
 ```javascript
 import { convertDateInstanceToDateObject } from '@persian-tools/persian-mobile-datepicker';
 
-convertDateInstanceToDateObject(new Date()); // {year: 1400, month: 5, day: 15, hour: 22, minute: 20,second: 10}
+convertDateInstanceToDateObject(new Date()); // { year: 1400, month: 5, day: 15, hour: 22, minute: 20,second: 10 }
 ```
 
 - `daysInMonth`: Get the number of days in a month of a year
@@ -318,6 +319,8 @@ convertDateInstanceToDateObject(new Date()); // {year: 1400, month: 5, day: 15, 
 import { daysInMonth } from '@persian-tools/persian-mobile-datepicker';
 
 daysInMonth(1400, 1); // 31
+daysInMonth(1399, 12); // 30 -> 1399 is a leap year
+daysInMonth(1400, 12); // 29
 ```
 
 - `getWeekDay`: Get the day of the week of the given date. Returns number starts from 0, 0 means the first day of Week and 6 means the last day of Week

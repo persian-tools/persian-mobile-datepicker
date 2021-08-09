@@ -4,47 +4,14 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### [0.0.9](https://github.com/persian-tools/persian-mobile-datepicker/compare/v0.0.11...v0.0.9) (2021-08-09)
 
-### [0.0.11](https://github.com/persian-tools/persian-mobile-datepicker/compare/v0.0.10...v0.0.11) (2021-08-09)
+### Bug Fixes
 
+* highlightHolidays issue ([ab56cd8](https://github.com/persian-tools/persian-mobile-datepicker/commit/ab56cd86f1fabab1914460fc013441c5e664895e))
 
 ### Minor Improvements
 
+* add sideEffect to false in package.json file ([1539664](https://github.com/persian-tools/persian-mobile-datepicker/commit/15396645d55e0f177d0f10e9128d2d27475cfa7b))
 * add versionrc file ([da80d33](https://github.com/persian-tools/persian-mobile-datepicker/commit/da80d3330a37c6d43bf30005164ffe7555488e8d))
-
-### [0.0.10](https://github.com/persian-tools/persian-mobile-datepicker/compare/v0.0.8...v0.0.10) (2021-08-09)
-
-
-### Bug Fixes
-
-* highlightHolidays issue ([ab56cd8](https://github.com/persian-tools/persian-mobile-datepicker/commit/ab56cd86f1fabab1914460fc013441c5e664895e))
-
-
-### Minor Improvements
-
-* add sideEffect to false in package.json file ([1539664](https://github.com/persian-tools/persian-mobile-datepicker/commit/15396645d55e0f177d0f10e9128d2d27475cfa7b))
-
-
-### Docs
-
-* **README:** change them image ([702cb40](https://github.com/persian-tools/persian-mobile-datepicker/commit/702cb40e0f706cb5eacf10c6877a702216c56cd2))
-* **README:** fix typo and add more info ([17c740b](https://github.com/persian-tools/persian-mobile-datepicker/commit/17c740b4cccc67351698eff689f98c4f46e2490a))
-* **storybook:** remove console addons ([5b87482](https://github.com/persian-tools/persian-mobile-datepicker/commit/5b874826ee17b362c11e392472d5a10bf2d0d999))
-* **storybook:** update all Columns Text formatter stories and fix the Stories source code ([5d90197](https://github.com/persian-tools/persian-mobile-datepicker/commit/5d90197ee7007b82bdb7705cb31593cff30ebe4e))
-* **storybook:** update all Date range stories and fix the Stories source code ([1a41204](https://github.com/persian-tools/persian-mobile-datepicker/commit/1a412046218a54d1c6d8f9f68d3505892931108e))
-* **usePicker:** add more docs for defaultSelectedDateObject complex logics ([7a7078a](https://github.com/persian-tools/persian-mobile-datepicker/commit/7a7078ac1c87df19f80409331048f6f407b494cb))
-
-### [0.0.9](https://github.com/persian-tools/persian-mobile-datepicker/compare/v0.0.8...v0.0.9) (2021-08-09)
-
-
-### Bug Fixes
-
-* highlightHolidays issue ([ab56cd8](https://github.com/persian-tools/persian-mobile-datepicker/commit/ab56cd86f1fabab1914460fc013441c5e664895e))
-
-
-### Minor Improvements
-
-* add sideEffect to false in package.json file ([1539664](https://github.com/persian-tools/persian-mobile-datepicker/commit/15396645d55e0f177d0f10e9128d2d27475cfa7b))
-
 
 ### Docs
 

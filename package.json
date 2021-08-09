@@ -11,6 +11,7 @@
   "esmodule": "build/index.modern.js",
   "module": "build/index.module.js",
   "typings": "build/index.d.ts",
+  "sideEffects": false,
   "scripts": {
     "bundler": "microbundle --no-css-modules --name PersianMobileDatePicker --strict --jsx React.createElement",
     "build": "microbundle --no-css-modules --name PersianMobileDatePicker --strict --jsx React.createElement --raw --sourcemap false --compress",

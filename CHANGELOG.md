@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.11](https://github.com/persian-tools/persian-mobile-datepicker/compare/v0.0.10...v0.0.11) (2021-08-09)
+
+
+### Minor Improvements
+
+* add versionrc file ([da80d33](https://github.com/persian-tools/persian-mobile-datepicker/commit/da80d3330a37c6d43bf30005164ffe7555488e8d))
+
 ### [0.0.10](https://github.com/persian-tools/persian-mobile-datepicker/compare/v0.0.8...v0.0.10) (2021-08-09)
 
 

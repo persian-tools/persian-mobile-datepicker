@@ -1,6 +1,6 @@
 {
   "name": "@persian-tools/persian-mobile-datepicker",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "Modern Persian mobile date picker",
   "publishConfig": {
     "access": "public"

@@ -31,7 +31,7 @@ module.exports = {
       options: {
         rule: {
           test: /\.stories\.tsx?$/,
-          include: [path.resolve(__dirname, '../src/stories')],
+          include: [path.resolve(__dirname, '../stories')],
         },
         sourceLoaderOptions: {
           injectStoryParameters: true,

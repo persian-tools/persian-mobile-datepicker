@@ -163,13 +163,22 @@ export function usePicker(props: WheelPickerProps) {
   ]);
 
   /**
-   * Get default selected date by [MinDate], [MaxDate], [initialValue] or current date
+   * Get default selected date by [MinDate], [MaxDate], [initialValue], [selectedDateRef] or [Current date that we are in]
    */
   const defaultSelectedDateObject = useMemo<PickerDateModel>(() => {
     if (
       !isObjectEmpty(selectedDateRef.current) &&
       isValid(newDate(selectedDateRef.current))
     ) {
+      /**
+       * This is happen when [MinDate] is `newDate({year: 1399, month: 9, day: 11})` and [MaxDate] is `newDate({year: 1400, month: 1, day: 13})`
+       * For namely, If the user select year: 1399 month: 10 day: 14, then change the Year to 1400, now, the current selectedDateRef is not valid because it doesn't meet the [MaxDate]
+       * what does it mean?
+       * selectedDateRef is, year: 1400 month: 10 and day: 14 which [MaxDate] is Year: 1400, month: 1 and day: 13
+       * So what should we do?
+       * We should Check if we can Render month 10 with day 14? if Yes, there is no issue,
+       * But if No, we have big trouble, We should find the closest month and day or just a day that can be replaced with month: 10 and day: 1 or just day: 14
+       **/
       if (
         canRender(
           selectedDateRef.current,
@@ -184,11 +193,13 @@ export function usePicker(props: WheelPickerProps) {
       ) {
         // Year can be rendered
         const { year, day, month } = selectedDateRef.current;
-        const closest =
+        const closestBound =
           year! - minDateObject.year > maxDateObject.year - year!
             ? 'upperBound' // Closest to `maxDate` Year
             : 'lowerBound'; // Closest to `minDate` Year
+        const isUpperBound = closestBound === 'upperBound';
 
+        // Just we have trouble with the day and it is not in our [MaxDate] range
         if (
           canRender(
             selectedDateRef.current,
@@ -197,17 +208,21 @@ export function usePicker(props: WheelPickerProps) {
           )
         ) {
           // Month can also render and day should be updated
-          selectedDateRef.current.day =
-            closest === 'upperBound'
-              ? day! <= maxDateObject.day
-                ? day
-                : maxDateObject.day
-              : day! >= minDateObject.day
-              ? day
-              : minDateObject.day;
+
+          if (isUpperBound) {
+            // Current Selected Year is closest to the [MaxDate] year and we should use the [MaxDate] day if its possible
+            selectedDateRef.current.day =
+              day! <= maxDateObject.day ? day : maxDateObject.day;
+          } else {
+            // Current Selected Year is closest to the [MinDate] year and we should use the [MinDate] day if its possible
+            selectedDateRef.current.day =
+              day! >= minDateObject.day ? day : minDateObject.day;
+          }
         } else {
-          // Month and day can't be rendered and both should be updated
-          if (closest === 'upperBound') {
+          // We have trouble with Month and Day and they should be changed
+
+          // Current Selected Year is closest to the [MaxDate] year and we should use the [MaxDate] month and day if its possible
+          if (isUpperBound) {
             selectedDateRef.current.day =
               day! <= maxDateObject.day ? day : maxDateObject.day;
             selectedDateRef.current.month =
@@ -215,6 +230,7 @@ export function usePicker(props: WheelPickerProps) {
 
             return selectedDateRef.current;
           } else {
+            // Current Selected Year is closest to the [MinDate] year and we should use the [MinDate] month and day if its possible
             selectedDateRef.current.day =
               day! >= minDateObject.day ? day : minDateObject.day;
             selectedDateRef.current.month =

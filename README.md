@@ -385,7 +385,7 @@ isAfter(newDate(1372, 10, 10), newDate(1361, 10, 10)); // false
 ```
 
 - `format`: Returns the formatted date string in the given format. The result may vary by locale.
-
+[See Accepted patterns](https://date-fns.org/v2.23.0/docs/format)
 ```javascript
 import { format } from '@persian-tools/persian-mobile-datepicker';
 

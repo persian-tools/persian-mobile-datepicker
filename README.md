@@ -369,10 +369,8 @@ isValidJalaaliDate(1400, 12, 30); // false
 ```javascript
 import { isBefore, newDate } from '@persian-tools/persian-mobile-datepicker';
 
-const firstDate = newDate(1399, 12, 30);
-const secondtDate = newDate(1400, 2, 1);
-
-isBefore(firstDate, secondtDate); // true
+isBefore(newDate(1399, 12, 30), newDate(1400, 2, 1)); // true
+isBefore(newDate(1400, 2, 1), newDate(1399, 12, 30)); // false
 ```
 
 - `isAfter`: Is the first date after the second one?
@@ -381,7 +379,7 @@ isBefore(firstDate, secondtDate); // true
 import { isAfter, newDate } from '@persian-tools/persian-mobile-datepicker';
 
 isAfter(newDate(1361, 10, 10), newDate(1372, 10, 10)); // false
-isAfter(newDate(1372, 10, 10), newDate(1361, 10, 10)); // false
+isAfter(newDate(1372, 10, 10), newDate(1361, 10, 10)); // true
 ```
 
 - `format`: Returns the formatted date string in the given format. The result may vary by locale.

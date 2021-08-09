@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.12](https://github.com/persian-tools/persian-mobile-datepicker/compare/v0.0.11...v0.0.12) (2021-08-09)
+
+
+### Docs
+
+* **README:** add accepted format patterns ([a7138d7](https://github.com/persian-tools/persian-mobile-datepicker/commit/a7138d70000723e4f0b065ff75e242e4f8d43624))
+* **README:** fix isAfter and isBefore docs ([e57d986](https://github.com/persian-tools/persian-mobile-datepicker/commit/e57d986a8fd2d7012f676b56c9458a64c1541b8c))
+
 ### [0.0.11](https://github.com/persian-tools/persian-mobile-datepicker/compare/v0.0.10...v0.0.11) (2021-08-09)
 
 

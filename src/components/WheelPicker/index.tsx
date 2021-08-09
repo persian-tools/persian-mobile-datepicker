@@ -1,4 +1,4 @@
-import React, { CSSProperties, useMemo, useCallback, FC } from 'react';
+import React, { useMemo, FC } from 'react';
 // Global Components
 import MultiPicker from 'rmc-picker/es/MultiPicker';
 // Styles
@@ -27,34 +27,33 @@ import { solarEvents } from '../../events/solar';
 import { persianEvents } from '../../events/persian';
 // Types
 import type {
-  DateConfigTypes,
   PickerColumns,
   WheelPickerProps,
   PickerColumnCaption,
-  PickerItemModel,
   EventTypes,
 } from './index.types';
 
 export const WheelPicker: FC<WheelPickerProps> = (props) => {
   const {
-    configs,
     classNamePrefix,
 
     daysInMonth,
     selectedDate,
     setSelectedDate,
-    defaultSelectedDateObject,
+    defaultSelectedDate,
     defaultPickerValueAsString,
 
     maxYear,
     minYear,
 
-    checkDayIsWeekend,
-    checkDateIsHoliday,
     getPickerColumnsCaption,
     filterAllowedColumnRows,
     getPickerItemClassNames,
     handlePickerItemTextContent,
+
+    // Styles
+    getColumnStylesByKey,
+    getPickerItemContentStyles,
   } = usePicker(props);
 
   // Memo list
@@ -155,90 +154,6 @@ export const WheelPicker: FC<WheelPickerProps> = (props) => {
     });
   }
 
-  // Columns styles value
-  const getColumnStylesByKey = useCallback<
-    (
-      type: DateConfigTypes,
-      styleKey: 'itemStyle' | 'columnStyle' | 'selectedItemStyle',
-    ) => CSSProperties
-  >(
-    (type, styleKey) => {
-      const styleConfig = configs[type];
-      return styleConfig[styleKey] || {};
-    },
-    [configs],
-  );
-
-  /**
-   * Get Picker's item styles such as selected and none selected styles
-   */
-  const getPickerItemStyles = React.useCallback<
-    (type: DateConfigTypes, isSelected: boolean) => CSSProperties
-  >(
-    (type, isSelected) => {
-      return {
-        ...getColumnStylesByKey(type, 'itemStyle'),
-        ...(isSelected ? getColumnStylesByKey(type, 'selectedItemStyle') : {}),
-      };
-    },
-    [configs],
-  );
-
-  /**
-   * Get Picker's text content styles if the day is weekend or holiday
-   */
-  const getPickerTextContentStyles = React.useCallback<
-    (pickerItem: PickerItemModel) => CSSProperties
-  >(
-    (pickerItem) => {
-      const isDayItem = pickerItem.type === 'day';
-      if (isDayItem) {
-        // Highlight weekends if needed
-        if (props.highlightWeekends && checkDayIsWeekend(pickerItem.value)) {
-          return {
-            color: '#de3f18',
-          };
-        }
-
-        // Highlight holidays if needed
-        if (props.highlightHolidays) {
-          const dayOfYear = getDayOfYear(
-            selectedDate.year!,
-            selectedDate.month!,
-            pickerItem.value,
-          );
-
-          if (checkDateIsHoliday(dayOfYear)) {
-            return {
-              color: '#de3f18',
-            };
-          }
-        }
-      }
-      return {};
-    },
-    [selectedDate, props.highlightHolidays, props.highlightWeekends],
-  );
-
-  /**
-   * Get every Picker Item's content styles
-   */
-  const getPickerItemContentStyles = React.useCallback<
-    (
-      pickerItem: PickerItemModel,
-      type: DateConfigTypes,
-      isSelectedItem: boolean,
-    ) => React.CSSProperties
-  >(
-    (pickerItem, type, isSelectedItem) => {
-      return {
-        ...getPickerTextContentStyles(pickerItem),
-        ...getPickerItemStyles(type, isSelectedItem),
-      };
-    },
-    [configs],
-  );
-
   return (
     <React.Fragment>
       {props.title && (
@@ -292,8 +207,7 @@ export const WheelPicker: FC<WheelPickerProps> = (props) => {
                 (pickerItem) => {
                   // Is this Column item selected and viewed to the User now?
                   const isSelectedItem =
-                    pickerItem.value ===
-                    defaultSelectedDateObject[pickerItem.type];
+                    pickerItem.value === defaultSelectedDate[pickerItem.type];
                   return (
                     <StyledWheelPickerItem
                       key={`Picker_Item_${pickerItem.type}_${pickerItem.value}`}

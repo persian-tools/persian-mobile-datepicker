@@ -40,6 +40,7 @@ import type {
   WheelPickerProps,
   RequiredPickerExtraDateInfo,
 } from '../components/WheelPicker/index.types';
+import type { CSSProperties } from 'react';
 import type { PickerColumnCaption } from '../components/WheelPicker/index.types';
 
 export function usePicker(props: WheelPickerProps) {
@@ -471,13 +472,13 @@ export function usePicker(props: WheelPickerProps) {
         // Check if Day or Month is in Range
         if (
           (type === 'day' || type === 'month') &&
-          !canRender(selectedDate, pickerItem.type, pickerItem.value)
+          !canRender(selectedDateRef.current, pickerItem.type, pickerItem.value)
         ) {
           return false;
           // Check if Month is in Range
         } else if (
           type === 'year' &&
-          !canRenderYear(selectedDate, pickerItem.value)
+          !canRenderYear(selectedDateRef.current, pickerItem.value)
         ) {
           return false;
         }
@@ -485,7 +486,7 @@ export function usePicker(props: WheelPickerProps) {
         return true;
       });
     },
-    [selectedDate],
+    [selectedDateRef.current],
   );
 
   // Picker Config's Formatters
@@ -496,7 +497,7 @@ export function usePicker(props: WheelPickerProps) {
     (pickerItem: PickerItemModel) => PickerSelectedDateValue | string
   >(
     (pickerItem) => {
-      const dateValues = addExtraDateInfo(selectedDate, pickerItem);
+      const dateValues = addExtraDateInfo(selectedDateRef.current, pickerItem);
       const textContent =
         configs[pickerItem.type]?.formatter?.(dateValues) ?? pickerItem.value;
       const isDayColumn = pickerItem.type === 'day';
@@ -510,7 +511,7 @@ export function usePicker(props: WheelPickerProps) {
         ? `${textContent}(${weekDays[dateValues.weekDay]})`
         : textContent;
     },
-    [props.config, props.highlightWeekends, props.addDayName],
+    [selectedDate, props.config, props.highlightWeekends, props.addDayName],
   );
 
   /**
@@ -572,19 +573,19 @@ export function usePicker(props: WheelPickerProps) {
   const checkDayIsWeekend = useCallback<(day: number) => boolean>(
     (day) => {
       return isWeekend(
-        defaultSelectedDateObject.year!,
-        defaultSelectedDateObject.month!,
+        selectedDateRef.current.year!,
+        selectedDateRef.current.month!,
         day,
       );
     },
-    [defaultSelectedDateObject.month, defaultSelectedDateObject.year],
+    [selectedDateRef.current],
   );
 
   /**
    * Check the given day of year is holiday or not?
    */
   function checkDateIsHoliday(dayOfYear: number): boolean {
-    return solarEvents[dayOfYear]?.holiday;
+    return solarEvents[dayOfYear]?.holiday || false;
   }
 
   // Utilities
@@ -628,6 +629,89 @@ export function usePicker(props: WheelPickerProps) {
     return targetSelectedDate as RequiredPickerExtraDateInfo;
   }
 
+  // Columns styles value
+  const getColumnStylesByKey = useCallback<
+    (
+      type: DateConfigTypes,
+      styleKey: 'itemStyle' | 'columnStyle' | 'selectedItemStyle',
+    ) => CSSProperties
+  >(
+    (type, styleKey) => {
+      const styleConfig = configs[type];
+      return styleConfig[styleKey] || {};
+    },
+    [configs],
+  );
+
+  /**
+   * Get Picker's item styles such as selected and none selected styles
+   */
+  const getPickerItemStyles = useCallback<
+    (type: DateConfigTypes, isSelected: boolean) => CSSProperties
+  >(
+    (type, isSelected) => {
+      return {
+        ...getColumnStylesByKey(type, 'itemStyle'),
+        ...(isSelected ? getColumnStylesByKey(type, 'selectedItemStyle') : {}),
+      };
+    },
+    [configs],
+  );
+
+  /**
+   * Get Picker's text content styles if the day is weekend or holiday
+   */
+  const getPickerTextContentStyles = useCallback<
+    (pickerItem: PickerItemModel) => CSSProperties
+  >(
+    (pickerItem) => {
+      const isDayItem = pickerItem.type === 'day';
+      if (isDayItem) {
+        // Highlight weekends if needed
+        if (props.highlightWeekends && checkDayIsWeekend(pickerItem.value)) {
+          return {
+            color: '#de3f18',
+          };
+        }
+
+        // Highlight holidays if needed
+        if (props.highlightHolidays) {
+          const dayOfYear = getDayOfYear(
+            selectedDateRef.current.year!,
+            selectedDateRef.current.month!,
+            pickerItem.value,
+          );
+          if (checkDateIsHoliday(dayOfYear)) {
+            return {
+              color: '#de3f18',
+            };
+          }
+        }
+      }
+      return {};
+    },
+    [selectedDateRef.current, props.highlightHolidays, props.highlightWeekends],
+  );
+
+  /**
+   * Get every Picker Item's content styles
+   */
+  const getPickerItemContentStyles = useCallback<
+    (
+      pickerItem: PickerItemModel,
+      type: DateConfigTypes,
+      isSelectedItem: boolean,
+    ) => CSSProperties
+  >(
+    (pickerItem, type, isSelectedItem) => {
+      return {
+        ...getPickerTextContentStyles(pickerItem),
+        ...getPickerItemStyles(type, isSelectedItem),
+      };
+    },
+    [configs],
+  );
+
   return {
     configs,
     classNamePrefix,
@@ -639,8 +723,6 @@ export function usePicker(props: WheelPickerProps) {
 
       setSelectedDate(date);
     },
-    defaultSelectedDateObject,
-
     defaultSelectedDate: defaultSelectedDateObject,
     maxYear,
     minYear,
@@ -654,14 +736,16 @@ export function usePicker(props: WheelPickerProps) {
     defaultPickerValueAsString,
 
     // Functions
-    addExtraDateInfo,
     checkDayIsWeekend,
-    checkDateIsHoliday,
     filterAllowedColumnRows,
     getPickerItemClassNames,
     getPickerColumnsCaption,
     shouldRender: canRender,
     shouldRenderYear: canRenderYear,
     handlePickerItemTextContent: pickerItemTextFormatter,
+
+    // Styles
+    getColumnStylesByKey,
+    getPickerItemContentStyles,
   };
 }

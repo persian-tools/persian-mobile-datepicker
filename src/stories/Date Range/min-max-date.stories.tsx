@@ -1,5 +1,5 @@
 import React from 'react';
-import { createBaseStory, BaseTemplate, baseArgs } from './../base';
+import { createBaseStory, BaseTemplate, baseArgs } from '../base';
 import { newDate, format, Picker, WheelPickerSelectEvent } from '../../index'; // in your code: @persian-tools/persian-mobile-datepicker
 import { BADGE } from '@geometricpanda/storybook-addon-badges';
 import { storiesOf } from '@storybook/react';
@@ -74,9 +74,8 @@ storiesOf(title, module).add(
       highlightHolidays: true,
       highlightWeekends: true,
       config,
-      initialValue: newDate({ year: 1400, month: 1, day: 20 }),
-      minDate: newDate({ year: 1400, month: 1, day: 20 }),
-      maxDate: newDate({ year: 1400, month: 5, day: 31 }),
+      minDate: newDate({ year: 1399, month: 9, day: 11 }),
+      maxDate: newDate({ year: 1400, month: 9, day: 11 }),
     },
     argTypes: baseArgs,
     badges: [BADGE.STABLE],

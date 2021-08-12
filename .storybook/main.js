@@ -9,23 +9,29 @@ module.exports = {
     fastRefresh: false,
     strictMode: true,
   },
-  stories: ['../src/**/*.stories.tsx'],
+  stories: [
+    '../stories/**/*.stories.mdx',
+    '../stories/**/*.stories.@(js|jsx|ts|tsx)',
+  ],
   addons: [
+    {
+      name: '@storybook/addon-docs',
+      options: {
+        configureJSX: true,
+        babelOptions: {},
+        sourceLoaderOptions: null,
+      },
+    },
     '@storybook/addon-viewport',
     '@storybook/addon-links',
     '@geometricpanda/storybook-addon-badges',
-    {
-      name: '@storybook/addon-essentials',
-      options: {
-        docs: false,
-      },
-    },
+    '@storybook/addon-essentials',
     {
       name: '@storybook/addon-storysource',
       options: {
         rule: {
           test: /\.stories\.tsx?$/,
-          include: [path.resolve(__dirname, '../src/stories')],
+          include: [path.resolve(__dirname, '../stories')],
         },
         sourceLoaderOptions: {
           injectStoryParameters: true,

@@ -19,4 +19,31 @@ export const parameters = {
       },
     ],
   },
+  options: {
+    panelPosition: 'right',
+    toolbar: {
+      Docs: { hidden: true },
+    },
+    showRoot: true,
+    storySort: {
+      order: [
+        'Overview',
+        'Getting Started',
+        'Filters',
+        'Date Range',
+        'Text Formatter',
+        'Accessibility',
+        'Styling',
+      ],
+    },
+  },
 };
+
+const storybookLayout = JSON.parse(
+  window.localStorage.getItem('storybook-layout'),
+);
+storybookLayout.resizerPanel.x = window.innerWidth - 300;
+window.localStorage.setItem(
+  'storybook-layout',
+  JSON.stringify(storybookLayout),
+);

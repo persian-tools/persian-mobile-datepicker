@@ -172,11 +172,11 @@ where the DateConfigTypes is one of `"year", "month", "day", "hour", "minute", "
 
 ## WheelPickerSelectEvent
 
-| Property | Type            | Description                                                                                 |
-| :------- | :-------------- | :------------------------------------------------------------------------------------------ |
-| object   | PickerDateModel | an object with the props text `string` and style `CSSProperties` regular react style object |
-| events   | Array           | the array of events                                                                         |
-| date     | Date            | the value of date                                                                           |
+| Property | Type            | Description                                           |
+| :------- | :-------------- | :---------------------------------------------------- |
+| object   | PickerDateModel | an object of selected date, including year, month,... |
+| events   | Array           | the array of events                                   |
+| date     | Date            | the value of date                                     |
 
 ## PickerExtraDateInfo
 

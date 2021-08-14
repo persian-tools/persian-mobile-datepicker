@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.13](https://github.com/persian-tools/persian-mobile-datepicker/compare/v0.0.12...v0.0.13) (2021-08-14)
+
+
+### Bug Fixes
+
+* bundle installation package-lock size ([9b4237b](https://github.com/persian-tools/persian-mobile-datepicker/commit/9b4237b7a2095abbb14a9ff99e10d30746b1ab0b))
+
+
+### Docs
+
+* **README:** update WheelPickerSelectEvent description ([5b0e217](https://github.com/persian-tools/persian-mobile-datepicker/commit/5b0e21760de2dd41dc7bf0d9eb07f574965c68d4))
+
 ### [0.0.12](https://github.com/persian-tools/persian-mobile-datepicker/compare/v0.0.11...v0.0.12) (2021-08-09)
 
 

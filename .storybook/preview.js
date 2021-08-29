@@ -42,8 +42,14 @@ export const parameters = {
 const storybookLayout = JSON.parse(
   window.localStorage.getItem('storybook-layout'),
 );
-storybookLayout.resizerPanel.x = window.innerWidth - 300;
-window.localStorage.setItem(
-  'storybook-layout',
-  JSON.stringify(storybookLayout),
-);
+if (
+  storybookLayout &&
+  storybookLayout.resizerPanel &&
+  storybookLayout.resizerPanel.x
+) {
+  storybookLayout.resizerPanel.x = window.innerWidth - 300;
+  window.localStorage.setItem(
+    'storybook-layout',
+    JSON.stringify(storybookLayout),
+  );
+}

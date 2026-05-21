@@ -22,11 +22,11 @@ All functionalities and demos have documented here: [Live Demo](https://persian-
 
 Using [npm](https://www.npmjs.com/):
 
-    $ npm install --save @persian-tools/persian-mobile-datepicker
+    npm install --save @persian-tools/persian-mobile-datepicker
 
 Using [yarn](https://yarnpkg.com):
 
-    $ yarn add --save @persian-tools/persian-mobile-datepicker
+    yarn add --save @persian-tools/persian-mobile-datepicker
 
 ### Import what you need
 
